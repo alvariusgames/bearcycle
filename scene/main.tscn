@@ -1,12 +1,12 @@
 [gd_scene load_steps=6 format=1]
 
-[ext_resource path="res://main.gd" type="Script" id=1]
+[ext_resource path="res://input_handler.gd" type="Script" id=1]
 [ext_resource path="res://STATE.gd" type="Script" id=2]
 [ext_resource path="res://src/player.gd" type="Script" id=3]
 [ext_resource path="res://img/icon.png" type="Texture" id=4]
 [ext_resource path="res://src/player_sprite.gd" type="Script" id=5]
 
-[node name="main" type="Node"]
+[node name="input_handler" type="Node"]
 
 script/script = ExtResource( 1 )
 

@@ -4,7 +4,7 @@ func _ready():
 	set_process_input(true)
 
 func _input(event):
-	if(event.type == InputEvent.KEY):
+	if(event.type == InputEvent.KEY and event.is_pressed()):
 		if(event.scancode == KEY_RIGHT):
 			get_node("player").set_state(\
 				get_node("/root/STATE").PLAYER.MOVE_RIGHT)
