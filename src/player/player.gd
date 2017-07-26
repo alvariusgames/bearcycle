@@ -16,6 +16,7 @@ func set_state(state):
 
 func react_to_state():
 	if(_state == get_node("/root/STATE").PLAYER.MOVE_RIGHT):
+		print(get_node("ground").check_if_on_ground(_pos))
 		if(_speed < _max_speed):
 			_speed += _accel
 	elif(_state == get_node("/root/STATE").PLAYER.MOVE_LEFT):
