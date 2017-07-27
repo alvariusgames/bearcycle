@@ -1,8 +1,9 @@
 extends Node
 
 var _state
-var _pos = Vector2(50,50)
+var _pos
 var _speed = 0
+var _angle_rad = 0
 var _accel = 0.25
 var _max_speed = 10
 var _idle_effect = 0.95
@@ -10,13 +11,13 @@ var _brake_effect = 0.85
 
 func _ready():
 	self.set_process(true)
+	_pos = get_node("player_sprite").get_pos()
 
 func set_state(state):
 	_state = state
 
 func react_to_state():
 	if(_state == get_node("/root/STATE").PLAYER.MOVE_RIGHT):
-		print(get_node("ground").check_if_on_ground(_pos))
 		if(_speed < _max_speed):
 			_speed += _accel
 	elif(_state == get_node("/root/STATE").PLAYER.MOVE_LEFT):
@@ -28,7 +29,12 @@ func react_to_state():
 			_speed = _speed * _brake_effect
 
 func react_stateless():
-	_pos.x += _speed
+	var ground_result = get_node("ground").check_if_on_ground(_pos)
+	if(ground_result.is_collision):
+		_angle_rad = ground_result.angle_to_next
+		#print(_angle_rad)
+	_pos.x += cos(_angle_rad) * _speed
+	_pos.y += sin(_angle_rad) * _speed
 	self.get_node("player_sprite").set_pos(_pos)
 
 func _process(delta):
