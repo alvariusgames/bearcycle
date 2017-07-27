@@ -39,19 +39,19 @@ func _some_form_left_and_right(event):
 	return _keyboard_left_and_right(event)
 
 func player_move_right():
-	get_node("player").set_state(\
+	get_node("player").set_move_state(\
 		get_node("/root/STATE").PLAYER.MOVE_RIGHT)
 
 func player_move_left():
-	get_node("player").set_state(\
+	get_node("player").set_move_state(\
 		get_node("/root/STATE").PLAYER.MOVE_LEFT)
 
 func player_idle():
-	get_node("player").set_state(\
+	get_node("player").set_move_state(\
 		get_node("/root/STATE").PLAYER.IDLE)
 
 func player_brake():
-	get_node("player").set_state(\
+	get_node("player").set_move_state(\
 		get_node("/root/STATE").PLAYER.BRAKE)
 
 func _input(event):
