@@ -35,8 +35,6 @@ func change_state_from_environment():
 
 func react_to_state():
 	if(_grav_state == get_node("/root/STATE").PLAYER.ON_GROUND):
-		print("ON GROUND STATE!")
-		print("-----")
 		_transfer_momentum_from_any_grav()
 		if(_move_state == get_node("/root/STATE").PLAYER.MOVE_RIGHT):
 			if(_speed < _max_speed):

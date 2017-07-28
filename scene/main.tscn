@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=1]
+[gd_scene load_steps=11 format=1]
 
 [ext_resource path="res://input_handler.gd" type="Script" id=1]
 [ext_resource path="res://CONST.gd" type="Script" id=2]
@@ -7,7 +7,21 @@
 [ext_resource path="res://img/icon.png" type="Texture" id=5]
 [ext_resource path="res://src/player/player_sprite.gd" type="Script" id=6]
 [ext_resource path="res://src/ground/ground.gd" type="Script" id=7]
-[ext_resource path="res://src/ground/ground_polygon.gd" type="Script" id=8]
+[ext_resource path="res://src/ground/ground_path.gd" type="Script" id=8]
+
+[sub_resource type="Curve2D" id=1]
+
+bake_interval = 5.0
+_data = {
+"points": Vector2Array( 0, 0, 0, 0, 201.724, 55.2769, 0, 0, 0, 0, 301.695, 64.3652, 0, 0, 0, 0, 394.85, 62.0932, 0, 0, 0, 0, 472.101, 30.2841, 0, 0, 0, 0, 519.814, -12.8854, 0, 0, 0, 0, 558.44, -58.3269, 0, 0, 0, 0, 587.977, -110.585, 0, 0, 0, 0, 608.425, -167.387 )
+}
+
+[sub_resource type="Curve2D" id=2]
+
+bake_interval = 5.0
+_data = {
+"points": Vector2Array( 0, 0, 0, 0, -27.7561, -228.733, 0, 0, 0, 0, -9.57959, -167.387, 0, 0, 0, 0, 22.2295, -108.313, 0, 0, 0, 0, 113.113, -46.9665, 0, 0, 0, 0, 335.776, -6.06909, 0, 0, 0, 0, 610.697, 0.747131 )
+}
 
 [node name="input_handler" type="Node"]
 
@@ -35,42 +49,42 @@ script/script = ExtResource( 6 )
 
 script/script = ExtResource( 7 )
 
-[node name="Polygon2D" type="Polygon2D" parent="player/ground"]
+[node name="Path2D" type="Path2D" parent="player/ground"]
 
-transform/pos = Vector2( 470.833, -186.714 )
-polygon = Vector2Array( -236.787, 455.162, -166.353, 457.435, -107.279, 455.162, -48.2048, 414.265, 22.2296, 334.742, -59.5652, 541.501, -486.716, 443.802 )
-uv = Vector2Array(  )
-color = Color( 1, 1, 1, 1 )
-vertex_colors = ColorArray(  )
-offset = Vector2( 0, 0 )
-texture/texture = null
-texture/offset = Vector2( 0, 0 )
-texture/scale = Vector2( 1, 1 )
-texture/rotation = 0.0
-invert/enable = false
-invert/border = 100.0
+editor/display_folded = true
+transform/pos = Vector2( -174.437, 249.525 )
+curve = SubResource( 1 )
 script/script = ExtResource( 8 )
-__meta__ = {
-"_edit_group_": true
-}
 
-[node name="Polygon2D1" type="Polygon2D" parent="player/ground"]
+[node name="PathFollow2D" type="PathFollow2D" parent="player/ground/Path2D"]
 
-transform/pos = Vector2( 877.535, -220.795 )
-polygon = Vector2Array( -336.758, 318.838, 110.841, 321.11, -52.7488, 600.575 )
-uv = Vector2Array(  )
-color = Color( 1, 1, 1, 1 )
-vertex_colors = ColorArray(  )
-offset = Vector2( 0, 0 )
-texture/texture = null
-texture/offset = Vector2( 0, 0 )
-texture/scale = Vector2( 1, 1 )
-texture/rotation = 0.0
-invert/enable = false
-invert/border = 100.0
+transform/pos = Vector2( -9.57941, 18.9237 )
+transform/rot = -8.65256
+offset = 0.0
+h_offset = 0.0
+v_offset = 0.0
+rotate = true
+cubic_interp = true
+loop = true
+lookahead = 4.0
+
+[node name="Path2D1" type="Path2D" parent="player/ground"]
+
+editor/display_folded = true
+transform/pos = Vector2( 557.172, 333.592 )
+curve = SubResource( 2 )
 script/script = ExtResource( 8 )
-__meta__ = {
-"_edit_group_": true
-}
+
+[node name="PathFollow2D" type="PathFollow2D" parent="player/ground/Path2D1"]
+
+transform/pos = Vector2( 201.724, 55.2769 )
+transform/rot = -5.19433
+offset = 0.0
+h_offset = 0.0
+v_offset = 0.0
+rotate = true
+cubic_interp = true
+loop = true
+lookahead = 4.0
 
 
