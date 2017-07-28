@@ -20,7 +20,7 @@ _data = {
 
 bake_interval = 5.0
 _data = {
-"points": Vector2Array( 0, 0, 0, 0, -27.7561, -228.733, 0, 0, 0, 0, -9.57959, -167.387, 0, 0, 0, 0, 22.2295, -108.313, 0, 0, 0, 0, 113.113, -46.9665, 0, 0, 0, 0, 335.776, -6.06909, 0, 0, 0, 0, 610.697, 0.747131 )
+"points": Vector2Array( 0, 0, 0, 0, -27.7561, -228.733, 0, 0, 0, 0, -9.57959, -167.387, 0, 0, 0, 0, 10.8691, -117.401, 0, 0, 0, 0, 40.4061, -67.4152, 0, 0, 0, 0, 67.671, -35.6061, 0, 0, 0, 0, 92.6639, -12.8854, 0, 0, 0, 0, 122.201, 7.56335, 0, 0, 0, 0, 158.554, 21.1958, 0, 0, 0, 0, 192.635, 25.7399, 0, 0, 0, 0, 226.716, 23.4679, 0, 0, 0, 0, 258.526, 12.1075, 0, 0, 0, 0, 288.062, -8.34119, 0, 0, 0, 0, 317.599, -37.8782, 0, 0, 0, 0, 335.776, -74.2314, 0, 0, 0, 0, 344.864, -121.945, 0, 0, 0, 0, 340.32, -167.387, 0, 0, 0, 0, 326.688, -224.188, 0, 0, 0, 0, 301.695, -274.174, 0, 0, 0, 0, 274.43, -326.432 )
 }
 
 [node name="input_handler" type="Node"]
@@ -52,7 +52,7 @@ script/script = ExtResource( 7 )
 [node name="Path2D" type="Path2D" parent="player/ground"]
 
 editor/display_folded = true
-transform/pos = Vector2( -174.437, 249.525 )
+transform/pos = Vector2( -181.253, 481.277 )
 curve = SubResource( 1 )
 script/script = ExtResource( 8 )
 
@@ -71,7 +71,7 @@ lookahead = 4.0
 [node name="Path2D1" type="Path2D" parent="player/ground"]
 
 editor/display_folded = true
-transform/pos = Vector2( 557.172, 333.592 )
+transform/pos = Vector2( 525.363, 553.983 )
 curve = SubResource( 2 )
 script/script = ExtResource( 8 )
 

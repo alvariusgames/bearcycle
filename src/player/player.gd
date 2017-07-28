@@ -3,7 +3,7 @@ extends Node
 var _move_state
 var _grav_state
 var _pos
-var _speed = 0
+var _speed = 1
 var _grav_speed = 0
 var _angle_rad = 0
 var _accel = 0.25
@@ -66,23 +66,20 @@ func _transfer_momentum_from_any_grav():
 	_grav_speed = 0
 
 func _apply_grav_effect_math():
-	_pos.y += _grav_speed
-	"""var new_speed = _speed + _grav_speed
-	var old_speed = _speed
 	var old_angle = _angle_rad
-	print("STATE:")
-	print(_grav_state)
-	print("--")
-	print(old_angle)
-	print(old_speed)
-	print(new_speed)
-	var new_angle = acos((cos(old_angle) * old_speed) / new_speed )
-	_speed = new_speed
+	var old_speed = _speed
+	var new_angle = atan(\
+		  (old_speed * sin(old_angle) + _grav_speed)\
+		/ (old_speed * cos(old_angle)))
+	var new_speed = (cos(old_angle) * old_speed) / cos(new_angle)
 	_angle_rad = new_angle
-	print(_angle_rad)
-	print("-----")"""
+	_speed = new_speed
 
 func react_stateless():
+	print(_grav_state)
+	print(_angle_rad)
+	print(_speed)
+	print("---")
 	self.get_node("player_sprite").set_pos(_pos)
 	_pos.x += cos(_angle_rad) * _speed
 	_pos.y += sin(_angle_rad) * _speed

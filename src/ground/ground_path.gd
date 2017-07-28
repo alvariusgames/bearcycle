@@ -18,7 +18,7 @@ func _perp_dot_prod(a, b, c):
 	return abs((a.x - c.x) * (b.y - c.y)\
 			    - (a.y - c.y) * (b.x - c.x));
 
-const epsilon_const = 0.1
+const epsilon_const = 0.5
 
 func _epsilon_of_line(v1, v2):
 	var dx1 = v2.x - v1.x
