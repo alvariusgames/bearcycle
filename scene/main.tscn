@@ -27,7 +27,7 @@ script/script = ExtResource( 4 )
 
 [node name="player_sprite" type="Sprite" parent="player"]
 
-transform/pos = Vector2( 419.35, 178.049 )
+transform/pos = Vector2( 89.899, 191.681 )
 texture = ExtResource( 5 )
 script/script = ExtResource( 6 )
 
@@ -37,8 +37,27 @@ script/script = ExtResource( 7 )
 
 [node name="Polygon2D" type="Polygon2D" parent="player/ground"]
 
-transform/pos = Vector2( 261.802, -159.449 )
-polygon = Vector2Array( 35.8613, 428.709, 226.716, 433.253, 308.51, 387.812, 353.952, 267.392, 512.997, 399.172, 208.539, 515.048 )
+transform/pos = Vector2( 470.833, -186.714 )
+polygon = Vector2Array( -236.787, 455.162, -166.353, 457.435, -107.279, 455.162, -48.2048, 414.265, 22.2296, 334.742, -59.5652, 541.501, -486.716, 443.802 )
+uv = Vector2Array(  )
+color = Color( 1, 1, 1, 1 )
+vertex_colors = ColorArray(  )
+offset = Vector2( 0, 0 )
+texture/texture = null
+texture/offset = Vector2( 0, 0 )
+texture/scale = Vector2( 1, 1 )
+texture/rotation = 0.0
+invert/enable = false
+invert/border = 100.0
+script/script = ExtResource( 8 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Polygon2D1" type="Polygon2D" parent="player/ground"]
+
+transform/pos = Vector2( 877.535, -220.795 )
+polygon = Vector2Array( -336.758, 318.838, 110.841, 321.11, -52.7488, 600.575 )
 uv = Vector2Array(  )
 color = Color( 1, 1, 1, 1 )
 vertex_colors = ColorArray(  )

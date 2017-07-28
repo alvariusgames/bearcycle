@@ -56,9 +56,9 @@ func check_on_polygon(pos):
 							  _angle_to_next(next_pt, curr_pt)))
 	if(collisions.size() > 0):
 		if(collisions.size() > 1):
-			print(collisions[0].angle_to_next)
-			print(collisions[1].angle_to_next)
-			print("-----")
+			#print(collisions[0].angle_to_next)
+			#print(collisions[1].angle_to_next)
+			#print("-----")
 			return GroundResult.new(true,
 									collisions[1].angle_to_next,
 									collisions[0].opposite_of_angle_to_prev)
