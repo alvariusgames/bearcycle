@@ -3,7 +3,7 @@ extends Node
 var _move_state
 var _grav_state
 var _pos
-var _speed = 1
+var _speed = 0.01
 var _grav_speed = 0
 var _angle_rad = 0
 var _accel = 0.25
@@ -15,23 +15,28 @@ var _ground_result
 func _ready():
 	self.set_process(true)
 	_pos = get_node("player_sprite").get_pos()
+	set_move_state(get_node("/root/STATE").PLAYER.IDLE)
+	set_grav_state(get_node("/root/STATE").PLAYER.FALL_ACCEL)
 
 func set_move_state(state):
 	_move_state = state
+
+func set_grav_state(state):
+	_grav_state = state
 
 func change_state_from_environment():
 	_ground_result = get_node("ground").check_if_on_ground(_pos)
 	if(_ground_result.is_collision):
 		if(_grav_state == get_node("/root/STATE").PLAYER.FALL_ACCEL or\
 		 _grav_state == get_node("/root/STATE").PLAYER.FALL_TERM_VEL):
-			_grav_state = get_node("/root/STATE").PLAYER.ON_GROUND_AFTER_FALL
+			set_grav_state(get_node("/root/STATE").PLAYER.ON_GROUND_AFTER_FALL)
 		else:
-			_grav_state = get_node("/root/STATE").PLAYER.ON_GROUND
+			set_grav_state(get_node("/root/STATE").PLAYER.ON_GROUND)
 	else:
 		if(sin(_angle_rad)*_speed < get_node("/root/CONST").TERM_VELOCITY):
-			_grav_state = get_node("/root/STATE").PLAYER.FALL_ACCEL
+			set_grav_state(get_node("/root/STATE").PLAYER.FALL_ACCEL)
 		else:
-			_grav_state = get_node("/root/STATE").PLAYER.FALL_TERM_VEL
+			set_grav_state(get_node("/root/STATE").PLAYER.FALL_TERM_VEL)
 
 func react_to_state():
 	if(_grav_state == get_node("/root/STATE").PLAYER.ON_GROUND):
