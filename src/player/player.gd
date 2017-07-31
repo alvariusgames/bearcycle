@@ -41,7 +41,10 @@ func change_state_from_environment():
 func react_to_state():
 	if(_grav_state == get_node("/root/STATE").PLAYER.ON_GROUND):
 		_transfer_momentum_from_any_grav()
-		_pos = _ground_result.closest_point
+		if(_speed >= 0):
+			_pos = _ground_result.closest_point_next
+		elif(_speed < 0):
+			_pos = _ground_result.closest_point_prev
 		if(_move_state == get_node("/root/STATE").PLAYER.MOVE_RIGHT):
 			if(_speed < _max_speed):
 				_speed += _accel
@@ -58,7 +61,6 @@ func react_to_state():
 	elif(_grav_state == get_node("/root/STATE").PLAYER.FALL_TERM_VEL):
 		_apply_grav_effect_math()
 	elif(_grav_state == get_node("/root/STATE").PLAYER.ON_GROUND_AFTER_FALL):
-		print(_ground_result.closest_point)
 		_transfer_momentum_from_any_grav()
 
 func _transfer_momentum_from_any_grav():
@@ -66,7 +68,7 @@ func _transfer_momentum_from_any_grav():
 	var angle_of_path
 	if(_speed >= 0):
 		angle_of_path = _ground_result.angle_to_next
-	if(_speed < 0):
+	elif(_speed < 0):
 		angle_of_path = _ground_result.opposite_of_angle_to_prev
 	_speed = cos(angle_of_path - curr_angle) * _speed
 	_angle_rad = angle_of_path
@@ -83,7 +85,6 @@ func _apply_grav_effect_math():
 	_speed = new_speed
 
 func react_stateless():
-	print(_grav_state)
 	_pos.x += cos(_angle_rad) * _speed
 	_pos.y += sin(_angle_rad) * _speed
 	self.get_node("player_sprite").set_pos(_pos)
