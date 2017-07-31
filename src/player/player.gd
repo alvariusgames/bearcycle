@@ -41,6 +41,7 @@ func change_state_from_environment():
 func react_to_state():
 	if(_grav_state == get_node("/root/STATE").PLAYER.ON_GROUND):
 		_transfer_momentum_from_any_grav()
+		_pos = _ground_result.closest_point
 		if(_move_state == get_node("/root/STATE").PLAYER.MOVE_RIGHT):
 			if(_speed < _max_speed):
 				_speed += _accel
@@ -57,6 +58,7 @@ func react_to_state():
 	elif(_grav_state == get_node("/root/STATE").PLAYER.FALL_TERM_VEL):
 		_apply_grav_effect_math()
 	elif(_grav_state == get_node("/root/STATE").PLAYER.ON_GROUND_AFTER_FALL):
+		print(_ground_result.closest_point)
 		_transfer_momentum_from_any_grav()
 
 func _transfer_momentum_from_any_grav():
@@ -82,12 +84,9 @@ func _apply_grav_effect_math():
 
 func react_stateless():
 	print(_grav_state)
-	print(_angle_rad)
-	print(_speed)
-	print("---")
-	self.get_node("player_sprite").set_pos(_pos)
 	_pos.x += cos(_angle_rad) * _speed
 	_pos.y += sin(_angle_rad) * _speed
+	self.get_node("player_sprite").set_pos(_pos)
 
 func _process(delta):
 	self.change_state_from_environment()

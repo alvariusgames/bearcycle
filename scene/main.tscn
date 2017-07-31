@@ -13,14 +13,14 @@
 
 bake_interval = 5.0
 _data = {
-"points": Vector2Array( 0, 0, 0, 0, 201.724, 55.2769, 0, 0, 0, 0, 301.695, 64.3652, 0, 0, 0, 0, 394.85, 62.0932, 0, 0, 0, 0, 472.101, 30.2841, 0, 0, 0, 0, 519.814, -12.8854, 0, 0, 0, 0, 558.44, -58.3269, 0, 0, 0, 0, 587.977, -110.585, 0, 0, 0, 0, 608.425, -167.387 )
+"points": Vector2Array( 0, 0, 0, 0, 181.87, 39.2762, 0, 0, 0, 0, 202.227, 85.5418, 0, 0, 0, 0, 231.837, 133.658, 0, 0, 0, 0, 276.252, 187.326, 0, 0, 0, 0, 324.368, 226.189, 0, 0, 0, 0, 381.737, 257.65, 0, 0, 0, 0, 453.911, 272.455, 0, 0, 0, 0, 540.891, 274.305, 0, 0, 0, 0, 605.662, 259.5, 0, 0, 0, 0, 648.227, 228.04, 0, 0, 0, 0, 679.687, 189.177, 0, 0, 0, 0, 696.343, 126.255, 0, 0, 0, 0, 690.791, 52.2306, 0, 0, 0, 0, 661.181, -27.3461, 0, 0, 0, 0, 603.812, -86.566, 0, 0, 0, 0, 527.936, -134.682, 0, 0, 0, 0, 455.762, -153.188 )
 }
 
 [sub_resource type="Curve2D" id=2]
 
 bake_interval = 5.0
 _data = {
-"points": Vector2Array( 0, 0, 0, 0, -27.7561, -228.733, 0, 0, 0, 0, -9.57959, -167.387, 0, 0, 0, 0, 10.8691, -117.401, 0, 0, 0, 0, 40.4061, -67.4152, 0, 0, 0, 0, 67.671, -35.6061, 0, 0, 0, 0, 92.6639, -12.8854, 0, 0, 0, 0, 122.201, 7.56335, 0, 0, 0, 0, 158.554, 21.1958, 0, 0, 0, 0, 192.635, 25.7399, 0, 0, 0, 0, 226.716, 23.4679, 0, 0, 0, 0, 258.526, 12.1075, 0, 0, 0, 0, 288.062, -8.34119, 0, 0, 0, 0, 317.599, -37.8782, 0, 0, 0, 0, 335.776, -74.2314, 0, 0, 0, 0, 344.864, -121.945, 0, 0, 0, 0, 340.32, -167.387, 0, 0, 0, 0, 326.688, -224.188, 0, 0, 0, 0, 301.695, -274.174, 0, 0, 0, 0, 274.43, -326.432 )
+"points": Vector2Array( 0, 0, 0, 0, -27.7561, -228.733, 0, 0, 0, 0, -9.57959, -167.387, 0, 0, 0, 0, 13.785, -105.604, 0, 0, 0, 0, 47.0962, -57.4879, 0, 0, 0, 0, 87.8098, -22.3261, 0, 0, 0, 0, 135.926, 3.58264, 0, 0, 0, 0, 187.743, 14.6864, 0, 0, 0, 0, 237.71, 10.9852, 0, 0, 0, 0, 304.333, -3.81976, 0, 0, 0, 0, 367.254, -33.4297, 0, 0, 0, 0, 424.623, -77.8447, 0, 0, 0, 0, 476.44, -137.065, 0, 0, 0, 0, 506.05, -198.135, 0, 0, 0, 0, 524.557, -272.16 )
 }
 
 [node name="input_handler" type="Node"]
@@ -41,7 +41,7 @@ script/script = ExtResource( 4 )
 
 [node name="player_sprite" type="Sprite" parent="player"]
 
-transform/pos = Vector2( 89.899, 191.681 )
+transform/pos = Vector2( 65.8409, 300.868 )
 texture = ExtResource( 5 )
 script/script = ExtResource( 6 )
 
@@ -52,14 +52,14 @@ script/script = ExtResource( 7 )
 [node name="Path2D" type="Path2D" parent="player/ground"]
 
 editor/display_folded = true
-transform/pos = Vector2( -181.253, 481.277 )
+transform/pos = Vector2( 462.763, 274.007 )
 curve = SubResource( 1 )
 script/script = ExtResource( 8 )
 
 [node name="PathFollow2D" type="PathFollow2D" parent="player/ground/Path2D"]
 
-transform/pos = Vector2( -9.57941, 18.9237 )
-transform/rot = -8.65256
+transform/pos = Vector2( 201.724, 55.2769 )
+transform/rot = -5.19429
 offset = 0.0
 h_offset = 0.0
 v_offset = 0.0
@@ -71,14 +71,14 @@ lookahead = 4.0
 [node name="Path2D1" type="Path2D" parent="player/ground"]
 
 editor/display_folded = true
-transform/pos = Vector2( 525.363, 553.983 )
+transform/pos = Vector2( 73.8113, 583.593 )
 curve = SubResource( 2 )
 script/script = ExtResource( 8 )
 
 [node name="PathFollow2D" type="PathFollow2D" parent="player/ground/Path2D1"]
 
-transform/pos = Vector2( 201.724, 55.2769 )
-transform/rot = -5.19433
+transform/pos = Vector2( -27.7561, -228.733 )
+transform/rot = -73.4958
 offset = 0.0
 h_offset = 0.0
 v_offset = 0.0
