@@ -1,14 +1,10 @@
-extends Node
+extends Polygon2D
+
+var pts
 
 func _ready():
-	pass
+	pts = []
 
-func check_if_on_ground(pos):
-	"""Checks all Polgyon2D children's points.
-	"""
-	var result
-	for child in self.get_children():
-		result = child.check_on_polygon(pos)
-		if(result.is_collision):
-			return result
-	return result
+func _draw():
+	for i in range(0, pts.size()-1):
+		draw_line(pts[i], pts[i+1], Color(255, 0, 0), 1)
