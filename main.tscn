@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=1]
+[gd_scene load_steps=11 format=1]
 
-[ext_resource path="res://Character.gd" type="Script" id=1]
-[ext_resource path="res://icon.png" type="Texture" id=2]
-[ext_resource path="res://src/ground/col_ground.gd" type="Script" id=3]
-[ext_resource path="res://src/ground/ground.gd" type="Script" id=4]
+[ext_resource path="res://src/input_handler/input_handler.gd" type="Script" id=1]
+[ext_resource path="res://player.gd" type="Script" id=2]
+[ext_resource path="res://icon.png" type="Texture" id=3]
+[ext_resource path="res://src/ground/col_ground.gd" type="Script" id=4]
+[ext_resource path="res://src/ground/ground.gd" type="Script" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -31,8 +32,13 @@ shader/shading_mode = 0
 
 [node name="main" type="Node"]
 
-[node name="Character" type="KinematicBody2D" parent="."]
+[node name="input_handler" type="Node" parent="."]
 
+script/script = ExtResource( 1 )
+
+[node name="player" type="KinematicBody2D" parent="input_handler"]
+
+editor/display_folded = true
 transform/pos = Vector2( -27.1321, 158.271 )
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
@@ -41,14 +47,14 @@ shapes/0/trigger = false
 collision/layers = 1
 collision/mask = 1
 collision/margin = 0.08
-script/script = ExtResource( 1 )
+script/script = ExtResource( 2 )
 
-[node name="Sprite" type="Sprite" parent="Character"]
+[node name="Sprite" type="Sprite" parent="input_handler/player"]
 
 transform/pos = Vector2( 172.767, 88.4243 )
-texture = ExtResource( 2 )
+texture = ExtResource( 3 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Character"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="input_handler/player"]
 
 transform/pos = Vector2( 173.904, 88.3277 )
 transform/scale = Vector2( 2.7018, 2.59789 )
@@ -56,8 +62,9 @@ shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="ground" type="StaticBody2D" parent="input_handler"]
 
+editor/display_folded = true
 input/pickable = false
 shapes/0/shape = SubResource( 2 )
 shapes/0/transform = Matrix32( 1, 0, 0, 1, -21.1028, 117.573 )
@@ -75,7 +82,7 @@ constant_angular_velocity = 0.0
 friction = 1.0
 bounce = 0.0
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="input_handler/ground"]
 
 material/material = SubResource( 5 )
 transform/pos = Vector2( -21.1028, 117.573 )
@@ -83,9 +90,9 @@ build_mode = 0
 polygon = Vector2Array( 269.522, 206.146, 401.522, 159.146, 451.595, 112.955, 493.801, 60.198, 549.572, 28.5439, 590.271, 21.0072, 630.969, 34.5732, 653.579, 73.7641, 653.579, 112.955, 602.329, 215.454, 480.235, 245.601, 356.633, 244.093, 260.163, 275.748, 231.524, 269.718, 222.48, 241.079, 228.509, 230.527 )
 shape_range = Vector2( 0, 2 )
 trigger = false
-script/script = ExtResource( 3 )
+script/script = ExtResource( 4 )
 
-[node name="Drawn_Polygon" type="Polygon2D" parent="StaticBody2D/CollisionPolygon2D"]
+[node name="Drawn_Polygon" type="Polygon2D" parent="input_handler/ground/CollisionPolygon2D"]
 
 polygon = Vector2Array(  )
 uv = Vector2Array(  )
@@ -98,6 +105,6 @@ texture/scale = Vector2( 1, 1 )
 texture/rotation = 0.0
 invert/enable = false
 invert/border = 100.0
-script/script = ExtResource( 4 )
+script/script = ExtResource( 5 )
 
 
