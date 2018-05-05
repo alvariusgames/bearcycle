@@ -11,7 +11,7 @@ config_version=3
 [application]
 
 config/name="Platformer"
-run/main_scene="pong.tscn"
+run/main_scene="res://scenes/level1.tscn"
 config/icon="res://icon.png"
 
 [display]
