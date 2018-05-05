@@ -22,13 +22,4 @@ public class Paddle : Area2D
             Position += new Vector2(0, MoveSpeed * delta);
         }
     }
-
-    public void OnAreaEntered(Area2D area)
-    {
-        if (area is Ball ball)
-        {
-            // Assign new direction
-            ball.direction = new Vector2(ballDir, (float)new Random().NextDouble() * 2 - 1).Normalized();
-        }
-    }
 }
