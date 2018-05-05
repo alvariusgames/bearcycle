@@ -10,7 +10,7 @@ config_version=3
 
 [application]
 
-config/name="Pong with C#"
+config/name="Platformer"
 run/main_scene="pong.tscn"
 config/icon="res://icon.png"
 

@@ -8,9 +8,6 @@ public class CeilingFloor : Area2D
 
     public void OnAreaEntered(Area2D area)
     {
-        if (area is Ball ball)
-        {
-            ball.direction += new Vector2(0, yDirection);
-        }
+
     }
 }

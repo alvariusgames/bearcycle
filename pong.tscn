@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Paddle.cs" type="Script" id=1]
+[ext_resource path="res://Player.cs" type="Script" id=1]
 [ext_resource path="res://right_pallete.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
@@ -23,7 +23,6 @@ angular_damp = 1.0
 audio_bus_override = false
 audio_bus_name = "Master"
 script = ExtResource( 1 )
-ballDir = 1
 
 [node name="sprite" type="Sprite" parent="right" index="0"]
 

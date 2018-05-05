@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pong with C#", "Pong with C#.csproj", "{4F9320CC-07E9-4CEA-AA42-A32C83303312}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platformer", "Platformer.csproj", "{4F9320CC-07E9-4CEA-AA42-A32C83303312}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
