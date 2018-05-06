@@ -15,7 +15,7 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="Player" type="KinematicBody2D" parent="." index="0"]
 
-position = Vector2( 192.433, 213.406 )
+position = Vector2( 153.982, 89.2513 )
 input_pickable = true
 collision_layer = 1
 collision_mask = 1
@@ -33,7 +33,7 @@ shape = SubResource( 1 )
 
 [node name="Platforms" type="Node2D" parent="." index="1"]
 
-[node name="Platform1" type="StaticBody2D" parent="Platforms" index="0"]
+[node name="Platform2" type="StaticBody2D" parent="Platforms" index="0"]
 
 input_pickable = false
 collision_layer = 1
@@ -43,13 +43,14 @@ constant_angular_velocity = 0.0
 friction = 1.0
 bounce = 0.0
 
-[node name="PlatformCollision" type="CollisionPolygon2D" parent="Platforms/Platform1" index="0"]
+[node name="PlatformCollision" type="CollisionPolygon2D" parent="Platforms/Platform2" index="0"]
 
+position = Vector2( -285.679, -38.0905 )
 build_mode = 0
-polygon = PoolVector2Array( 5.84862, 303.571, 109.237, 303.571, 137.805, 302.211, 167.733, 292.688, 188.139, 276.363, 207.184, 243.714, 216.707, 235.552, 231.671, 232.831, 239.833, 234.192, 242.554, 240.994, 243.914, 251.877, 243.914, 306.292, 249.356, 315.814, 257.518, 317.175, 271.122, 317.175, 442.529, 317.175, 477.898, 314.454, 506.466, 304.931, 543.196, 276.363, 567.683, 242.354, 581.287, 202.903, 584.008, 174.335, 584.008, 136.245, 570.404, 96.794, 548.638, 62.7847, 514.628, 39.6583, 473.817, 26.0546, 423.483, 23.3338, 412.6, 17.8923, 409.88, 11.0905, 412.6, -3.87364, 653.387, -3.87364, 652.026, 426.005, -52.6475, 427.365, -47.206, 20.6131, -37.6833, 11.0905, -24.0796, 8.36973, -19.9985, 13.8112, -15.9174, 24.6942, -15.9174, 35.5772, -15.9174, 280.445, -11.8362, 291.328, -3.674, 295.409 )
+polygon = PoolVector2Array( 354.104, 272.273, 403.078, 270.913, 433.006, 264.111, 468.376, 243.705, 492.863, 224.66, 524.151, 193.371, 521.43, 261.39, 699.639, 260.03, 741.811, 249.147, 769.018, 217.858, 781.262, 177.047, 778.541, 136.236, 762.217, 107.668, 733.649, 91.3433, 698.279, 75.0188, 698.279, 21.9643, 887.371, 26.0454, 873.767, 328.048, 277.923, 319.886, 282.005, 5.63977, 299.689, 4.27939, 292.888, 266.832 )
 script = ExtResource( 3 )
 
-[node name="VisiblePolygon" type="Polygon2D" parent="Platforms/Platform1/PlatformCollision" index="0"]
+[node name="VisiblePolygon" type="Polygon2D" parent="Platforms/Platform2/PlatformCollision" index="0"]
 
 polygon = PoolVector2Array(  )
 uv = PoolVector2Array(  )
