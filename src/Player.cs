@@ -9,6 +9,8 @@ public class Player : KinematicBody2D{
     // See `this.calculateForwardAngle()` for more information
     private Vector2 currentTravel = new Vector2(0,0);
     private Vector2 currentNormal = new Vector2(0,-1);
+    private Vector2 adjustedForwardAngle = new Vector2(1,0);
+    private Vector2 unadjustedForwardAngle = new Vector2(1,0);
     private const float GRAVITY  = 600.0f;
     private const float MAX_GRAVITY_SPEED = 300f;
     private const float MAX_FORWARD_ACCEL = 40f;
@@ -64,10 +66,10 @@ public class Player : KinematicBody2D{
            this.currentTravel = collision.Travel;
            this.currentNormal = collision.Normal;
            //Calculate the Forward movement
-           var forwardAngle = this.calculateForwardAngle();
+           this.calculateForwardAngle();
            if (Math.Abs(this.velocity.Length()) <= MAX_SPEED){
-                this.velocity.x += forwardAngle.x*forwardAccell;
-                this.velocity.y += forwardAngle.y*forwardAccell;
+                this.velocity.x += this.adjustedForwardAngle.x*forwardAccell;
+                this.velocity.y += this.adjustedForwardAngle.y*forwardAccell;
             }
             //Apply the friction effect
             this.velocity *= FRICTION_EFFECT;
@@ -85,23 +87,42 @@ public class Player : KinematicBody2D{
     /// The solution to this is to make the angle a bit "above" the traditional "forward".
     ///     - "above" is defined as the direction towards "Normal" (away from the platform)
     ///     - "above" is dependant the direction player is moving (AKA the angle of velocity)
-    private Vector2 calculateForwardAngle(){
+    private void calculateForwardAngle(){
         //Calculate the angle above foreward
         const float angleAbovePercent = 0.20f;
         var normalAngle = this.currentNormal.Normalized();
         var currentVelocityAngle = this.currentTravel.Normalized();
         var angleAbove = angleAbovePercent * currentVelocityAngle.AngleTo(normalAngle);
         //Apply the previously calculate "angleAbove" to the forward angle 
-        var unadjustedForwardAngle = normalAngle.Rotated((float)Math.PI / 2f).Normalized();
-        var adjustedForwardAngle = unadjustedForwardAngle.Rotated(angleAbove);
-        return adjustedForwardAngle;
+        this.unadjustedForwardAngle = normalAngle.Rotated((float)Math.PI / 2f).Normalized();
+        this.adjustedForwardAngle = unadjustedForwardAngle.Rotated(angleAbove);
     }
     private void applyPhysics(float delta){
         MoveAndSlide(linearVelocity: this.velocity);
     }
 
     private void updateSprite(float delta){
-        const float arbitraryConstant = 400;
-        this.sprite.Rotate(this.forwardAccell / arbitraryConstant);
+       if(this.forwardAccell >= 0){
+           this.sprite.SetFlipH(false);
+       }
+       else{
+           this.sprite.SetFlipH(true);
+       }
+       const float maxRadiansCanRotateInOneFrame=0.1f;
+       var spriteAngle = new Vector2((float)Math.Cos(this.sprite.GlobalRotation),
+                                     (float)Math.Sin(this.sprite.GlobalRotation));
+       var radiansNeededToRotateToForward = spriteAngle.AngleTo(this.unadjustedForwardAngle);
+       GD.Print(radiansNeededToRotateToForward);
+       if(Math.Abs(radiansNeededToRotateToForward) < maxRadiansCanRotateInOneFrame){
+            this.sprite.SetGlobalRotation(this.unadjustedForwardAngle.Angle());
+       }
+       else{
+          if (radiansNeededToRotateToForward < 0){
+            this.sprite.Rotate(-maxRadiansCanRotateInOneFrame);
+          }
+          else{
+            this.sprite.Rotate(maxRadiansCanRotateInOneFrame);
+          }
+       }
     }
 }

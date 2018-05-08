@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wheely", "Wheely.csproj", "{ABD7E83B-2C74-4EE5-AEE6-A13837EFEBCC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BearsOnATVs", "BearsOnATVs.csproj", "{ABD7E83B-2C74-4EE5-AEE6-A13837EFEBCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
