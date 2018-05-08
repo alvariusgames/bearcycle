@@ -15,7 +15,7 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="Player" type="KinematicBody2D" parent="." index="0"]
 
-position = Vector2( 40.9198, 323.644 )
+position = Vector2( 55.2395, 227.702 )
 input_pickable = true
 collision_layer = 1
 collision_mask = 1
@@ -31,8 +31,8 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="Collision" type="CollisionShape2D" parent="Player" index="1"]
 
-position = Vector2( 10.6463, 3.12479 )
-scale = Vector2( 2.43146, 2.40276 )
+position = Vector2( 9.03067, 1.52826 )
+scale = Vector2( 2.32495, 2.29751 )
 shape = SubResource( 1 )
 
 [node name="Platforms" type="StaticBody2D" parent="." index="1"]
@@ -47,9 +47,9 @@ bounce = 0.0
 
 [node name="PlatformCollision" type="CollisionPolygon2D" parent="Platforms" index="0"]
 
-position = Vector2( -243.013, 123.16 )
+position = Vector2( -435.14, 137.093 )
 build_mode = 0
-polygon = PoolVector2Array( 183.324, 299.951, 182.889, -100.055, 254.911, -100.055, 255.422, 227.607, 356.239, 229.473, 463.22, 213.282, 526.227, 171.755, 543.643, 152.278, 597.826, 230.466, 699.496, 230.466, 749.615, 216.413, 799.734, 176.317, 828.373, 123.068, 834.101, 68.9194, 821.213, 21.6643, 795.438, -16.999, 773.958, -37.0466, 743.887, -57.0942, 699.496, -71.4139, 772.526, -70.2485, 926.238, -26.3092, 1099.02, 317.816 )
+polygon = PoolVector2Array( 183.324, 299.951, -113.002, 294.632, 30.0995, -39.2729, 24.7994, 224.559, 383.03, 226.436, 540.092, 226.622, 619.426, 153.635, 646.4, 153.635, 713.04, 221.862, 830.454, 221.862, 868.534, 212.342, 912.961, 186.956, 939.934, 158.395, 962.148, 115.555, 1033.55, 115.555, 1302.12, 121.207, 1299.47, -82.8455, 1498.22, -82.8455, 1254.26, 346.605 )
 script = ExtResource( 3 )
 
 [node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision" index="0"]
