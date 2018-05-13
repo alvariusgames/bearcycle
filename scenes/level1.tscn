@@ -1,30 +1,15 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://src/Player.cs" type="Script" id=1]
 [ext_resource path="res://media/player.png" type="Texture" id=2]
 [ext_resource path="res://src/PlatformCollision.cs" type="Script" id=3]
 
-[sub_resource type="RectangleShape2D" id=4]
-
-custom_solver_bias = 0.0
-extents = Vector2( 47.5588, 10 )
-
-[sub_resource type="CircleShape2D" id=1]
-
-custom_solver_bias = 0.0
-radius = 12.1689
-
-[sub_resource type="CircleShape2D" id=5]
+[sub_resource type="CircleShape2D" id=2]
 
 custom_solver_bias = 0.0
 radius = 10.0
 
 [sub_resource type="RectangleShape2D" id=3]
-
-custom_solver_bias = 0.0
-extents = Vector2( 10, 35.3183 )
-
-[sub_resource type="RectangleShape2D" id=2]
 
 custom_solver_bias = 0.0
 extents = Vector2( 10, 10 )
@@ -33,11 +18,39 @@ extents = Vector2( 10, 10 )
 
 _sections_unfolded = [ "Transform" ]
 
-[node name="ATV" type="Node2D" parent="." index="0"]
+[node name="ATV" type="Node" parent="." index="0"]
 
-[node name="Body" type="RigidBody2D" parent="ATV" index="0"]
+[node name="BackWheel" type="KinematicBody2D" parent="ATV" index="0"]
 
-position = Vector2( 30, 230 )
+position = Vector2( 111.279, 172.133 )
+scale = Vector2( 0.971302, 0.959835 )
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+collision/safe_margin = 0.08
+script = ExtResource( 1 )
+_sections_unfolded = [ "Collision", "Pickable", "collision" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ATV/BackWheel" index="0"]
+
+scale = Vector2( 2.07795, 2.07795 )
+shape = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="ATV/BackWheel" index="1"]
+
+scale = Vector2( 0.453363, 0.453363 )
+texture = ExtResource( 2 )
+
+[node name="PinJoint2D" type="PinJoint2D" parent="ATV/BackWheel" index="2"]
+
+node_a = NodePath("..")
+node_b = NodePath("Body")
+bias = 0.0
+disable_collision = true
+softness = 0.0
+
+[node name="Body" type="RigidBody2D" parent="ATV/BackWheel/PinJoint2D" index="0"]
+
 input_pickable = false
 collision_layer = 1
 collision_mask = 1
@@ -57,73 +70,28 @@ linear_damp = -1.0
 angular_velocity = 0.0
 angular_damp = -1.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ATV/Body" index="0"]
+[node name="Polygon2D" type="Polygon2D" parent="ATV/BackWheel/PinJoint2D/Body" index="0"]
 
-position = Vector2( 44.8174, 0.712555 )
-scale = Vector2( 0.804402, 1 )
-shape = SubResource( 4 )
+position = Vector2( 29.2812, -0.595123 )
+scale = Vector2( 4.4091, 0.918752 )
+polygon = PoolVector2Array( 9.86512, -9.41782, -10.0121, -9.2505, -9.94319, 10.8252, 10.2441, 11.6617, 10.2096, -11.0908 )
+uv = PoolVector2Array(  )
+color = Color( 1, 1, 1, 1 )
+vertex_colors = PoolColorArray(  )
+offset = Vector2( 0, 0 )
+antialiased = false
+texture = null
+texture_offset = Vector2( 0, 0 )
+texture_scale = Vector2( 1, 1 )
+texture_rotation_degrees = 0.0
+invert_enable = false
+invert_border = 100.0
 
-[node name="FrontWheel" type="KinematicBody2D" parent="ATV" index="1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ATV/BackWheel/PinJoint2D/Body" index="1"]
 
-editor/display_folded = true
-position = Vector2( 109.368, 229.566 )
-input_pickable = true
-collision_layer = 1
-collision_mask = 1
-collision/safe_margin = 0.08
-script = ExtResource( 1 )
-
-[node name="Collision" type="CollisionShape2D" parent="ATV/FrontWheel" index="0"]
-
-scale = Vector2( 1.62637, 1.60717 )
-shape = SubResource( 1 )
-
-[node name="Sprite" type="Sprite" parent="ATV/FrontWheel" index="1"]
-
-scale = Vector2( 0.438217, 0.438217 )
-texture = ExtResource( 2 )
-
-[node name="BackWheel" type="KinematicBody2D" parent="ATV" index="2"]
-
-position = Vector2( 40.0672, 229.566 )
-scale = Vector2( 0.971302, 0.959835 )
-input_pickable = false
-collision_layer = 1
-collision_mask = 1
-collision/safe_margin = 0.08
-script = ExtResource( 1 )
-_sections_unfolded = [ "Collision", "Pickable", "collision" ]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ATV/BackWheel" index="0"]
-
-scale = Vector2( 2.07795, 2.07795 )
-shape = SubResource( 5 )
-
-[node name="Sprite" type="Sprite" parent="ATV/BackWheel" index="1"]
-
-scale = Vector2( 0.453363, 0.453363 )
-texture = ExtResource( 2 )
-
-[node name="BWtoBody" type="PinJoint2D" parent="ATV" index="3"]
-
-position = Vector2( 110, 230 )
-scale = Vector2( 0.321884, 0.318084 )
-node_a = NodePath("../BackWheel")
-node_b = NodePath("../Body")
-bias = 0.0
-disable_collision = true
-softness = 0.0
-
-[node name="FWtoBody" type="PinJoint2D" parent="ATV" index="4"]
-
-position = Vector2( 40, 230 )
-scale = Vector2( 0.34375, 0.34375 )
-node_a = NodePath("../FrontWheel")
-node_b = NodePath("../Body")
-bias = 0.0
-disable_collision = true
-softness = 0.0
-_sections_unfolded = [ "Material", "Pause", "Transform", "Visibility" ]
+position = Vector2( 29.2812, -0.595108 )
+scale = Vector2( 4.4091, 0.918752 )
+shape = SubResource( 3 )
 
 [node name="Platforms" type="StaticBody2D" parent="." index="1"]
 
@@ -140,7 +108,7 @@ bounce = 0.0
 
 position = Vector2( -588.53, -443.68 )
 build_mode = 0
-polygon = PoolVector2Array( 183.324, 299.951, -113.002, 294.632, 30.0995, -39.2729, 24.7994, 224.559, 383.03, 226.436, 540.092, 226.622, 619.426, 153.635, 646.4, 153.635, 713.04, 221.862, 830.454, 221.862, 868.534, 212.342, 912.961, 186.956, 939.934, 158.395, 962.148, 115.555, 1033.55, 115.555, 1302.12, 121.207, 1299.47, -82.8455, 1498.22, -82.8455, 1254.26, 346.605 )
+polygon = PoolVector2Array( 183.324, 299.951, -113.002, 294.632, 30.0995, -39.2729, 24.7994, 224.559, 383.03, 226.436, 540.092, 226.622, 713.04, 221.862, 773.597, 193.509, 830.454, 221.862, 868.534, 212.342, 912.961, 186.956, 939.934, 158.395, 962.148, 115.555, 1033.55, 115.555, 1302.12, 121.207, 1299.47, -82.8455, 1498.22, -82.8455, 1254.26, 346.605 )
 script = ExtResource( 3 )
 
 [node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision" index="0"]
@@ -158,100 +126,5 @@ texture_rotation_degrees = 0.0
 invert_enable = false
 invert_border = 100.0
 _sections_unfolded = [ "Pause" ]
-
-[node name="PinJoint2D" type="PinJoint2D" parent="." index="2"]
-
-position = Vector2( 503.605, 216.091 )
-node_a = NodePath("RigidBody2D")
-node_b = NodePath("R1")
-bias = 0.0
-disable_collision = true
-softness = 0.0
-
-[node name="RigidBody2D" type="RigidBody2D" parent="PinJoint2D" index="0"]
-
-position = Vector2( 19.1442, 2.35471 )
-input_pickable = false
-collision_layer = 1
-collision_mask = 1
-mode = 0
-mass = 1.0
-friction = 1.0
-bounce = 0.0
-gravity_scale = 1.0
-custom_integrator = false
-continuous_cd = 0
-contacts_reported = 0
-contact_monitor = false
-sleeping = false
-can_sleep = true
-linear_velocity = Vector2( 0, 0 )
-linear_damp = -1.0
-angular_velocity = 0.0
-angular_damp = -1.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PinJoint2D/RigidBody2D" index="0"]
-
-position = Vector2( -19.0383, -27.1976 )
-shape = SubResource( 3 )
-
-[node name="Polygon2D" type="Polygon2D" parent="PinJoint2D/RigidBody2D/CollisionShape2D" index="0"]
-
-polygon = PoolVector2Array( -10.1649, -35.6205, 10.8881, -35.9227, 9.37708, 34.9925, -10.1649, 34.8917 )
-uv = PoolVector2Array(  )
-color = Color( 1, 0, 0, 1 )
-vertex_colors = PoolColorArray(  )
-offset = Vector2( 0, 0 )
-antialiased = false
-texture = null
-texture_offset = Vector2( 0, 0 )
-texture_scale = Vector2( 1, 1 )
-texture_rotation_degrees = 0.0
-invert_enable = false
-invert_border = 100.0
-
-[node name="R1" type="RigidBody2D" parent="PinJoint2D" index="1"]
-
-position = Vector2( 19.1442, 2.35471 )
-input_pickable = false
-collision_layer = 1
-collision_mask = 1
-mode = 0
-mass = 1.0
-friction = 1.0
-bounce = 0.0
-gravity_scale = 1.0
-custom_integrator = false
-continuous_cd = 0
-contacts_reported = 0
-contact_monitor = false
-sleeping = false
-can_sleep = true
-linear_velocity = Vector2( 0, 0 )
-linear_damp = -1.0
-angular_velocity = 0.0
-angular_damp = -1.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PinJoint2D/R1" index="0"]
-
-position = Vector2( 7.64728, -1.71243 )
-scale = Vector2( 3.63388, 1 )
-shape = SubResource( 2 )
-
-[node name="Polygon2D" type="Polygon2D" parent="PinJoint2D/R1/CollisionShape2D" index="0"]
-
-position = Vector2( -0.110878, -0.503647 )
-polygon = PoolVector2Array( -9.78043, -9.32954, 10.1504, -9.73248, 10.0949, 10.1117, -9.83588, 10.2124 )
-uv = PoolVector2Array(  )
-color = Color( 1, 1, 1, 1 )
-vertex_colors = PoolColorArray(  )
-offset = Vector2( 0, 0 )
-antialiased = false
-texture = null
-texture_offset = Vector2( 0, 0 )
-texture_scale = Vector2( 1, 1 )
-texture_rotation_degrees = 0.0
-invert_enable = false
-invert_border = 100.0
 
 
