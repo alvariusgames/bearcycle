@@ -10,9 +10,9 @@ config_version=3
 
 [application]
 
-config/name="BearsOnATVs"
+config/name="Wheely"
 run/main_scene="res://scenes/level1.tscn"
-config/icon="res://media/icon.png"
+config/icon="res://media/player.png"
 
 [display]
 

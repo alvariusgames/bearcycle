@@ -6,8 +6,8 @@
     <ProjectGuid>{ABD7E83B-2C74-4EE5-AEE6-A13837EFEBCC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <OutputPath>.mono/temp/bin/$(Configuration)</OutputPath>
-    <RootNamespace>BearsOnATVs</RootNamespace>
-    <AssemblyName>BearsOnATVs</AssemblyName>
+    <RootNamespace>Wheely</RootNamespace>
+    <AssemblyName>Wheely</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <BaseIntermediateOutputPath>.mono/temp/obj</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)/$(Configuration)</IntermediateOutputPath>
