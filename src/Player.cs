@@ -15,7 +15,7 @@ public class Player : KinematicBody2D{
     private const float MAX_GRAVITY_SPEED = 300f;
     private const float MAX_FORWARD_ACCEL = 40f;
     private const float MAX_BACKWARD_ACCEL = - MAX_FORWARD_ACCEL;
-    private const float MAX_SPEED = 500f;
+    private const float MAX_SPEED = 300f;
     private const float FORWARD_ACCEL_UNIT = 1.5f;
     private const float DECELL_EFFECT = 0.9f;
     private const float FRICTION_EFFECT = 0.9f;
@@ -108,22 +108,21 @@ public class Player : KinematicBody2D{
        else{
            this.sprite.SetFlipH(true);
        }
-       const float lowerCutoff = 0.001f;
-       const float midCutoff = 0.5f;
+       const float maxRadiansCanRotateInOneFrame=0.1f;
        var spriteAngle = new Vector2((float)Math.Cos(this.sprite.GlobalRotation),
                                      (float)Math.Sin(this.sprite.GlobalRotation));
        var radiansNeededToRotateToForward = spriteAngle.AngleTo(this.unadjustedForwardAngle);
-
-       this.sprite.Rotate(radiansNeededToRotateToForward / 4);
-/*       GD.Print(radiansNeededToRotateToForward);
-       if(Math.Abs(radiansNeededToRotateToForward) < lowerCutoff){
+       GD.Print(radiansNeededToRotateToForward);
+       if(Math.Abs(radiansNeededToRotateToForward) < maxRadiansCanRotateInOneFrame){
             this.sprite.SetGlobalRotation(this.unadjustedForwardAngle.Angle());
        }
-       else if(Math.Abs(radiansNeededToRotateToForward) < midCutoff){
-            this.sprite.Rotate(radiansNeededToRotateToForward / 4);
-       }
        else{
-           this.sprite.Rotate(radiansNeededToRotateToForward / 20);
-       }*/
+          if (radiansNeededToRotateToForward < 0){
+            this.sprite.Rotate(-maxRadiansCanRotateInOneFrame);
+          }
+          else{
+            this.sprite.Rotate(maxRadiansCanRotateInOneFrame);
+          }
+       }
     }
 }
