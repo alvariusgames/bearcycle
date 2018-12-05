@@ -50,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="scenes\ATV.cs" />
+    <Compile Include="scenes\Body.cs" />
     <Compile Include="src\PlatformCollision.cs" />
     <Compile Include="src\Player.cs" />
   </ItemGroup>
