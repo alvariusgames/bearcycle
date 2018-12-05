@@ -9,6 +9,7 @@ public class ATV : Node2D
 
     public Player FrontWheel;
     public Player BackWheel;
+    public float BodyLength;
 
     public override void _Ready()
     {
@@ -19,6 +20,9 @@ public class ATV : Node2D
                 this.BackWheel = (Player)child;
             }
         }
+        this.BodyLength = this.FrontWheel.Position.DistanceTo(
+            this.BackWheel.Position);
+        //GD.Print(this.BodyLength);
         // Called every time the node is added to the scene.
         // Initialization here
         
@@ -27,7 +31,8 @@ public class ATV : Node2D
     public override void _Process(float delta)
     {
         //Do physics for a joint between frontwheel and backwheel
-        GD.Print(this.FrontWheel.Position);
+        
+
     }
 //        // Called every frame. Delta is time since last frame.
 //        // Update game logic here.
