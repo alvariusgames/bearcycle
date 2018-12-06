@@ -4,6 +4,7 @@ using System;
 public class Player : KinematicBody2D{
     public Vector2 velocity = new Vector2(0,0);
     public Sprite sprite;
+    public CollisionShape2D collisionShape2D;
     private float forwardAccell = 0f;
     //The below 2 vars auto update, & can be used to calculate all info about "forward"
     // See `this.calculateForwardAngle()` for more information
@@ -23,10 +24,15 @@ public class Player : KinematicBody2D{
             var child = this.GetChild(i);
             if(child is Sprite){
                 this.sprite = (Sprite)child;
-                return;
+            }
+            if(child is CollisionShape2D){
+                this.collisionShape2D = (CollisionShape2D)child;
             }
         }
-        throw new Exception("No Sprite found as Child of Player");
+    }
+
+    public Vector2 getCenter(){
+        return this.collisionShape2D.GetGlobalPosition();
     }
 
     public override void _PhysicsProcess(float delta){

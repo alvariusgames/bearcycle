@@ -16,12 +16,13 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="ATV" type="Node2D" parent="." index="0"]
 
-position = Vector2( 50.4212, 318.948 )
+position = Vector2( 55.5357, 310.131 )
 script = ExtResource( 1 )
 
 [node name="FrontWheel" type="KinematicBody2D" parent="ATV" index="0"]
 
-position = Vector2( 33.5514, -0.567398 )
+position = Vector2( 19.5987, 0.500695 )
+scale = Vector2( 0.449839, 0.449839 )
 input_pickable = true
 collision_layer = 1
 collision_mask = 1
@@ -30,15 +31,15 @@ script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="ATV/FrontWheel" index="0"]
 
-position = Vector2( 2.26469, 1.31337 )
-scale = Vector2( 0.342427, 0.342427 )
+position = Vector2( 1.90122, -0.550384 )
+scale = Vector2( 0.758414, 0.758414 )
 texture = ExtResource( 3 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="Collision" type="CollisionShape2D" parent="ATV/FrontWheel" index="1"]
 
-position = Vector2( 2.32071, 1.28775 )
-scale = Vector2( 1.12074, 1.11832 )
+position = Vector2( 2.26027, -0.168106 )
+scale = Vector2( 2.61779, 2.61213 )
 shape = SubResource( 1 )
 
 [node name="BackWheel" type="KinematicBody2D" parent="ATV" index="1"]
@@ -75,7 +76,7 @@ bounce = 0.0
 
 [node name="PlatformCollision" type="CollisionPolygon2D" parent="Platforms" index="0"]
 
-position = Vector2( -243.013, 124.592 )
+position = Vector2( -240.97, 115.397 )
 build_mode = 0
 polygon = PoolVector2Array( 183.324, 299.951, 182.889, -100.055, 254.911, -100.055, 255.422, 227.607, 488.692, 227.607, 591.822, 169.903, 591.822, 225.151, 710.913, 225.151, 738.341, 220.929, 766.139, 213.614, 791.498, 201.422, 809.054, 186.304, 829.767, 155.427, 845.334, 125.07, 862.098, 81.9612, 866.888, 61.0692, 867.949, 41.7332, 865.314, 25.6585, 860.571, 15.5788, 853.192, 7.93676, 840.016, 1.61227, 825.786, -0.495888, 811.029, -1.28645, 792.846, -1.28645, 792.984, -26.7587, 926.238, -26.3092, 929.123, 301.802 )
 script = ExtResource( 4 )
