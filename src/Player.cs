@@ -32,7 +32,7 @@ public class Player : KinematicBody2D{
     }
 
     public Vector2 getCenter(){
-        return this.collisionShape2D.GetGlobalPosition();
+        return this.GetGlobalPosition();
     }
 
     public override void _PhysicsProcess(float delta){

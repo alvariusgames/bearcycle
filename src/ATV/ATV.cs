@@ -35,17 +35,12 @@ public class ATV : Node2D
         var bcenter = this.BackWheel.getCenter();
         var fBodyEndCoord = fcenter - ((fcenter - bcenter).Normalized()) * this.BodyLength;
         var bBodyEndCoor = bcenter - ((bcenter - fcenter).Normalized()) * this.BodyLength;
-        var fwheelVToApply = (fcenter - bBodyEndCoor);
-        this.FrontWheel.velocity.x -= fwheelVToApply.x * 2f;
-        this.FrontWheel.velocity.y -= fwheelVToApply.y * 2f;
-        var bwheelVToApply = (bcenter - fBodyEndCoord);
-        this.BackWheel.velocity.x -= bwheelVToApply.x * 2f;
-        this.BackWheel.velocity.y -= bwheelVToApply.y * 2f;
-        
-
-        GD.Print(fwheelVToApply);
-        GD.Print(bwheelVToApply);
-        GD.Print("-----");
+        GD.Print(this.FrontWheel.GetGlobalPosition());
+        GD.Print(fcenter);
+        GD.Print(bBodyEndCoor);
+        GD.Print("----");
+        this.FrontWheel.SetGlobalPosition(bBodyEndCoor);
+        this.BackWheel.SetGlobalPosition(fBodyEndCoord);
     }
 //        // Called every frame. Delta is time since last frame.
 //        // Update game logic here.
