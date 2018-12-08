@@ -17,3 +17,5 @@ public class PlatformCollision : CollisionPolygon2D{
         throw new Exception("PlatformCollison must have visible Polygon2D Child");
     }
 }
+
+

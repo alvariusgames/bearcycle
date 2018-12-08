@@ -45,4 +45,3 @@ private void applyPhysics(float delta){
 //    }
 }
 
-

@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Player : KinematicBody2D{
+public class Wheel : KinematicBody2D{
     public Vector2 velocity = new Vector2(0,0);
     public Sprite sprite;
     public CollisionShape2D collisionShape2D;

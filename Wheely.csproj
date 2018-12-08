@@ -50,10 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\ATV\ATV.cs" />
-    <Compile Include="src\Bear.cs" />
-    <Compile Include="src\PlatformCollision.cs" />
-    <Compile Include="src\Player.cs" />
+    <Compile Include="src\Platforms\PlatformCollision.cs" />
+    <Compile Include="src\Player\ATV.cs" />
+    <Compile Include="src\Player\Bear.cs" />
+    <Compile Include="src\Player\Player.cs" />
+    <Compile Include="src\Player\Wheel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -8,8 +8,8 @@ public class ATV : Node2D
     // private int a = 2;
     // private string b = "textvar";
     public enum State {withBear=0, withoutBear=1 };
-    public Player FrontWheel;
-    public Player BackWheel;
+    public Wheel FrontWheel;
+    public Wheel BackWheel;
     public Bear Bear;
     public State activeState = ATV.State.withBear;
     public float BodyLength;
@@ -18,9 +18,9 @@ public class ATV : Node2D
     {
         foreach(Node2D child in this.GetChildren()){
             if(child.Name.Equals("FrontWheel")){
-                this.FrontWheel = (Player)child;}
+                this.FrontWheel = (Wheel)child;}
             else if(child.Name.Equals("BackWheel")){
-                this.BackWheel = (Player)child;}
+                this.BackWheel = (Wheel)child;}
             else if(child.Name.Equals("Bear")){
                 this.Bear = (Bear)child;}
         }
@@ -62,3 +62,5 @@ public class ATV : Node2D
         GD.Print("----");
     }
 }
+
+
