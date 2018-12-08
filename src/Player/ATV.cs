@@ -1,17 +1,16 @@
 using Godot;
 using System;
 
+public enum ATVState {WithBear, WithoutBear}
 
-public class ATV : Node2D
-{
+public class ATV : Node2D {
     // Member variables here, example:
     // private int a = 2;
     // private string b = "textvar";
-    public enum State {withBear=0, withoutBear=1 };
+    public ATVState ActiveState {get; set;}
     public Wheel FrontWheel;
     public Wheel BackWheel;
     public Bear Bear;
-    public State activeState = ATV.State.withBear;
     public float BodyLength;
 
     public override void _Ready()
@@ -31,11 +30,32 @@ public class ATV : Node2D
         // Initialization here
         
     }
-    public override void _Process(float delta) {
+
+    public void UpdateState(float delta){
+
+    }
+
+    public void ReactStateless(float delta){
         this.holdWheelsTogether(delta);
-        if(this.activeState == ATV.State.withBear){
-            this.moveBearToCenter(delta);
+    }
+
+    public void ReactToState(float delta){
+        switch(this.ActiveState){
+            case ATVState.WithBear:
+                moveBearToCenter(delta);
+                break;
+            case ATVState.WithoutBear:
+                this.FrontWheel.SetActiveState(WheelState.LOCKED, 99);
+                this.BackWheel.SetActiveState(WheelState.LOCKED, 99);
+                break;
+            default:
+                throw new Exception("ATV must have state");
         }
+    }
+    public override void _Process(float delta) {
+        this.UpdateState(delta);
+        this.ReactStateless(delta);
+        this.ReactToState(delta);
     }
     private void holdWheelsTogether(float delta){
         //Do physics for a joint between frontwheel and backwheel

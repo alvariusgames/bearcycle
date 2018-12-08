@@ -1,7 +1,13 @@
 using Godot;
 using System;
 
-public class Wheel : KinematicBody2D{
+public enum WheelState {
+    ACCELERATING,
+    DECELERATING,
+    IDLING,
+    LOCKED}
+
+public class Wheel : FSMKinematicBody2D<WheelState>{
     public Vector2 velocity = new Vector2(0,0);
     public Sprite sprite;
     public CollisionShape2D collisionShape2D;
@@ -31,10 +37,17 @@ public class Wheel : KinematicBody2D{
         }
     }
 
-    public override void _PhysicsProcess(float delta){
+    public override void UpdateState(float delta){
         this.reactToInput(delta);
+    }
+
+    public override void ReactStateless(float delta){
         this.processPhysics(delta);
         this.applyPhysics(delta);
+ 
+    }
+
+    public override void ReactToState(float delta){
         this.updateSprite(delta);
     }
 

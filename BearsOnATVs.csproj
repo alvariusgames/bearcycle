@@ -55,6 +55,10 @@
     <Compile Include="src\Player\Bear.cs" />
     <Compile Include="src\Player\Player.cs" />
     <Compile Include="src\Player\Wheel.cs" />
+    <Compile Include="src\FSMComponents\IFSMObject.cs" />
+    <Compile Include="src\FSMComponents\FSMObject.cs" />
+    <Compile Include="src\FSMComponents\FSMNode2D.cs" />
+    <Compile Include="src\FSMComponents\FSMKinematicBody2D.cs" /> 
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
