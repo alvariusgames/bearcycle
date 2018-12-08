@@ -31,10 +31,6 @@ public class Player : KinematicBody2D{
         }
     }
 
-    public Vector2 getCenter(){
-        return this.GetGlobalPosition();
-    }
-
     public override void _PhysicsProcess(float delta){
         this.reactToInput(delta);
         this.processPhysics(delta);
@@ -66,6 +62,9 @@ public class Player : KinematicBody2D{
         var numCollisions = this.GetSlideCount();
         for(int i = 0; i < this.GetSlideCount(); i++){
            var collision = this.GetSlideCollision(i);
+           //if(collision.Collider is Bear){
+               //continue;
+           //}
            //Save relevant collision info to this
            this.currentTravel = collision.Travel;
            this.currentNormal = collision.Normal;
