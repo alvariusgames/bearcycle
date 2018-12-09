@@ -23,8 +23,8 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     private const float MAX_SPEED = 300f;
     private const float FORWARD_ACCEL_UNIT = 1.5f;
     private const float DECELL_EFFECT = 0.9f;
-    private const float LOCKING_EFFECT = 0.8f;
-    private const float FRICTION_EFFECT = 0.9f;
+    private const float LOCKING_EFFECT = 0.9f;
+    private const float DEFAULT_FRICTION_EFFECT = 0.9f;
 
     public override void _Ready(){
         for(int i = 0; i<this.GetChildCount(); i++){
@@ -49,27 +49,27 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                 if(this.forwardAccell <= MAX_FORWARD_ACCEL){  
                     this.forwardAccell += FORWARD_ACCEL_UNIT;
                 }
-                this.reactToCollisions(delta);
+                reactToSlideCollision(delta);
                 break;
             case WheelState.DECELERATING:
                 if(this.forwardAccell >= MAX_BACKWARD_ACCEL){
                     this.forwardAccell -= FORWARD_ACCEL_UNIT;
                 }
-                this.reactToCollisions(delta);
+                reactToSlideCollision(delta);
                 break;
             case WheelState.IDLING:
                 this.forwardAccell *= DECELL_EFFECT;
-                this.reactToCollisions(delta);
+                reactToSlideCollision(delta);
                 break;
             case WheelState.LOCKED:
                 this.forwardAccell *= LOCKING_EFFECT;
+                reactToSlideCollision(delta, 0.4f);
                 break;
             default:
                 throw new Exception("Wheel invalid state.");
         }
     }
     public override void ReactStateless(float delta){
-        GD.Print(this.ActiveState);
         this.applyGravity(delta);
         MoveAndSlide(linearVelocity: this.velocity);
         this.updateSprite(delta);
@@ -91,7 +91,8 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
         }
     }
 
-    private void reactToCollisions(float delta){
+    private void reactToSlideCollision(float delta,
+                                       float frictionEffect = DEFAULT_FRICTION_EFFECT){
         //Process Collision with platforms
         var numCollisions = this.GetSlideCount();
         for(int i = 0; i < this.GetSlideCount(); i++){
@@ -109,7 +110,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                 this.velocity.y += forwardAngle.y*forwardAccell;
             }
             //Apply the friction effect
-            this.velocity *= FRICTION_EFFECT;
+            this.velocity *= frictionEffect;
             break; //For now, only process 1 collision (buggy with multiple atm)
         }
     }

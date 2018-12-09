@@ -1,17 +1,19 @@
 using Godot;
 using System;
 
-public class Bear : KinematicBody2D
-{
+public enum BearState {ON_ATV, HIT, RECOVERING_ATV};
+
+public class Bear : FSMKinematicBody2D<BearState>{
     // Member variables here, example:
     // private int a = 2;
     // private string b = "textvar";
     private const float GRAVITY  = 600.0f;
     private const float MAX_GRAVITY_SPEED = 300f;
-    private const float FRICTION_EFFECT = 0.8f;
+    private const float FRICTION_EFFECT = 0.9f;
 
     public Vector2 velocity = new Vector2(0,0);
     public Sprite Sprite;
+    private ATV ATV;
 
     public override void _Ready()
     {
@@ -20,28 +22,49 @@ public class Bear : KinematicBody2D
                 this.Sprite = (Sprite)child;
             }
         }
-
-    }
-public override void _PhysicsProcess(float delta){
-        this.processPhysics(delta);
-        this.applyPhysics(delta);
+        this.ATV = (ATV)this.GetParent();
     }
 
-private void processPhysics(float delta){
-        if(this.velocity.y <= MAX_GRAVITY_SPEED){        
+    public override void UpdateState(float delta){
+    
+    }
+
+    public override void ReactToState(float delta){
+        KinematicCollision2D collision;
+        switch(this.ActiveState){
+            case BearState.HIT:
+                this.applyGravity(delta);
+                this.MoveAndSlide(this.velocity);
+                for(var i=0; i<this.GetSlideCount(); i++){
+                    this.velocity.x *= 0.8f;
+                    this.velocity.y *= 0.8f;
+                    collision = this.GetSlideCollision(i);
+                    if(this.velocity.Length() <= 50 && collision.Normal.y < 0){
+                        this.SetActiveState(BearState.RECOVERING_ATV, 100);
+                    }
+                }
+                break;
+            case BearState.ON_ATV:
+                this.velocity.x = 0;
+                this.velocity.y = 0;
+                collision = this.MoveAndCollide(this.velocity);
+                if(collision != null){
+                    this.SetActiveState(BearState.HIT, 100);
+                    this.ATV.ThrowBearOffATV();
+                }
+                break;
+            case BearState.RECOVERING_ATV:
+                GD.Print("Recovering!");
+                break;
+        }
+    }
+
+    public override void ReactStateless(float delta){
+   }
+
+    private void applyGravity(float delta){
+        if(this.velocity.y < MAX_GRAVITY_SPEED){
             this.velocity.y += delta * GRAVITY;
         }
-        this.velocity *= FRICTION_EFFECT;
     }
-
-private void applyPhysics(float delta){
-    this.MoveAndSlide(linearVelocity: this.velocity);
 }
-//    public override void _Process(float delta)
-//    {
-//        // Called every frame. Delta is time since last frame.
-//        // Update game logic here.
-//        
-//    }
-}
-

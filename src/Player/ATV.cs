@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public enum ATVState {WithBear, WithoutBear}
+public enum ATVState {WITH_BEAR, WITHOUT_BEAR}
 
 public class ATV : FSMNode2D<ATVState> {
     // Member variables here, example:
@@ -9,6 +9,8 @@ public class ATV : FSMNode2D<ATVState> {
     // private string b = "textvar";
     public Wheel FrontWheel;
     public Wheel BackWheel;
+    private Vector2 bodyCenter;
+    private Vector2 BackToFrontVector;
     public Bear Bear;
     public float BodyLength;
 
@@ -24,14 +26,21 @@ public class ATV : FSMNode2D<ATVState> {
         }
         this.BodyLength = this.FrontWheel.Position.DistanceTo(
             this.BackWheel.Position);
-        //GD.Print(this.BodyLength);
-        // Called every time the node is added to the scene.
-        // Initialization here
-        
+    }
+
+    public void ThrowBearOffATV(float throwSpeed = 100){
+        this.SetActiveState(ATVState.WITHOUT_BEAR, 100);
+        if(this.FrontWheel.velocity.x >= 0f){
+            this.Bear.velocity += (new Vector2(throwSpeed,0)).Rotated(1.25f * (float)Math.PI);
+        }
+        else{
+            this.Bear.velocity -= (new Vector2(throwSpeed, 0)).Rotated(0.75f * (float)Math.PI);
+        }
+        //this.Bear.velocity += throwDirection * throwSpeed;
     }
 
     public override void UpdateState(float delta){
-
+        
     }
 
     public override void ReactStateless(float delta){
@@ -40,12 +49,14 @@ public class ATV : FSMNode2D<ATVState> {
 
     public override void ReactToState(float delta){
         switch(this.ActiveState){
-            case ATVState.WithBear:
+            case ATVState.WITH_BEAR:
+                this.FrontWheel.UnsetActiveState(200);
+                this.BackWheel.UnsetActiveState(200);
                 moveBearToCenter(delta);
                 break;
-            case ATVState.WithoutBear:
-                this.FrontWheel.SetActiveState(WheelState.LOCKED, 99);
-                this.BackWheel.SetActiveState(WheelState.LOCKED, 99);
+            case ATVState.WITHOUT_BEAR:
+                this.FrontWheel.SetActiveState(WheelState.LOCKED, 200);
+                this.BackWheel.SetActiveState(WheelState.LOCKED, 200);
                 break;
             default:
                 throw new Exception("ATV must have state");

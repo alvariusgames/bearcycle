@@ -10,7 +10,7 @@ public abstract class FSMKinematicBody2D<StateEnum> : KinematicBody2D, IFSMObjec
     private SortedList<int, StateEnum> prevActiveStates = new SortedList<int, StateEnum>();
 
     public void SetActiveState(StateEnum ActiveState, int priority){
-        if(priority >= ActiveStatePriority){
+        if(priority >= this.ActiveStatePriority){
             this.prevActiveStates[this.ActiveStatePriority] = this.ActiveState;
             this.ActiveState = ActiveState;
             this.ActiveStatePriority = priority;
@@ -18,15 +18,13 @@ public abstract class FSMKinematicBody2D<StateEnum> : KinematicBody2D, IFSMObjec
     }
 
     public void UnsetActiveState(int priority){
-        if(priority >= ActiveStatePriority){
+        if(priority == this.ActiveStatePriority){
             var keys = this.prevActiveStates.Keys.ToList();
             keys.Sort();
             var highestPriorityKey = keys[keys.Count - 1];
             this.ActiveState = this.prevActiveStates[highestPriorityKey];
             this.ActiveStatePriority = highestPriorityKey;}
-        if(this.prevActiveStates.ContainsKey(priority)){
-            this.prevActiveStates.Remove(priority);}
-    }
+        }
 
    public abstract void UpdateState(float delta);
     public abstract void ReactStateless(float delta);
