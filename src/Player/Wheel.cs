@@ -23,6 +23,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     private const float MAX_SPEED = 300f;
     private const float FORWARD_ACCEL_UNIT = 1.5f;
     private const float DECELL_EFFECT = 0.9f;
+    private const float LOCKING_EFFECT = 0.8f;
     private const float FRICTION_EFFECT = 0.9f;
 
     public override void _Ready(){
@@ -35,42 +36,62 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                 this.collisionShape2D = (CollisionShape2D)child;
             }
         }
+        this.SetActiveState(WheelState.IDLING, 100);
     }
 
     public override void UpdateState(float delta){
         this.reactToInput(delta);
     }
 
-    public override void ReactStateless(float delta){
-        this.processPhysics(delta);
-        this.applyPhysics(delta);
- 
-    }
-
     public override void ReactToState(float delta){
+        switch(this.ActiveState){
+            case WheelState.ACCELERATING:
+                if(this.forwardAccell <= MAX_FORWARD_ACCEL){  
+                    this.forwardAccell += FORWARD_ACCEL_UNIT;
+                }
+                this.reactToCollisions(delta);
+                break;
+            case WheelState.DECELERATING:
+                if(this.forwardAccell >= MAX_BACKWARD_ACCEL){
+                    this.forwardAccell -= FORWARD_ACCEL_UNIT;
+                }
+                this.reactToCollisions(delta);
+                break;
+            case WheelState.IDLING:
+                this.forwardAccell *= DECELL_EFFECT;
+                this.reactToCollisions(delta);
+                break;
+            case WheelState.LOCKED:
+                this.forwardAccell *= LOCKING_EFFECT;
+                break;
+            default:
+                throw new Exception("Wheel invalid state.");
+        }
+    }
+    public override void ReactStateless(float delta){
+        GD.Print(this.ActiveState);
+        this.applyGravity(delta);
+        MoveAndSlide(linearVelocity: this.velocity);
         this.updateSprite(delta);
     }
 
     private void reactToInput(float delta){
-        if (Input.IsActionPressed("ui_left") &&
-        (this.forwardAccell >= MAX_BACKWARD_ACCEL)){
-            this.forwardAccell -= FORWARD_ACCEL_UNIT;
-        }
-        else if (Input.IsActionPressed("ui_right") &&
-        (this.forwardAccell <= MAX_FORWARD_ACCEL)) {       
-            this.forwardAccell += FORWARD_ACCEL_UNIT;
-        }
+        if (Input.IsActionPressed("ui_left")){
+            this.SetActiveState(WheelState.DECELERATING, 100);}
+        else if (Input.IsActionPressed("ui_right")){
+            this.SetActiveState(WheelState.ACCELERATING, 100);}
         else{
-            this.forwardAccell *= DECELL_EFFECT;
+            this.SetActiveState(WheelState.IDLING, 100);
         }
     }
 
-    private void processPhysics(float delta){
-        //Process Gravity
-        if(this.velocity.y <= MAX_GRAVITY_SPEED){        
+    private void applyGravity(float delta){
+        if(this.velocity.y < MAX_GRAVITY_SPEED){
             this.velocity.y += delta * GRAVITY;
         }
+    }
 
+    private void reactToCollisions(float delta){
         //Process Collision with platforms
         var numCollisions = this.GetSlideCount();
         for(int i = 0; i < this.GetSlideCount(); i++){
@@ -113,9 +134,6 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
         var unadjustedForwardAngle = normalAngle.Rotated((float)Math.PI / 2f).Normalized();
         var adjustedForwardAngle = unadjustedForwardAngle.Rotated(angleAbove);
         return adjustedForwardAngle;
-    }
-    private void applyPhysics(float delta){
-        MoveAndSlide(linearVelocity: this.velocity);
     }
 
     private void updateSprite(float delta){

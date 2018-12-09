@@ -3,11 +3,10 @@ using System;
 
 public enum ATVState {WithBear, WithoutBear}
 
-public class ATV : Node2D {
+public class ATV : FSMNode2D<ATVState> {
     // Member variables here, example:
     // private int a = 2;
     // private string b = "textvar";
-    public ATVState ActiveState {get; set;}
     public Wheel FrontWheel;
     public Wheel BackWheel;
     public Bear Bear;
@@ -31,15 +30,15 @@ public class ATV : Node2D {
         
     }
 
-    public void UpdateState(float delta){
+    public override void UpdateState(float delta){
 
     }
 
-    public void ReactStateless(float delta){
+    public override void ReactStateless(float delta){
         this.holdWheelsTogether(delta);
     }
 
-    public void ReactToState(float delta){
+    public override void ReactToState(float delta){
         switch(this.ActiveState){
             case ATVState.WithBear:
                 moveBearToCenter(delta);
@@ -52,11 +51,7 @@ public class ATV : Node2D {
                 throw new Exception("ATV must have state");
         }
     }
-    public override void _Process(float delta) {
-        this.UpdateState(delta);
-        this.ReactStateless(delta);
-        this.ReactToState(delta);
-    }
+
     private void holdWheelsTogether(float delta){
         //Do physics for a joint between frontwheel and backwheel
         var fcenter = this.FrontWheel.GetGlobalPosition();
@@ -77,9 +72,6 @@ public class ATV : Node2D {
         //this.Bear.SetGlobalPosition(bearCenter / 90);
         this.Bear.Sprite.SetGlobalRotation((fcenter - bcenter).Angle());
         this.Bear.SetGlobalPosition(bearCenter);
-
-        GD.Print(angleUpCenter);
-        GD.Print("----");
     }
 }
 
