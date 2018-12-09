@@ -14,7 +14,7 @@ public class Bear : FSMKinematicBody2D<BearState>{
     public Vector2 velocity = new Vector2(0,0);
     public Sprite Sprite;
     private ATV ATV;
-    private int recoveryTimer = 0;
+    private float recoveryTimer = 0;
 
     public override void _Ready()
     {
@@ -32,54 +32,42 @@ public class Bear : FSMKinematicBody2D<BearState>{
 
     public override void ReactToState(float delta){
         KinematicCollision2D collision;
+        float numSecondsToWait;
         switch(this.ActiveState){
             case BearState.HIT:
+                GD.Print(this.velocity);
+                this.recoveryTimer += delta;
+                numSecondsToWait = 1.5f;
                 this.applyGravity(delta);
                 this.MoveAndSlide(this.velocity);
                 for(var i=0; i<this.GetSlideCount(); i++){
                     this.velocity.x *= 0.8f;
                     this.velocity.y *= 0.8f;
                     collision = this.GetSlideCollision(i);
-                    if(this.velocity.Length() <= 50 && collision.Normal.y < 0){
+                    if((this.velocity.Length() <= 50 && collision.Normal.y < 0) ||
+                       (this.recoveryTimer > numSecondsToWait)){
                         this.SetActiveState(BearState.RECOVERING_ATV, 100);
-                        recoveryTimer = 0;
-                    }
-                }
+                        recoveryTimer = 0;}}
                 break;
             case BearState.ON_ATV:
+                GD.Print("---");
+                GD.Print(this.velocity);
                 this.velocity.x = 0;
                 this.velocity.y = 0;
                 collision = this.MoveAndCollide(this.velocity);
                 if(collision != null){
                     this.SetActiveState(BearState.HIT, 100);
                     this.ATV.ThrowBearOffATV();
+                    this.recoveryTimer = 0;
                 }
                 break;
             case BearState.RECOVERING_ATV:
-                recoveryTimer++;
-                if(recoveryTimer > 60){
-                    this.applyGravity(delta);
-                    var angleToATV = (this.ATV.GetGlobalCenterOfTwoWheels() - this.GetGlobalPosition()).Normalized();
-                    var advanceSpeed = 0f;
-                    if(advanceSpeed < 30){
-                        advanceSpeed++;
-                    }
-
-                    this.MoveAndSlide(this.velocity);
-                    this.velocity += angleToATV * advanceSpeed;
-                    for(var i=0; i< this.GetSlideCount(); i++){
-                        collision = this.GetSlideCollision(i);
-                        var forwardOnCurve = collision.Normal.Rotated(0.5f * (float)Math.PI);
-                        var onCurveTowardsATV = forwardOnCurve.AngleTo(angleToATV);
-                        if(Math.Abs(onCurveTowardsATV) < Math.PI / 2f){
-                            var angleAbove = 0.2f * forwardOnCurve.AngleTo(collision.Normal);
-                            var angleToApply = forwardOnCurve.Rotated(angleAbove);
-                            this.velocity = this.velocity.Length() * angleToApply;}
-                        else {
-                            var angleAbove = 0.2f * (-forwardOnCurve).AngleTo(collision.Normal);
-                            var angleToApply = (-forwardOnCurve).Rotated(angleAbove);
-                            this.velocity = this.velocity.Length() * angleToApply;}
-                    }
+                this.applyGravity(delta);
+                this.recoveryTimer += delta;
+                numSecondsToWait = 1.5f;
+                if(this.recoveryTimer >= numSecondsToWait){
+                    this.ATV.ReattachBear();
+                    this.recoveryTimer = 0;
                 }
                 break;
             default:

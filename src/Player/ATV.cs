@@ -18,6 +18,20 @@ public class ATV : FSMNode2D<ATVState> {
         return (this.FrontWheel.GetGlobalPosition() + this.BackWheel.GetGlobalPosition()) / 2f;
     }
 
+    public void ReattachBear(){
+        this.Bear.SetActiveState(BearState.ON_ATV, 100);
+        this.moveBearToCenter(-1);
+        if(this.Bear.MoveAndCollide(new Vector2(0,0)) != null){
+            var swizzle = this.FrontWheel.GetGlobalPosition();
+            this.FrontWheel.SetGlobalPosition(this.BackWheel.GetGlobalPosition());
+            this.BackWheel.SetGlobalPosition(swizzle);
+        }
+        this.SetActiveState(ATVState.WITH_BEAR, 100);
+        this.FrontWheel.ResetActiveState(WheelState.IDLING);
+        this.BackWheel.ResetActiveState(WheelState.IDLING);
+
+    }
+
     public override void _Ready()
     {
         foreach(Node2D child in this.GetChildren()){
@@ -54,8 +68,6 @@ public class ATV : FSMNode2D<ATVState> {
     public override void ReactToState(float delta){
         switch(this.ActiveState){
             case ATVState.WITH_BEAR:
-                this.FrontWheel.UnsetActiveState(200);
-                this.BackWheel.UnsetActiveState(200);
                 moveBearToCenter(delta);
                 break;
             case ATVState.WITHOUT_BEAR:

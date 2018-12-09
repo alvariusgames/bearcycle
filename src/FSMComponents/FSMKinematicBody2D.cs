@@ -17,15 +17,10 @@ public abstract class FSMKinematicBody2D<StateEnum> : KinematicBody2D, IFSMObjec
         }
     }
 
-    public void UnsetActiveState(int priority){
-        if(priority == this.ActiveStatePriority){
-            var keys = this.prevActiveStates.Keys.ToList();
-            keys.Sort();
-            var highestPriorityKey = keys[keys.Count - 1];
-            this.ActiveState = this.prevActiveStates[highestPriorityKey];
-            this.ActiveStatePriority = highestPriorityKey;}
-        }
-
+    public void ResetActiveState(StateEnum ActiveState){
+        this.ActiveStatePriority = 0;
+        this.ActiveState = ActiveState;
+    }
    public abstract void UpdateState(float delta);
     public abstract void ReactStateless(float delta);
     public abstract void ReactToState(float delta);
