@@ -14,6 +14,10 @@ public class ATV : FSMNode2D<ATVState> {
     public Bear Bear;
     public float BodyLength;
 
+    public Vector2 GetGlobalCenterOfTwoWheels(){
+        return (this.FrontWheel.GetGlobalPosition() + this.BackWheel.GetGlobalPosition()) / 2f;
+    }
+
     public override void _Ready()
     {
         foreach(Node2D child in this.GetChildren()){

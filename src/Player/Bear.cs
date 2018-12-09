@@ -14,6 +14,7 @@ public class Bear : FSMKinematicBody2D<BearState>{
     public Vector2 velocity = new Vector2(0,0);
     public Sprite Sprite;
     private ATV ATV;
+    private int recoveryTimer = 0;
 
     public override void _Ready()
     {
@@ -41,6 +42,7 @@ public class Bear : FSMKinematicBody2D<BearState>{
                     collision = this.GetSlideCollision(i);
                     if(this.velocity.Length() <= 50 && collision.Normal.y < 0){
                         this.SetActiveState(BearState.RECOVERING_ATV, 100);
+                        recoveryTimer = 0;
                     }
                 }
                 break;
@@ -54,8 +56,34 @@ public class Bear : FSMKinematicBody2D<BearState>{
                 }
                 break;
             case BearState.RECOVERING_ATV:
-                GD.Print("Recovering!");
+                recoveryTimer++;
+                if(recoveryTimer > 60){
+                    this.applyGravity(delta);
+                    var angleToATV = (this.ATV.GetGlobalCenterOfTwoWheels() - this.GetGlobalPosition()).Normalized();
+                    var advanceSpeed = 0f;
+                    if(advanceSpeed < 30){
+                        advanceSpeed++;
+                    }
+
+                    this.MoveAndSlide(this.velocity);
+                    this.velocity += angleToATV * advanceSpeed;
+                    for(var i=0; i< this.GetSlideCount(); i++){
+                        collision = this.GetSlideCollision(i);
+                        var forwardOnCurve = collision.Normal.Rotated(0.5f * (float)Math.PI);
+                        var onCurveTowardsATV = forwardOnCurve.AngleTo(angleToATV);
+                        if(Math.Abs(onCurveTowardsATV) < Math.PI / 2f){
+                            var angleAbove = 0.2f * forwardOnCurve.AngleTo(collision.Normal);
+                            var angleToApply = forwardOnCurve.Rotated(angleAbove);
+                            this.velocity = this.velocity.Length() * angleToApply;}
+                        else {
+                            var angleAbove = 0.2f * (-forwardOnCurve).AngleTo(collision.Normal);
+                            var angleToApply = (-forwardOnCurve).Rotated(angleAbove);
+                            this.velocity = this.velocity.Length() * angleToApply;}
+                    }
+                }
                 break;
+            default:
+                throw new Exception("Bear must have a valid state");
         }
     }
 
