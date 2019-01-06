@@ -19,18 +19,24 @@ public class ATV : FSMNode2D<ATVState> {
     }
 
     public void ReattachBear(){
-            this.Bear.SetActiveState(BearState.ON_ATV, 100);
-            this.moveBearToCenter(-1);
-            if(this.Bear.MoveAndCollide(new Vector2(0,0)) != null){
-                var swizzle = this.FrontWheel.GetGlobalPosition();
-                this.FrontWheel.SetGlobalPosition(this.BackWheel.GetGlobalPosition());
-                this.BackWheel.SetGlobalPosition(swizzle);}
+        this.Bear.SetActiveState(BearState.ON_ATV, 100);
+        this.moveBearToCenter(-1);
+        if(this.Bear.MoveAndCollide(new Vector2(0,0)) != null){
+            //if ATV appears to be flipped over, flip it over
+            var swizzle = this.FrontWheel.GetGlobalPosition();
+            this.FrontWheel.SetGlobalPosition(this.BackWheel.GetGlobalPosition());
+            this.BackWheel.SetGlobalPosition(swizzle);
+            this.moveBearToCenter(-1);}
+        if(this.Bear.MoveAndCollide(new Vector2(0,0)) != null){
+            //ATV attempted to be flipped, but failed
+            GD.Print("Failed to flip!");
+            
+        }
             this.SetActiveState(ATVState.WITH_BEAR, 100);
             this.FrontWheel.ResetActiveState(WheelState.IDLING);
             this.BackWheel.ResetActiveState(WheelState.IDLING);}
 
-    public override void _Ready()
-    {
+    public override void _Ready(){
         foreach(Node2D child in this.GetChildren()){
             if(child.Name.Equals("FrontWheel")){
                 this.FrontWheel = (Wheel)child;}
@@ -51,7 +57,6 @@ public class ATV : FSMNode2D<ATVState> {
         else{
             this.Bear.velocity -= (new Vector2(throwSpeed, 0)).Rotated(0.75f * (float)Math.PI);
         }
-        //this.Bear.velocity += throwDirection * throwSpeed;
     }
 
     public override void UpdateState(float delta){
