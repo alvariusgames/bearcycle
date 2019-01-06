@@ -41,12 +41,7 @@ public abstract class FSMKinematicBody2D<StateEnum> : KinematicBody2D, IFSMObjec
     private void handleTimers(float delta){
         for(var i=0; i<this.timersSet.Count(); i++){
             var timerAttr = this.timersSet.ElementAt(i);
-            GD.Print(timerAttr.secondsCount);
-            GD.Print(delta);
-            GD.Print(timerAttr.secondsCount + delta);
             timerAttr.secondsCount = timerAttr.secondsCount + delta;
-            GD.Print(timerAttr.secondsCount);
-            GD.Print("---");
             if(timerAttr.secondsCount >= timerAttr.numSecondsToTriggerStateChange){
                 if(timerAttr.callResetState){
                     GD.Print("Resetting active state");

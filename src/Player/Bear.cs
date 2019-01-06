@@ -12,15 +12,15 @@ public class Bear : FSMKinematicBody2D<BearState>{
     private const float FRICTION_EFFECT = 0.9f;
 
     public Vector2 velocity = new Vector2(0,0);
-    public Sprite Sprite;
+    public AnimatedSprite Sprite;
     private ATV ATV;
     private float recoveryTimer = 0;
 
     public override void _Ready()
     {
         foreach(var child in this.GetChildren()){
-            if(child is Sprite){
-                this.Sprite = (Sprite)child;
+            if(child is AnimatedSprite){
+                this.Sprite = (AnimatedSprite)child;
             }
         }
         this.ATV = (ATV)this.GetParent();
@@ -46,12 +46,13 @@ public class Bear : FSMKinematicBody2D<BearState>{
                 for(var i=0; i<this.GetSlideCount(); i++){
                     this.velocity.x *= 0.8f;
                     this.velocity.y *= 0.8f;
-                    collision = this.GetSlideCollision(i);
-                }
+                    collision = this.GetSlideCollision(i);}
                 break;
             case BearState.HIT_SEQ_INVINC:
                 this.velocity.x = 0f;
                 this.velocity.y = 0f;
+                this.ATV.ReattachBear();
+                this.Sprite.Play("invinc");
                 break;
             case BearState.ON_ATV:
                 this.velocity.x = 0;
@@ -62,6 +63,7 @@ public class Bear : FSMKinematicBody2D<BearState>{
                     this.ATV.ThrowBearOffATV();
                     this.recoveryTimer = 0;
                 }
+                this.Sprite.Play("default");
                 break;
             default:
                 throw new Exception("Bear must have a valid state");

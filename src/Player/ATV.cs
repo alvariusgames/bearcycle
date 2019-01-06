@@ -19,18 +19,15 @@ public class ATV : FSMNode2D<ATVState> {
     }
 
     public void ReattachBear(){
-        this.Bear.SetActiveState(BearState.ON_ATV, 100);
-        this.moveBearToCenter(-1);
-        if(this.Bear.MoveAndCollide(new Vector2(0,0)) != null){
-            var swizzle = this.FrontWheel.GetGlobalPosition();
-            this.FrontWheel.SetGlobalPosition(this.BackWheel.GetGlobalPosition());
-            this.BackWheel.SetGlobalPosition(swizzle);
-        }
-        this.SetActiveState(ATVState.WITH_BEAR, 100);
-        this.FrontWheel.ResetActiveState(WheelState.IDLING);
-        this.BackWheel.ResetActiveState(WheelState.IDLING);
-
-    }
+            this.Bear.SetActiveState(BearState.ON_ATV, 100);
+            this.moveBearToCenter(-1);
+            if(this.Bear.MoveAndCollide(new Vector2(0,0)) != null){
+                var swizzle = this.FrontWheel.GetGlobalPosition();
+                this.FrontWheel.SetGlobalPosition(this.BackWheel.GetGlobalPosition());
+                this.BackWheel.SetGlobalPosition(swizzle);}
+            this.SetActiveState(ATVState.WITH_BEAR, 100);
+            this.FrontWheel.ResetActiveState(WheelState.IDLING);
+            this.BackWheel.ResetActiveState(WheelState.IDLING);}
 
     public override void _Ready()
     {
