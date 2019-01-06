@@ -97,23 +97,17 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
         var numCollisions = this.GetSlideCount();
         for(int i = 0; i < this.GetSlideCount(); i++){
            var collision = this.GetSlideCollision(i);
-           //if(collision.Collider is Bear){
-               //continue;
-           //}
-           //Save relevant collision info to this
-           this.currentTravel = collision.Travel;
-           this.currentNormal = collision.Normal;
-           //Calculate the Forward movement
-           var forwardAngle = this.calculateForwardAngle();
-           if (Math.Abs(this.velocity.Length()) <= MAX_SPEED){
-                this.velocity.x += forwardAngle.x*forwardAccell;
-                this.velocity.y += forwardAngle.y*forwardAccell;
-            }
-            //Apply the friction effect
-            this.velocity *= frictionEffect;
-            break; //For now, only process 1 collision (buggy with multiple atm)
-        }
-    }
+           if(collision.Collider is Platforms){
+                //Save relevant collision info to this
+                this.currentTravel = collision.Travel;
+                this.currentNormal = collision.Normal;
+                //Calculate the Forward movement
+                var forwardAngle = this.calculateForwardAngle();
+                if (Math.Abs(this.velocity.Length()) <= MAX_SPEED){
+                        this.velocity.x += forwardAngle.x*forwardAccell;
+                        this.velocity.y += forwardAngle.y*forwardAccell;}
+                    //Apply the friction effect
+                    this.velocity *= frictionEffect;}}}
 
     /// "Normal" is defined as the direction "up" away from the platform.
     ///     - this is calculated automatically for us for each kinematic collision

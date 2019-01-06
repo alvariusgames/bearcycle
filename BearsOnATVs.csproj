@@ -51,13 +51,15 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Platforms\PlatformCollision.cs" />
+    <Compile Include="src\Platforms\Platforms.cs" />
+    <Compile Include="src\Platforms\SafetyCheckpoint.cs" />
     <Compile Include="src\Player\ATV.cs" />
     <Compile Include="src\Player\Bear.cs" />
     <Compile Include="src\Player\Player.cs" />
     <Compile Include="src\Player\Wheel.cs" />
     <Compile Include="src\FSMComponents\IFSMObject.cs" />
     <Compile Include="src\FSMComponents\FSMNode2D.cs" />
-    <Compile Include="src\FSMComponents\FSMKinematicBody2D.cs" /> 
+    <Compile Include="src\FSMComponents\FSMKinematicBody2D.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
