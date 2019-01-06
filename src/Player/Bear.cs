@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public enum BearState {ON_ATV, HIT, RECOVERING_ATV};
+public enum BearState {ON_ATV, TRIGGER_HIT_SEQUENCE, HIT_SEQ_FALL_OFF, HIT_SEQ_INVINC};
 
 public class Bear : FSMKinematicBody2D<BearState>{
     // Member variables here, example:
@@ -33,40 +33,33 @@ public class Bear : FSMKinematicBody2D<BearState>{
     public override void ReactToState(float delta){
         KinematicCollision2D collision;
         float numSecondsToWait;
+        GD.Print(this.ActiveState);
         switch(this.ActiveState){
-            case BearState.HIT:
-                GD.Print(this.velocity);
-                this.recoveryTimer += delta;
-                numSecondsToWait = 1.5f;
+            case BearState.TRIGGER_HIT_SEQUENCE:
+                this.SetActiveState(BearState.HIT_SEQ_FALL_OFF, 100);
+                this.SetActiveStateAfter(BearState.HIT_SEQ_INVINC, 200, 1.5f);
+                this.ResetActiveStateAfter(BearState.ON_ATV, 4.5f);
+                break;
+            case BearState.HIT_SEQ_FALL_OFF:
                 this.applyGravity(delta);
                 this.MoveAndSlide(this.velocity);
                 for(var i=0; i<this.GetSlideCount(); i++){
                     this.velocity.x *= 0.8f;
                     this.velocity.y *= 0.8f;
                     collision = this.GetSlideCollision(i);
-                    if((this.velocity.Length() <= 50 && collision.Normal.y < 0) ||
-                       (this.recoveryTimer > numSecondsToWait)){
-                        this.SetActiveState(BearState.RECOVERING_ATV, 100);
-                        recoveryTimer = 0;}}
+                }
+                break;
+            case BearState.HIT_SEQ_INVINC:
+                this.velocity.x = 0f;
+                this.velocity.y = 0f;
                 break;
             case BearState.ON_ATV:
-                GD.Print("---");
-                GD.Print(this.velocity);
                 this.velocity.x = 0;
                 this.velocity.y = 0;
                 collision = this.MoveAndCollide(this.velocity);
                 if(collision != null){
-                    this.SetActiveState(BearState.HIT, 100);
+                    this.SetActiveState(BearState.TRIGGER_HIT_SEQUENCE, 100);
                     this.ATV.ThrowBearOffATV();
-                    this.recoveryTimer = 0;
-                }
-                break;
-            case BearState.RECOVERING_ATV:
-                this.applyGravity(delta);
-                this.recoveryTimer += delta;
-                numSecondsToWait = 1.5f;
-                if(this.recoveryTimer >= numSecondsToWait){
-                    this.ATV.ReattachBear();
                     this.recoveryTimer = 0;
                 }
                 break;

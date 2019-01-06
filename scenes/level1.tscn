@@ -64,7 +64,7 @@ _sections_unfolded = [ "Collision" ]
 
 [node name="Sprite" type="Sprite" parent="Player/ATV/BackWheel" index="0"]
 
-position = Vector2( 1.90122, -0.550384 )
+position = Vector2( 4.12424, -0.550384 )
 scale = Vector2( 0.758414, 0.758414 )
 texture = ExtResource( 5 )
 _sections_unfolded = [ "Transform" ]

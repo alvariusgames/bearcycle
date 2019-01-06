@@ -15,29 +15,46 @@ public abstract class FSMKinematicBody2D<StateEnum> : KinematicBody2D, IFSMObjec
         this.ActiveStatePriority = 0;
         this.ActiveState = ActiveState;}
 
-    private struct TimerAttrs{
+    private class TimerAttrs{
         public float secondsCount;
         public float numSecondsToTriggerStateChange;
         public StateEnum stateToSetTo;
         public int priorityToSetTo;
+        public Boolean callResetState;
         public TimerAttrs(float numSecondsToTriggerStateChange,
                           StateEnum stateToSetTo,
-                          int priorityToSetTo){
+                          int priorityToSetTo,
+                          bool callResetState){
             this.secondsCount = 0f;
             this.numSecondsToTriggerStateChange = numSecondsToTriggerStateChange;
             this.stateToSetTo = stateToSetTo;
-            this.priorityToSetTo = priorityToSetTo;}}
+            this.priorityToSetTo = priorityToSetTo;
+            this.callResetState = callResetState;}}
     private List<TimerAttrs> timersSet = new List<TimerAttrs>();
 
     public void SetActiveStateAfter(StateEnum ActiveState, int priority, float numSeconds){
-        this.timersSet.Add(new TimerAttrs(numSeconds, ActiveState, priority));}
+        this.timersSet.Add(new TimerAttrs(numSeconds, ActiveState, priority, false));}
+    
+    public void ResetActiveStateAfter(StateEnum ActiveState, float numSeconds){
+        this.timersSet.Add(new TimerAttrs(numSeconds, ActiveState, -1, true));}
 
     private void handleTimers(float delta){
         for(var i=0; i<this.timersSet.Count(); i++){
-            var timerAttr = this.timersSet[i];
-            timerAttr.secondsCount += delta;
+            var timerAttr = this.timersSet.ElementAt(i);
+            GD.Print(timerAttr.secondsCount);
+            GD.Print(delta);
+            GD.Print(timerAttr.secondsCount + delta);
+            timerAttr.secondsCount = timerAttr.secondsCount + delta;
+            GD.Print(timerAttr.secondsCount);
+            GD.Print("---");
             if(timerAttr.secondsCount >= timerAttr.numSecondsToTriggerStateChange){
-                this.SetActiveState(timerAttr.stateToSetTo, timerAttr.priorityToSetTo);
+                if(timerAttr.callResetState){
+                    GD.Print("Resetting active state");
+                    this.ResetActiveState(timerAttr.stateToSetTo);
+                } else {
+                    GD.Print("Setting active state");
+                    this.SetActiveState(timerAttr.stateToSetTo, timerAttr.priorityToSetTo);
+                }
                 this.timersSet.Remove(timerAttr);}}}
 
     public abstract void UpdateState(float delta);
