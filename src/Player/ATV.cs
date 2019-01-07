@@ -12,10 +12,30 @@ public class ATV : FSMNode2D<ATVState> {
     private Vector2 bodyCenter;
     private Vector2 BackToFrontVector;
     public Bear Bear;
+    public Player Player;
     public float BodyLength;
+    public override void _Ready(){
+        foreach(Node2D child in this.GetChildren()){
+            if(child.Name.Equals("FrontWheel")){
+                this.FrontWheel = (Wheel)child;}
+            else if(child.Name.Equals("BackWheel")){
+                this.BackWheel = (Wheel)child;}
+            else if(child.Name.Equals("Bear")){
+                this.Bear = (Bear)child;}}
+        this.Player = (Player)this.GetParent();
+        this.BodyLength = this.FrontWheel.Position.DistanceTo(
+            this.BackWheel.Position);}
 
     public Vector2 GetGlobalCenterOfTwoWheels(){
-        return (this.FrontWheel.GetGlobalPosition() + this.BackWheel.GetGlobalPosition()) / 2f;
+        return (this.FrontWheel.GetGlobalPosition() + this.BackWheel.GetGlobalPosition()) / 2f;}
+    
+    public void SetGlobalCenterOfTwoWheels(Vector2 globalCenter, float verticalOffset=30){
+        this.BackWheel.SetGlobalPosition(new Vector2(globalCenter.x, 
+                                                     globalCenter.y - verticalOffset));
+        this.FrontWheel.SetGlobalPosition(new Vector2(globalCenter.x + this.BodyLength,
+                                                   globalCenter.y - verticalOffset));
+        this.holdWheelsTogether(-1);
+        this.moveBearToCenter(-1);
     }
 
     public void ReattachBear(){
@@ -30,24 +50,11 @@ public class ATV : FSMNode2D<ATVState> {
         if(this.Bear.MoveAndCollide(new Vector2(0,0)) != null){
             //ATV attempted to be flipped, but failed
             GD.Print("Failed to flip!");
-            
+            this.Player.GoToMostRecentSafetyCheckPoint();
         }
             this.SetActiveState(ATVState.WITH_BEAR, 100);
             this.FrontWheel.ResetActiveState(WheelState.IDLING);
             this.BackWheel.ResetActiveState(WheelState.IDLING);}
-
-    public override void _Ready(){
-        foreach(Node2D child in this.GetChildren()){
-            if(child.Name.Equals("FrontWheel")){
-                this.FrontWheel = (Wheel)child;}
-            else if(child.Name.Equals("BackWheel")){
-                this.BackWheel = (Wheel)child;}
-            else if(child.Name.Equals("Bear")){
-                this.Bear = (Bear)child;}
-        }
-        this.BodyLength = this.FrontWheel.Position.DistanceTo(
-            this.BackWheel.Position);
-    }
 
     public void ThrowBearOffATV(float throwSpeed = 100){
         this.SetActiveState(ATVState.WITHOUT_BEAR, 100);

@@ -11,6 +11,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     public Vector2 velocity = new Vector2(0,0);
     public Sprite sprite;
     public CollisionShape2D collisionShape2D;
+    public ATV ATV;
     private float forwardAccell = 0f;
     //The below 2 vars auto update, & can be used to calculate all info about "forward"
     // See `this.calculateForwardAngle()` for more information
@@ -36,6 +37,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                 this.collisionShape2D = (CollisionShape2D)child;
             }
         }
+        this.ATV = (ATV)this.GetParent();
         this.SetActiveState(WheelState.IDLING, 100);
     }
 
@@ -107,7 +109,10 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                         this.velocity.x += forwardAngle.x*forwardAccell;
                         this.velocity.y += forwardAngle.y*forwardAccell;}
                     //Apply the friction effect
-                    this.velocity *= frictionEffect;}}}
+                    this.velocity *= frictionEffect;}
+            else if(collision.Collider is IConsumeable){
+                ((IConsumeable)collision.Collider).consume(this);
+            }}}
 
     /// "Normal" is defined as the direction "up" away from the platform.
     ///     - this is calculated automatically for us for each kinematic collision

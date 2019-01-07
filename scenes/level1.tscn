@@ -9,7 +9,7 @@
 [ext_resource path="res://media/normalBear.png" type="Texture" id=7]
 [ext_resource path="res://media/invincibleBear.png" type="Texture" id=8]
 [ext_resource path="res://media/hitBear.png" type="Texture" id=9]
-[ext_resource path="res://src/Platforms/SafetyCheckpoint.cs" type="Script" id=10]
+[ext_resource path="res://src/Items/SafetyCheckPoint.cs" type="Script" id=10]
 [ext_resource path="res://src/Platforms/Platforms.cs" type="Script" id=11]
 [ext_resource path="res://src/Platforms/PlatformCollision.cs" type="Script" id=12]
 
@@ -54,7 +54,6 @@ script = ExtResource( 1 )
 
 [node name="ATV" type="Node2D" parent="Player" index="0"]
 
-editor/display_folded = true
 position = Vector2( 5.11925, 16.4953 )
 script = ExtResource( 2 )
 
@@ -158,23 +157,22 @@ editor_draw_limits = false
 editor_draw_drag_margin = false
 _sections_unfolded = [ "Smoothing" ]
 
-[node name="Area2D" type="Area2D" parent="." index="1"]
+[node name="SafetyCheckPoint1" type="KinematicBody2D" parent="." index="1"]
 
 position = Vector2( 404.555, 351.115 )
 scale = Vector2( 1, 2.09352 )
 input_pickable = true
-gravity_vec = Vector2( 0, 1 )
-gravity = 98.0
-linear_damp = 0.1
-angular_damp = 1.0
-audio_bus_override = false
-audio_bus_name = "Master"
-
-[node name="SafetyCheckPoint" type="CollisionShape2D" parent="Area2D" index="0"]
-
-position = Vector2( -255.813, -2.80901 )
-shape = SubResource( 3 )
+collision_layer = 1
+collision_mask = 1
+collision/safe_margin = 0.08
 script = ExtResource( 10 )
+_sections_unfolded = [ "Collision", "Pause" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SafetyCheckPoint1" index="0"]
+
+position = Vector2( -163.191, -7.72478 )
+shape = SubResource( 3 )
+_sections_unfolded = [ "Pause" ]
 
 [node name="Platforms" type="StaticBody2D" parent="." index="2"]
 
