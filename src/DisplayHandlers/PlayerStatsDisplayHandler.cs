@@ -41,6 +41,8 @@ public sealed class PlayerStatsDisplayHandler : Node2D
      public override void _Process(float delta) {
         var cameraPosition = this.activeCamera.GetCameraScreenCenter();
         var visibleRectangle = this.activeCamera.GetViewport().GetVisibleRect();
-        this.testLabel.SetGlobalPosition(cameraPosition); 
+        var vecToSet = new Vector2(cameraPosition.x + (visibleRectangle.Size.x / 2.5f),
+                                   cameraPosition.y - (visibleRectangle.Size.y / 2.5f));
+        this.testLabel.SetGlobalPosition(vecToSet); 
      }
  }
