@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\DisplayHandlers\PlayerStatsDisplayHandler.cs" />
     <Compile Include="src\Items\IConsumeable.cs" />
     <Compile Include="src\Items\SafetyCheckPoint.cs" />
     <Compile Include="src\Platforms\PlatformCollision.cs" />
