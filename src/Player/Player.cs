@@ -40,11 +40,11 @@ public class Player : FSMNode2D<PlayerState>
     }
 
     public void EatFood(IFood food){
-        this.UpdateHealth(food.Calories * HEALTH_TO_CALORIES_RATIO);
-        this.TotalCalories += food.Calories;
-        this.foodEaten.Add(food);
-        this.lastFoodEaten = food;
-    }
+        if(!food.isConsumed){
+            this.UpdateHealth(food.Calories * HEALTH_TO_CALORIES_RATIO);
+            this.TotalCalories += food.Calories;
+            this.foodEaten.Add(food);
+            this.lastFoodEaten = food;}}
 
     public void UpdateHealth(float signedHealthUnits){
         var tentativeHealth = this.CurrentHealth + signedHealthUnits;

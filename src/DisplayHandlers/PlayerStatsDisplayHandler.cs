@@ -13,6 +13,7 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
     private Label totalCaloriesLabel;
     private IFood lastFoodDisplayed;
     private Label lastFoodEatenDisplayLabel;
+    private Container lastFoodEatenContainer;
     private Sprite lastFoodEatenDisplaySprite;
 
     private void setPlayerAndCameraMembers(){                                   
@@ -36,6 +37,7 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
             if((child is Label) && (child.GetName().ToLower().Contains("total"))){
                 this.totalCaloriesLabel= (Label)child;}
             if(child is Container){
+                this.lastFoodEatenContainer = (Container)child;
                 foreach(Node subChild in child.GetChildren()){
                     if(subChild is Label){
                         this.lastFoodEatenDisplayLabel = (Label)subChild;
@@ -55,6 +57,7 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
     public override void UpdateState(float delta){
         if(this.activePlayer.lastFoodEaten != this.lastFoodDisplayed){
             GD.Print("Update state...");
+            this.ForceClearAllTimers();
             this.ResetActiveState(PlayerStatsDisplayHandlerState.TRIGGER_SHOW_LAST_FOOD);
         }
     }
@@ -65,9 +68,21 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
                 GD.Print("Triggering showing of last food");
                 this.lastFoodDisplayed = this.activePlayer.lastFoodEaten;
                 this.SetActiveState(PlayerStatsDisplayHandlerState.SHOW_LAST_FOOD, 200);
-                this.ResetActiveStateAfter(PlayerStatsDisplayHandlerState.END_SHOW_LAST_FOOD, 2.5f);
+                this.SetActiveStateAfter(PlayerStatsDisplayHandlerState.END_SHOW_LAST_FOOD, 300, 2.5f);
                 this.lastFoodEatenDisplayLabel.Text = this.activePlayer.lastFoodEaten.Name;
-                this.lastFoodEatenDisplaySprite.Texture = this.activePlayer.lastFoodEaten.Sprite.Texture;
+
+                var targetSize = this.lastFoodEatenContainer.GetRect().Size;
+                var texture = this.activePlayer.lastFoodEaten.Sprite.Texture;
+                var widthScale = targetSize.x / texture.GetWidth();
+                var heightScale = targetSize.y / texture.GetHeight();
+                var targetScale = widthScale < heightScale ? widthScale : heightScale;
+
+
+                this.lastFoodEatenDisplaySprite.Scale = new Vector2(targetScale, targetScale);
+                var spritePos = new Vector2(this.lastFoodEatenContainer.RectPosition.x + targetSize.x / 2f,
+                                            this.lastFoodEatenContainer.RectPosition.y + targetSize.y / 2f);
+                this.lastFoodEatenDisplaySprite.SetGlobalPosition(spritePos);
+                this.lastFoodEatenDisplaySprite.Texture = texture;
                 this.lastFoodEatenDisplayLabel.Visible = true;
                 this.lastFoodEatenDisplaySprite.Visible = true;
                 break;
@@ -77,7 +92,7 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
             case PlayerStatsDisplayHandlerState.END_SHOW_LAST_FOOD:
                 this.lastFoodEatenDisplayLabel.Visible = false;
                 this.lastFoodEatenDisplaySprite.Visible = false;
-                this.ResetActiveState(PlayerStatsDisplayHandlerState.DEFAULT);
+                this.SetActiveState(PlayerStatsDisplayHandlerState.DEFAULT, 400);
                 break;
             case PlayerStatsDisplayHandlerState.DEFAULT:
                 break;

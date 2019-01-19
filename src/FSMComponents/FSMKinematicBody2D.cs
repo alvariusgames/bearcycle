@@ -37,6 +37,8 @@ public abstract class FSMKinematicBody2D<StateEnum> : KinematicBody2D, IFSMObjec
     
     public void ResetActiveStateAfter(StateEnum ActiveState, float numSeconds){
         this.timersSet.Add(new TimerAttrs(numSeconds, ActiveState, -1, true));}
+    public void ForceClearAllTimers(){
+        this.timersSet = new List<TimerAttrs>();}
 
     private void handleTimers(float delta){
         for(var i=0; i<this.timersSet.Count(); i++){

@@ -5,7 +5,7 @@
 [ext_resource path="res://media/UI/health_bar/HealthBarUnder.png" type="Texture" id=3]
 [ext_resource path="res://media/UI/health_bar/HealthBarProgress.png" type="Texture" id=4]
 
-[node name="Node" type="Node" index="0"]
+[node name="Node" type="Node"]
 
 [node name="ViewportContainer" type="ViewportContainer" parent="." index="0"]
 
@@ -115,10 +115,10 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 529.0
-margin_top = 42.0
-margin_right = 609.0
-margin_bottom = 122.0
+margin_left = 520.0
+margin_top = 36.0
+margin_right = 560.0
+margin_bottom = 76.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 0
@@ -131,20 +131,24 @@ _sections_unfolded = [ "Rect" ]
 
 _sections_unfolded = [ "Region" ]
 
-[node name="LastFoodEatenCalorieLabel" type="Label" parent="PlayerStatsDisplayHandler/LastFoodEaten" index="1"]
+[node name="LastFoodEatenLabel" type="Label" parent="PlayerStatsDisplayHandler/LastFoodEaten" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 40.0
-margin_bottom = 14.0
+margin_left = -17.0
+margin_top = 49.0
+margin_right = 59.0
+margin_bottom = 63.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 4
+align = 1
+autowrap = true
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
