@@ -1,10 +1,11 @@
 using Godot;
 using System;
+using System.Text.RegularExpressions;
 
 public interface IFood{
     Sprite Sprite {get; set;}
     float Calories {get; set;}
-    String Name{get;set;}
+    String GetDisplayableName();
     bool isConsumed{get;set;}
 
 }
@@ -15,6 +16,14 @@ public class Food : KinematicBody2D, IConsumeable, IFood{
     public float Calories{get;set;}
     public bool isConsumed{get;set;} = false;
     private CollisionShape2D CollisionShape2D;
+
+    public String GetDisplayableName(){
+        var name = this.GetName();
+        string pattern = @"\d+$"; //find numbers at end of string
+        string replacement = "";
+        Regex rgx = new Regex(pattern);
+        return rgx.Replace(name, replacement);
+    }
 
     public override void _Ready(){
         foreach(var child in this.GetChildren()){

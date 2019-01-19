@@ -56,7 +56,6 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
 
     public override void UpdateState(float delta){
         if(this.activePlayer.lastFoodEaten != this.lastFoodDisplayed){
-            GD.Print("Update state...");
             this.ForceClearAllTimers();
             this.ResetActiveState(PlayerStatsDisplayHandlerState.TRIGGER_SHOW_LAST_FOOD);
         }
@@ -65,26 +64,11 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
     public override void ReactToState(float delta){
         switch(this.ActiveState){
             case PlayerStatsDisplayHandlerState.TRIGGER_SHOW_LAST_FOOD:
-                GD.Print("Triggering showing of last food");
                 this.lastFoodDisplayed = this.activePlayer.lastFoodEaten;
                 this.SetActiveState(PlayerStatsDisplayHandlerState.SHOW_LAST_FOOD, 200);
                 this.SetActiveStateAfter(PlayerStatsDisplayHandlerState.END_SHOW_LAST_FOOD, 300, 2.5f);
-                this.lastFoodEatenDisplayLabel.Text = this.activePlayer.lastFoodEaten.Name;
-
-                var targetSize = this.lastFoodEatenContainer.GetRect().Size;
-                var texture = this.activePlayer.lastFoodEaten.Sprite.Texture;
-                var widthScale = targetSize.x / texture.GetWidth();
-                var heightScale = targetSize.y / texture.GetHeight();
-                var targetScale = widthScale < heightScale ? widthScale : heightScale;
-
-
-                this.lastFoodEatenDisplaySprite.Scale = new Vector2(targetScale, targetScale);
-                var spritePos = new Vector2(this.lastFoodEatenContainer.RectPosition.x + targetSize.x / 2f,
-                                            this.lastFoodEatenContainer.RectPosition.y + targetSize.y / 2f);
-                this.lastFoodEatenDisplaySprite.SetGlobalPosition(spritePos);
-                this.lastFoodEatenDisplaySprite.Texture = texture;
-                this.lastFoodEatenDisplayLabel.Visible = true;
-                this.lastFoodEatenDisplaySprite.Visible = true;
+                this.setUpLastFoodSprite(delta);
+                this.setUpLastFoodLabel(delta);
                 break;
             case PlayerStatsDisplayHandlerState.SHOW_LAST_FOOD:
                 this.lastFoodEatenDisplaySprite.Rotate(0.04f);
@@ -99,4 +83,24 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
         }
     }
 
-}
+    private void setUpLastFoodSprite(float delta){
+        //Get the size of the parent display container, scale sprite to ti
+        var targetSize = this.lastFoodEatenContainer.GetRect().Size;
+        var texture = this.activePlayer.lastFoodEaten.Sprite.Texture;
+        var widthScale = targetSize.x / texture.GetWidth();
+        var heightScale = targetSize.y / texture.GetHeight();
+        //For oblong non-square sizes, always pick the smaller scale
+        var targetScale = widthScale < heightScale ? widthScale : heightScale;
+        this.lastFoodEatenDisplaySprite.Scale = new Vector2(targetScale, targetScale);
+        this.lastFoodEatenDisplaySprite.Texture = texture;
+        this.lastFoodEatenDisplaySprite.Visible = true;
+        //Center the newly scaled sprite in the center of the container
+        var spritePos = new Vector2(
+            this.lastFoodEatenContainer.RectPosition.x + targetSize.x / 2f,
+            this.lastFoodEatenContainer.RectPosition.y + targetSize.y / 2f);
+        this.lastFoodEatenDisplaySprite.SetGlobalPosition(spritePos);}
+
+    private void setUpLastFoodLabel(float delta){
+        this.lastFoodEatenDisplayLabel.Visible = true;
+        this.lastFoodEatenDisplayLabel.Text = this.activePlayer.lastFoodEaten.GetDisplayableName();
+}}
