@@ -1,48 +1,46 @@
 using Godot;
 using System;
 
-public sealed class PlayerStatsDisplayHandler : Node2D
+public class PlayerStatsDisplayHandler : Node
 {
-    private Camera2D activeCamera;
+    // Member variables here, example:
+    // private int a = 2;
+    // private string b = "textvar";
     private Player activePlayer;
-    private Label testLabel;
-    public override void _Ready(){
-           this.setPlayerAndCameraMembers();
-           foreach(var child in this.GetChildren()){
-               if(child is Label){
-                this.testLabel = (Label)child;
-               }
-           }
-        }
-    private void setPlayerAndCameraMembers(){
-           var player = this.tryGetPlayerFrom(this.GetTree().GetRoot());
-            if(player != null){
-                this.activePlayer = player;
-                this.activeCamera = player.ATV.Bear.Camera2D;}}
-    private Player tryGetPlayerFrom(Node node){
-        GD.Print("Testing Node");
-        GD.Print(node);
-        if(node is Player){
-            return (Player)node;}
-        foreach(Node child in node.GetChildren()){
-           var player = this.tryGetPlayerFrom(child);
-           if(player is Player){
-               return player;}}
-        return null;}
-   
+    private Label healthLabel;
 
-        public void update(Player player){
-            this.updatePlayerTotalCalories(player);
+    private void setPlayerAndCameraMembers(){                                   
+           var player = this.tryGetPlayerFrom(this.GetTree().GetRoot());        
+            if(player != null){                                                 
+                this.activePlayer = player;}}                                   
+    private Player tryGetPlayerFrom(Node node){                                 
+        if(node is Player){                                                     
+            return (Player)node;}                                               
+        foreach(Node child in node.GetChildren()){                              
+           var player = this.tryGetPlayerFrom(child);                           
+           if(player is Player){                                                
+               return player;}}                                                 
+        return null;}  
+
+    public override void _Ready()
+    {
+        this.setPlayerAndCameraMembers();
+        foreach(Node child in this.GetChildren()){
+            if(child is Label){
+                this.healthLabel = (Label)child;
+            }
         }
-            
-        private void updatePlayerTotalCalories(Player player){
-            GD.Print(this.activeCamera);
-        }
-     public override void _Process(float delta) {
-        var cameraPosition = this.activeCamera.GetCameraScreenCenter();
-        var visibleRectangle = this.activeCamera.GetViewport().GetVisibleRect();
-        var vecToSet = new Vector2(cameraPosition.x + (visibleRectangle.Size.x / 2.5f),
-                                   cameraPosition.y - (visibleRectangle.Size.y / 2.5f));
-        this.testLabel.SetGlobalPosition(vecToSet); 
-     }
- }
+        // Called every time the node is added to the scene.
+        // Initialization here
+        
+    }
+
+    public override void _Process(float delta)
+    {
+        //GD.Print(this.activePlayer);
+        this.healthLabel.Text = this.activePlayer.currentHealth.ToString("0");
+//        // Called every frame. Delta is time since last frame.
+//        // Update game logic here.
+//        
+    }
+}

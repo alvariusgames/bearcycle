@@ -14,7 +14,7 @@ public class Bear : FSMKinematicBody2D<BearState>{
 
     public Vector2 velocity = new Vector2(0,0);
     public AnimatedSprite Sprite;
-    private ATV ATV;
+    public ATV ATV;
     private float recoveryTimer = 0;
 
     public override void _Ready()
@@ -40,6 +40,7 @@ public class Bear : FSMKinematicBody2D<BearState>{
                 this.SetActiveStateAfter(BearState.HIT_SEQ_TRIGGER_TEMP_INVINC, 200, 1.5f);
                 this.ResetActiveStateAfter(BearState.ON_ATV, 4.5f);
                 this.Sprite.Play("hit");
+                this.ATV.Player.UpdateHealth(Player.DEFAULT_HIT_UNIT);
                 break;
             case BearState.HIT_SEQ_FALL_OFF:
                 this.applyGravity(delta);
