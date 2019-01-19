@@ -42,7 +42,7 @@ animations = [ {
 custom_solver_bias = 0.0
 extents = Vector2( 23.6071, 10 )
 
-[node name="main" type="Node2D" index="0"]
+[node name="main" type="Node2D"]
 
 position = Vector2( -3, 0 )
 _sections_unfolded = [ "Transform" ]

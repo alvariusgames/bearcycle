@@ -11,7 +11,7 @@ config_version=3
 [application]
 
 config/name="BearsOnATVs"
-run/main_scene="res://scenes/level1.tscn"
+run/main_scene="res://scenes/LevelFrame.tscn"
 config/icon="res://media/player.png"
 
 [display]
