@@ -10,9 +10,10 @@ public class Player : FSMNode2D<PlayerState>
     private const float MAX_HEALTH = 100;
     private const float HEALTH_TO_CALORIES_RATIO = 1f/100f;
     public const float DEFAULT_HIT_UNIT = -6f;
-    public float currentHealth {get; private set;} = MAX_HEALTH;
-    public float totalCalories = 0;
+    public float CurrentHealth {get; private set;} = MAX_HEALTH;
+    public float TotalCalories = 0;
     private List<IFood> foodEaten = new List<IFood>();
+    public IFood lastFoodEaten;
     private SafetyCheckPoint LastSafetyCheckPoint;
 
     public override void _Ready(){
@@ -21,7 +22,7 @@ public class Player : FSMNode2D<PlayerState>
                 this.ATV = (ATV)child;}}}
 
     public override void ReactStateless(float delta){
-        this.currentHealth -= delta;
+        this.CurrentHealth -= delta;
     }
     public override void ReactToState(float delta){
 
@@ -40,16 +41,17 @@ public class Player : FSMNode2D<PlayerState>
 
     public void EatFood(IFood food){
         this.UpdateHealth(food.Calories * HEALTH_TO_CALORIES_RATIO);
-        this.totalCalories += food.Calories;
+        this.TotalCalories += food.Calories;
         this.foodEaten.Add(food);
+        this.lastFoodEaten = food;
     }
 
     public void UpdateHealth(float signedHealthUnits){
-        var tentativeHealth = this.currentHealth + signedHealthUnits;
+        var tentativeHealth = this.CurrentHealth + signedHealthUnits;
         if(tentativeHealth >= MAX_HEALTH){
-            this.currentHealth = MAX_HEALTH;}
+            this.CurrentHealth = MAX_HEALTH;}
         else {
-            this.currentHealth = tentativeHealth;}}
+            this.CurrentHealth = tentativeHealth;}}
 
 //    public override void _Process(float delta)
 //    {

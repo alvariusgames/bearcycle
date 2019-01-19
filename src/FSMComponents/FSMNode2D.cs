@@ -14,7 +14,7 @@ public abstract class FSMNode2D<StateEnum> : Node2D, IFSMObject<StateEnum> {    
         this.ActiveStatePriority = 0;
         this.ActiveState = ActiveState;}
 
-    private struct TimerAttrs{
+    private class TimerAttrs{
         public float secondsCount;
         public float numSecondsToTriggerStateChange;
         public StateEnum stateToSetTo;

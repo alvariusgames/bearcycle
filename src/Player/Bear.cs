@@ -40,7 +40,6 @@ public class Bear : FSMKinematicBody2D<BearState>{
                 this.SetActiveStateAfter(BearState.HIT_SEQ_TRIGGER_TEMP_INVINC, 200, 1.5f);
                 this.ResetActiveStateAfter(BearState.ON_ATV, 4.5f);
                 this.Sprite.Play("hit");
-                this.ATV.Player.UpdateHealth(Player.DEFAULT_HIT_UNIT);
                 break;
             case BearState.HIT_SEQ_FALL_OFF:
                 this.applyGravity(delta);
@@ -53,6 +52,7 @@ public class Bear : FSMKinematicBody2D<BearState>{
             case BearState.HIT_SEQ_TRIGGER_TEMP_INVINC:
                 this.ATV.ReattachBear();
                 this.SetActiveState(BearState.HIT_SEQ_INVINC, 300);
+                this.ATV.Player.UpdateHealth(Player.DEFAULT_HIT_UNIT);
                 break;
             case BearState.HIT_SEQ_INVINC:
                 this.velocity.x = 0f;
