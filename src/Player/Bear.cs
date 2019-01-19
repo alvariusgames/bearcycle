@@ -15,7 +15,6 @@ public class Bear : FSMKinematicBody2D<BearState>{
     public Vector2 velocity = new Vector2(0,0);
     public AnimatedSprite Sprite;
     private ATV ATV;
-    public Camera2D Camera2D;
     private float recoveryTimer = 0;
 
     public override void _Ready()
@@ -23,9 +22,6 @@ public class Bear : FSMKinematicBody2D<BearState>{
         foreach(var child in this.GetChildren()){
             if(child is AnimatedSprite){
                 this.Sprite = (AnimatedSprite)child;
-            }
-            if(child is Camera2D){
-                this.Camera2D = (Camera2D)child;
             }
         }
         this.ATV = (ATV)this.GetParent();
