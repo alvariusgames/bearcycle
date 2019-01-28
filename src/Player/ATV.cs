@@ -3,11 +3,14 @@ using System;
 
 public enum ATVState {WITH_BEAR, WITHOUT_BEAR}
 
+public enum ATVDirection{FORWARD, BACKWARD}
+
 public class ATV : FSMNode2D<ATVState> {
     // Member variables here, example:
     // private int a = 2;
     // private string b = "textvar";
     public override ATVState InitialState { get { return ATVState.WITH_BEAR; }}
+    public ATVDirection Direction { get; private set;}
     public Wheel FrontWheel;
     public Wheel BackWheel;
     private Vector2 bodyCenter;
@@ -30,6 +33,10 @@ public class ATV : FSMNode2D<ATVState> {
 
     public Vector2 GetGlobalCenterOfTwoWheels(){
         return (this.FrontWheel.GetGlobalPosition() + this.BackWheel.GetGlobalPosition()) / 2f;}
+    
+    public Vector2 GetNormalizedBackToFront(){
+        return (this.FrontWheel.GetGlobalPosition() - this.BackWheel.GetGlobalPosition()).Normalized();
+    }
     
     public void SetGlobalCenterOfTwoWheels(Vector2 globalCenter, float verticalOffset=30){
         this.BackWheel.SetGlobalPosition(new Vector2(globalCenter.x, 
@@ -69,7 +76,12 @@ public class ATV : FSMNode2D<ATVState> {
     }
 
     public override void UpdateState(float delta){
-        
+        if(this.FrontWheel.ActiveState == WheelState.ACCELERATING){
+            this.Direction = ATVDirection.FORWARD;
+        }
+        else if(this.FrontWheel.ActiveState == WheelState.DECELERATING){
+            this.Direction = ATVDirection.BACKWARD;
+        }
     }
 
     public override void ReactStateless(float delta){

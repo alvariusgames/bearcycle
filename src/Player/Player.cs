@@ -7,6 +7,7 @@ public enum PlayerState {NORMAL, ATTACKING}
 public class Player : FSMNode2D<PlayerState>
 {
     public override PlayerState InitialState {get { return PlayerState.NORMAL;}}
+    public AttackWindow AttackWindow;
     public ATV ATV;
     private const float MAX_HEALTH = 100;
     private const float HEALTH_TO_CALORIES_RATIO = 1f/100f;
@@ -21,7 +22,9 @@ public class Player : FSMNode2D<PlayerState>
        this.ResetActiveState(this.InitialState);
        foreach(var child in this.GetChildren()){
             if(child is ATV){
-                this.ATV = (ATV)child;}}}
+                this.ATV = (ATV)child;}
+            else if(child is AttackWindow){
+                this.AttackWindow = (AttackWindow)child;}}}
 
     public override void ReactStateless(float delta){
         this.CurrentHealth -= delta;
