@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum PlayerState {NORMAL, ATTACKING}
+public enum PlayerState {NORMAL, TRIGGER_ATTACK, ATTACK}
 public class Player : FSMNode2D<PlayerState>
 {
     public override PlayerState InitialState {get { return PlayerState.NORMAL;}}
@@ -32,9 +32,16 @@ public class Player : FSMNode2D<PlayerState>
     public override void ReactToState(float delta){
         switch(this.ActiveState){
             case PlayerState.NORMAL:
+                this.AttackWindow.ResetActiveState(AttackWindowState.NOT_ATTACKING);
                 break;
-            case PlayerState.ATTACKING:
-                GD.Print("Attack!");
+            case PlayerState.TRIGGER_ATTACK:
+                var attackDurationS = 0.2f;
+                this.SetActiveState(PlayerState.ATTACK, 200);
+                this.ResetActiveStateAfter(PlayerState.NORMAL, attackDurationS);
+                break;
+            case PlayerState.ATTACK:
+                GD.Print("Attacking!");
+                this.AttackWindow.SetActiveState(AttackWindowState.ATTACKING, 100);
                 break;
             default:
                 throw new Exception("Invalid Player State");
@@ -47,7 +54,7 @@ public class Player : FSMNode2D<PlayerState>
 
     public void reactToInput(float delta){
         if(Input.IsActionPressed("ui_accept")){
-            this.SetActiveState(PlayerState.ATTACKING, 100);
+            this.SetActiveState(PlayerState.TRIGGER_ATTACK, 100);
         } else {
             this.SetActiveState(PlayerState.NORMAL, 100);
         }
