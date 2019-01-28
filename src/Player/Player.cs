@@ -3,9 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum PlayerState {NORMAL}
+public enum PlayerState {NORMAL, ATTACKING}
 public class Player : FSMNode2D<PlayerState>
 {
+    public override PlayerState InitialState {get { return PlayerState.NORMAL;}}
     public ATV ATV;
     private const float MAX_HEALTH = 100;
     private const float HEALTH_TO_CALORIES_RATIO = 1f/100f;
@@ -17,6 +18,7 @@ public class Player : FSMNode2D<PlayerState>
     private SafetyCheckPoint LastSafetyCheckPoint;
 
     public override void _Ready(){
+       this.ResetActiveState(this.InitialState);
        foreach(var child in this.GetChildren()){
             if(child is ATV){
                 this.ATV = (ATV)child;}}}
@@ -25,10 +27,27 @@ public class Player : FSMNode2D<PlayerState>
         this.CurrentHealth -= delta;
     }
     public override void ReactToState(float delta){
+        switch(this.ActiveState){
+            case PlayerState.NORMAL:
+                break;
+            case PlayerState.ATTACKING:
+                GD.Print("Attack!");
+                break;
+            default:
+                throw new Exception("Invalid Player State");
+        }
 
     }
     public override void UpdateState(float delta){
+        this.reactToInput(delta);
+    }
 
+    public void reactToInput(float delta){
+        if(Input.IsActionPressed("ui_accept")){
+            this.SetActiveState(PlayerState.ATTACKING, 100);
+        } else {
+            this.SetActiveState(PlayerState.NORMAL, 100);
+        }
     }
 
     public void SetMostRecentSafetyCheckPoint(SafetyCheckPoint safetyCheckPoint){

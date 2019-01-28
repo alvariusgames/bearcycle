@@ -8,6 +8,7 @@ public class Bear : FSMKinematicBody2D<BearState>{
     // Member variables here, example:
     // private int a = 2;
     // private string b = "textvar";
+    public override BearState InitialState {get { return BearState.ON_ATV; }}
     private const float GRAVITY  = 600.0f;
     private const float MAX_GRAVITY_SPEED = 300f;
     private const float FRICTION_EFFECT = 0.9f;
@@ -19,6 +20,7 @@ public class Bear : FSMKinematicBody2D<BearState>{
 
     public override void _Ready()
     {
+        this.ResetActiveState(this.InitialState);
         foreach(var child in this.GetChildren()){
             if(child is AnimatedSprite){
                 this.Sprite = (AnimatedSprite)child;

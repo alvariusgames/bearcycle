@@ -1,5 +1,6 @@
 
 public interface IFSMObject<StateEnum> {
+    StateEnum InitialState{get;}
     StateEnum ActiveState {get;}
     int ActiveStatePriority {get;}
     void SetActiveState(StateEnum ActiveState, int priority);

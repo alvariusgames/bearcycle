@@ -8,6 +8,8 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
     // Member variables here, example:
     // private int a = 2;
     // private string b = "textvar";
+    public override PlayerStatsDisplayHandlerState InitialState {
+        get { return PlayerStatsDisplayHandlerState.DEFAULT;}}
     private Player activePlayer;
     private TextureProgress healthProgressBar;
     private Label totalCaloriesLabel;
@@ -16,20 +18,8 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
     private Container lastFoodEatenContainer;
     private Sprite lastFoodEatenDisplaySprite;
 
-    private void setPlayerAndCameraMembers(){                                   
-           var player = this.tryGetPlayerFrom(this.GetTree().GetRoot());        
-            if(player != null){                                                 
-                this.activePlayer = player;}}                                   
-    private Player tryGetPlayerFrom(Node node){                                 
-        if(node is Player){                                                     
-            return (Player)node;}                                               
-        foreach(Node child in node.GetChildren()){                              
-           var player = this.tryGetPlayerFrom(child);                           
-           if(player is Player){                                                
-               return player;}}                                                 
-        return null;}  
-
     public override void _Ready(){
+        this.ResetActiveState(this.InitialState);
         this.setPlayerAndCameraMembers();
         foreach(Node child in this.GetChildren()){
             if(child is TextureProgress){
@@ -47,6 +37,20 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
                     }
                 }
             }}}
+
+    private void setPlayerAndCameraMembers(){                                   
+           var player = this.tryGetPlayerFrom(this.GetTree().GetRoot());        
+            if(player != null){                                                 
+                this.activePlayer = player;}}                                   
+    private Player tryGetPlayerFrom(Node node){                                 
+        if(node is Player){                                                     
+            return (Player)node;}                                               
+        foreach(Node child in node.GetChildren()){                              
+           var player = this.tryGetPlayerFrom(child);                           
+           if(player is Player){                                                
+               return player;}}                                                 
+        return null;}  
+
 
     public override void ReactStateless(float delta)
     {
@@ -80,6 +84,8 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
                 break;
             case PlayerStatsDisplayHandlerState.DEFAULT:
                 break;
+            default:
+                throw new Exception("Invalid player handler state");
         }
     }
 

@@ -7,6 +7,7 @@ public class ATV : FSMNode2D<ATVState> {
     // Member variables here, example:
     // private int a = 2;
     // private string b = "textvar";
+    public override ATVState InitialState { get { return ATVState.WITH_BEAR; }}
     public Wheel FrontWheel;
     public Wheel BackWheel;
     private Vector2 bodyCenter;
@@ -15,6 +16,7 @@ public class ATV : FSMNode2D<ATVState> {
     public Player Player;
     public float BodyLength;
     public override void _Ready(){
+        this.ResetActiveState(this.InitialState);
         foreach(Node2D child in this.GetChildren()){
             if(child.Name.Equals("FrontWheel")){
                 this.FrontWheel = (Wheel)child;}

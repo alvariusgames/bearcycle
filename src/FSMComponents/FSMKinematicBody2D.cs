@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 public abstract class FSMKinematicBody2D<StateEnum> : KinematicBody2D, IFSMObject<StateEnum> {
+    public abstract StateEnum InitialState {get;}
     public StateEnum ActiveState {get; private set;}
     public int ActiveStatePriority {get; private set;}
     public void SetActiveState(StateEnum ActiveState, int priority){

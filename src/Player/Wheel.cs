@@ -8,6 +8,7 @@ public enum WheelState {
     LOCKED}
 
 public class Wheel : FSMKinematicBody2D<WheelState>{
+    public override WheelState InitialState { get { return WheelState.IDLING;}}
     public Vector2 velocity = new Vector2(0,0);
     public Sprite sprite;
     public CollisionShape2D collisionShape2D;
@@ -28,6 +29,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     private const float DEFAULT_FRICTION_EFFECT = 0.9f;
 
     public override void _Ready(){
+        this.ResetActiveState(this.InitialState);
         for(int i = 0; i<this.GetChildCount(); i++){
             var child = this.GetChild(i);
             if(child is Sprite){
