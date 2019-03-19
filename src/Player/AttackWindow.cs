@@ -9,25 +9,26 @@ public class AttackWindow : FSMKinematicBody2D<AttackWindowState>
     public CollisionPolygon2D CollisionPolygon2D;
     public Polygon2D Polygon2D;
     public Player Player;
+    private int startingCollisionMask;
+    private int startingCollisionLayer;
 
-    public override void _Ready()
-    {
-        this.CollisionLayer = 0;
-        this.SetCollisionLayerBit(5, true);
-        this.CollisionMask = 0;
-        this.SetCollisionMaskBit(5,true);
+    private void makeCollideable(bool collidability){
+        if(collidability){
+            this.SetCollisionLayer(this.startingCollisionLayer);
+            this.SetCollisionMask(this.startingCollisionMask);}
+       else {
+            this.SetCollisionLayer(0);
+            this.SetCollisionMask(0);}}
+
+    public override void _Ready(){
         this.Player = (Player)this.GetParent();
+        this.startingCollisionLayer = this.GetCollisionLayer();
+        this.startingCollisionMask = this.GetCollisionMask();
         foreach(Node2D child in this.GetChildren()){
             if(child is CollisionPolygon2D){
                 this.CollisionPolygon2D = (CollisionPolygon2D)child;
                 this.Polygon2D = (Polygon2D)this.CollisionPolygon2D.GetChild(0);
-                this.Polygon2D.Polygon = this.CollisionPolygon2D.Polygon;
-            }
-        }
-        // Called every time the node is added to the scene.
-        // Initialization here
-        
-    }
+                this.Polygon2D.Polygon = this.CollisionPolygon2D.Polygon;}}}
 
     public override void ReactStateless(float delta){
         this.SetGlobalPosition(this.Player.ATV.GetGlobalCenterOfTwoWheels());
@@ -38,6 +39,7 @@ public class AttackWindow : FSMKinematicBody2D<AttackWindowState>
            this.SetScale(new Vector2(-1,1));
            this.SetGlobalRotation(this.Player.ATV.GetNormalizedBackToFront().Angle());
        }
+    //    GD.Print(this.CollisionPolygon2D.GetGlobalPosition());
     }
 
     public override void UpdateState(float delta){}
@@ -46,13 +48,15 @@ public class AttackWindow : FSMKinematicBody2D<AttackWindowState>
         switch(this.ActiveState){
             case AttackWindowState.NOT_ATTACKING:
                 this.Polygon2D.Visible = false;
+                this.makeCollideable(false);
                 break;
             case AttackWindowState.ATTACKING:
+                this.makeCollideable(true);
                 this.Polygon2D.Visible = true;
                 var collision = this.MoveAndCollide(new Vector2(0,0));
                 if(collision != null){
-                    GD.Print("I attacked something!");
-                }
+                    if(collision.Collider is NPC){
+                        ((NPC)collision.Collider).GetHitBy(this);}}
                 break;
             default:
                 throw new Exception("Invalid Attack Window state");
