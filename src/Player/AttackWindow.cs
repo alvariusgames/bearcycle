@@ -49,9 +49,9 @@ public class AttackWindow : FSMKinematicBody2D<AttackWindowState>
                 break;
             case AttackWindowState.ATTACKING:
                 this.Polygon2D.Visible = true;
-                for(var i=0; i<this.GetSlideCount(); i++){
-                    var coll = this.GetSlideCollision(i);
-                    GD.Print("I hit something!"); 
+                var collision = this.MoveAndCollide(new Vector2(0,0));
+                if(collision != null){
+                    GD.Print("I attacked something!");
                 }
                 break;
             default:

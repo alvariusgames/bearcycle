@@ -67,10 +67,11 @@ public class Bear : FSMKinematicBody2D<BearState>{
                 if(collision != null){
                     if(collision.Collider is Platforms){
                         this.commonHitFunctionality();}
-                    if((collision.Collider is NPC)){
+                    if(collision.Collider is NPC){
                         this.commonHitFunctionality();
-                        GD.Print(collision.Collider);
-                        ((NPC)collision.Collider).GetHitBy(this);}}
+                        var npc = ((NPC)collision.Collider);
+                        npc.GetHitBy(this);
+                        this.ATV.Player.GetHitBy(npc);}}
                 this.Sprite.Play("default");
                 break;
             default:
