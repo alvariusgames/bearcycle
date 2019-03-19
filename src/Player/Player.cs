@@ -53,7 +53,7 @@ public class Player : FSMNode2D<PlayerState>
     }
 
     public void reactToInput(float delta){
-        if(Input.IsActionPressed("ui_accept")){
+        if(Input.IsActionJustPressed("ui_accept")){
             this.SetActiveState(PlayerState.TRIGGER_ATTACK, 100);
         } else {
             this.SetActiveState(PlayerState.NORMAL, 100);
