@@ -8,7 +8,7 @@ public class NPC : RigidBody2D{
    public bool isHit;
 
     public void GetHitBy(Node node){
-        GD.Print("I, NPC, was hit by " + node.Name);
+        GD.Print("NPC hit " + node.Name);
         this.CollisionShape2D.Disabled = true;
         this.Sprite.Visible = false;
         this.isHit = true;  

@@ -107,7 +107,7 @@ script = ExtResource( 3 )
 position = Vector2( 39.057, 0.0374146 )
 scale = Vector2( 0.449839, 0.449839 )
 input_pickable = true
-collision_layer = 338261
+collision_layer = 174421
 collision_mask = 174421
 collision/safe_margin = 0.08
 script = ExtResource( 4 )
@@ -436,7 +436,7 @@ shape = SubResource( 5 )
 
 [node name="NPC2" type="RigidBody2D" parent="Items" index="6"]
 
-position = Vector2( 151.512, 221.321 )
+position = Vector2( 173.673, 207.325 )
 input_pickable = false
 collision_layer = 524300
 collision_mask = 524300
@@ -473,7 +473,7 @@ shape = SubResource( 5 )
 
 [node name="NPC3" type="RigidBody2D" parent="Items" index="7"]
 
-position = Vector2( 214.838, 251.045 )
+position = Vector2( 248.662, 261.542 )
 input_pickable = false
 collision_layer = 524300
 collision_mask = 524300
