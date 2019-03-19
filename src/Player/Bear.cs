@@ -16,7 +16,6 @@ public class Bear : FSMKinematicBody2D<BearState>{
     public Vector2 velocity = new Vector2(0,0);
     public AnimatedSprite Sprite;
     public ATV ATV;
-    private float recoveryTimer = 0;
 
     public override void _Ready()
     {
@@ -66,9 +65,12 @@ public class Bear : FSMKinematicBody2D<BearState>{
                 this.velocity.y = 0;
                 collision = this.MoveAndCollide(this.velocity);
                 if(collision != null){
-                    this.SetActiveState(BearState.TRIGGER_HIT_SEQUENCE, 100);
-                    this.ATV.ThrowBearOffATV();
-                    this.recoveryTimer = 0;}
+                    if(collision.Collider is Platforms){
+                        this.commonHitFunctionality();}
+                    if((collision.Collider is NPC)){
+                        this.commonHitFunctionality();
+                        GD.Print(collision.Collider);
+                        ((NPC)collision.Collider).GetHitBy(this);}}
                 this.Sprite.Play("default");
                 break;
             default:
@@ -76,8 +78,11 @@ public class Bear : FSMKinematicBody2D<BearState>{
         }
     }
 
-    public override void ReactStateless(float delta){
-   }
+    private void commonHitFunctionality(){
+        this.SetActiveState(BearState.TRIGGER_HIT_SEQUENCE, 100);
+        this.ATV.ThrowBearOffATV();}
+
+    public override void ReactStateless(float delta){}
 
     private void applyGravity(float delta){
         if(this.velocity.y < MAX_GRAVITY_SPEED){

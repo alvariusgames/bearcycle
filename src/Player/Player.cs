@@ -40,7 +40,6 @@ public class Player : FSMNode2D<PlayerState>
                 this.ResetActiveStateAfter(PlayerState.NORMAL, attackDurationS);
                 break;
             case PlayerState.ATTACK:
-                GD.Print("Attacking!");
                 this.AttackWindow.SetActiveState(AttackWindowState.ATTACKING, 100);
                 break;
             default:
@@ -81,6 +80,11 @@ public class Player : FSMNode2D<PlayerState>
             this.CurrentHealth = MAX_HEALTH;}
         else {
             this.CurrentHealth = tentativeHealth;}}
+
+    public void GetHitBy(Node node){
+        GD.Print("Player hit!");
+
+    }
 
 //    public override void _Process(float delta)
 //    {

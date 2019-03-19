@@ -112,8 +112,12 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                         this.velocity.y += forwardAngle.y*forwardAccell;}
                     //Apply the friction effect
                     this.velocity *= frictionEffect;}
-            else if(collision.Collider is IConsumeable){
-                ((IConsumeable)collision.Collider).consume(this);
+            if(collision.Collider is IConsumeable){
+                ((IConsumeable)collision.Collider).consume(this);}
+            if(collision.Collider is NPC){
+                var npc = (NPC)collision.Collider;
+                npc.GetHitBy(this);
+                this.ATV.Player.GetHitBy(npc);
             }}}
 
     /// "Normal" is defined as the direction "up" away from the platform.

@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://src/Player/Player.cs" type="Script" id=1]
 [ext_resource path="res://src/Player/AttackWindow.cs" type="Script" id=2]
@@ -16,6 +16,8 @@
 [ext_resource path="res://src/Items/Food.cs" type="Script" id=14]
 [ext_resource path="res://media/food.png" type="Texture" id=15]
 [ext_resource path="res://media/hotdog.png" type="Texture" id=16]
+[ext_resource path="res://src/NPC/NPC.cs" type="Script" id=17]
+[ext_resource path="res://media/npc.png" type="Texture" id=18]
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -47,6 +49,11 @@ custom_solver_bias = 0.0
 extents = Vector2( 23.6071, 10 )
 
 [sub_resource type="RectangleShape2D" id=4]
+
+custom_solver_bias = 0.0
+extents = Vector2( 10, 10 )
+
+[sub_resource type="RectangleShape2D" id=5]
 
 custom_solver_bias = 0.0
 extents = Vector2( 10, 10 )
@@ -197,6 +204,7 @@ _sections_unfolded = [ "Smoothing" ]
 
 [node name="Platforms" type="StaticBody2D" parent="." index="1"]
 
+editor/display_folded = true
 input_pickable = false
 collision_layer = 3
 collision_mask = 3
@@ -279,10 +287,9 @@ _sections_unfolded = [ "Pause" ]
 
 [node name="Items" type="Node2D" parent="." index="2"]
 
-editor/display_folded = true
-
 [node name="SafetyCheckPoint1" type="KinematicBody2D" parent="Items" index="0"]
 
+editor/display_folded = true
 position = Vector2( 404.555, 351.115 )
 scale = Vector2( 1, 2.09352 )
 input_pickable = true
@@ -300,6 +307,7 @@ _sections_unfolded = [ "Pause" ]
 
 [node name="Chicken Leg" type="KinematicBody2D" parent="Items" index="1"]
 
+editor/display_folded = true
 position = Vector2( 403.461, 353.511 )
 input_pickable = false
 collision_layer = 1
@@ -321,6 +329,7 @@ shape = SubResource( 4 )
 
 [node name="Chicken Leg2" type="KinematicBody2D" parent="Items" index="2"]
 
+editor/display_folded = true
 position = Vector2( 548.452, 310.106 )
 input_pickable = false
 collision_layer = 1
@@ -342,6 +351,7 @@ shape = SubResource( 4 )
 
 [node name="Hot Dog" type="KinematicBody2D" parent="Items" index="3"]
 
+editor/display_folded = true
 position = Vector2( 484.889, 331.358 )
 input_pickable = false
 collision_layer = 1
@@ -363,6 +373,7 @@ shape = SubResource( 4 )
 
 [node name="Hot Dog2" type="KinematicBody2D" parent="Items" index="4"]
 
+editor/display_folded = true
 position = Vector2( 323.829, 352.912 )
 input_pickable = false
 collision_layer = 1
@@ -381,5 +392,41 @@ texture = ExtResource( 16 )
 position = Vector2( 3.35304, 0.725145 )
 scale = Vector2( 1.32531, 1.32531 )
 shape = SubResource( 4 )
+
+[node name="NPC" type="RigidBody2D" parent="Items" index="5"]
+
+position = Vector2( 68.8014, 203.228 )
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+mode = 0
+mass = 1.0
+friction = 1.0
+bounce = 0.0
+gravity_scale = 1.0
+custom_integrator = false
+continuous_cd = 0
+contacts_reported = 0
+contact_monitor = false
+sleeping = false
+can_sleep = true
+linear_velocity = Vector2( 0, 0 )
+linear_damp = -1.0
+angular_velocity = 0.0
+angular_damp = -1.0
+script = ExtResource( 17 )
+
+[node name="Sprite" type="Sprite" parent="Items/NPC" index="0"]
+
+position = Vector2( 2.91019, 3.98184 )
+scale = Vector2( 0.0972942, 0.0972942 )
+texture = ExtResource( 18 )
+_sections_unfolded = [ "Offset" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC" index="1"]
+
+position = Vector2( 2.75938, 4.82353 )
+scale = Vector2( 1.72059, 2.3115 )
+shape = SubResource( 5 )
 
 
