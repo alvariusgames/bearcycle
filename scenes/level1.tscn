@@ -67,7 +67,7 @@ extents = Vector2( 37.297, 10 )
 
 [node name="main" type="Node2D" index="0"]
 
-position = Vector2( -3, 0 )
+position = Vector2( 24, 0 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="Player" type="Node2D" parent="." index="0"]
@@ -253,6 +253,29 @@ polygon = PoolVector2Array( 41.4824, 132.152, 101.813, 227.689, 133.546, 270.529
 script = ExtResource( 12 )
 
 [node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision4" index="0"]
+
+polygon = PoolVector2Array(  )
+uv = PoolVector2Array(  )
+color = Color( 1, 1, 1, 1 )
+vertex_colors = PoolColorArray(  )
+offset = Vector2( 0, 0 )
+antialiased = false
+texture = null
+texture_offset = Vector2( 0, 0 )
+texture_scale = Vector2( 1, 1 )
+texture_rotation_degrees = 0.0
+invert_enable = false
+invert_border = 100.0
+_sections_unfolded = [ "Pause" ]
+
+[node name="PlatformCollision5" type="CollisionPolygon2D" parent="Platforms" index="2"]
+
+position = Vector2( 2828.67, 943.386 )
+build_mode = 0
+polygon = PoolVector2Array( 1154.98, -382.713, 1301.39, -372.953, 4175.42, -327.249, 3459.4, -1445.27, 3782.53, -797.287, 3493.67, -411.917, 2351.63, -455.885, 2275.63, -494.835, 2169.23, -449.235, 2193.93, -537.586, 2062.3, -439.926, 1174.5, -444.531 )
+script = ExtResource( 12 )
+
+[node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision5" index="0"]
 
 polygon = PoolVector2Array(  )
 uv = PoolVector2Array(  )
@@ -501,35 +524,35 @@ collision_mask = 1
 collision/safe_margin = 0.08
 script = ExtResource( 19 )
 
-[node name="3000" type="Sprite" parent="Items/SpeedBoost" index="0"]
+[node name="600" type="Sprite" parent="Items/SpeedBoost" index="0"]
 
 position = Vector2( 1.63123, -24.7805 )
 rotation = -6.26459
 scale = Vector2( 0.218074, 0.218074 )
 texture = ExtResource( 20 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SpeedBoost" index="1"]
+[node name="Backward" type="CollisionShape2D" parent="Items/SpeedBoost" index="1"]
 
 shape = SubResource( 6 )
 
 [node name="SpeedBoost2" type="KinematicBody2D" parent="Items" index="9"]
 
-position = Vector2( 3046.76, 443.581 )
-rotation = -6.27531
+position = Vector2( 4814, 479.266 )
+rotation = -6.25955
 input_pickable = false
 collision_layer = 1
 collision_mask = 1
 collision/safe_margin = 0.08
 script = ExtResource( 19 )
 
-[node name="3000" type="Sprite" parent="Items/SpeedBoost2" index="0"]
+[node name="600" type="Sprite" parent="Items/SpeedBoost2" index="0"]
 
-position = Vector2( 0.883545, 24.7126 )
+position = Vector2( -1.27002, 28.1324 )
 rotation = -6.26459
 scale = Vector2( 0.218074, 0.218074 )
 texture = ExtResource( 20 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SpeedBoost2" index="1"]
+[node name="Forward" type="CollisionShape2D" parent="Items/SpeedBoost2" index="1"]
 
 shape = SubResource( 6 )
 

@@ -14,7 +14,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     public Sprite sprite;
     public CollisionShape2D collisionShape2D;
     public ATV ATV;
-    private float forwardAccell = 0f;
+    public float forwardAccell = 0f;
     //The below 2 vars auto update, & can be used to calculate all info about "forward"
     // See `this.calculateForwardAngle()` for more information
     private Vector2 currentTravel = new Vector2(0,0);
@@ -23,11 +23,11 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     private const float MAX_GRAVITY_SPEED = 600f;
     private const float MAX_FORWARD_ACCEL = 60f;
     private const float MAX_BACKWARD_ACCEL = - MAX_FORWARD_ACCEL;
-    private const float MAX_SPEED = 3000f;
+    private const float MAX_SPEED = 600f;
     private const float FORWARD_ACCEL_UNIT = 3f;
-    private const float DECELL_EFFECT = 0.9f;
-    private const float LOCKING_EFFECT = 0.9f;
-    private const float DEFAULT_FRICTION_EFFECT = 0.9f;
+    private const float DECELL_EFFECT = 0.90f;
+    private const float LOCKING_EFFECT = 0.90f;
+    private const float DEFAULT_FRICTION_EFFECT = 0.90f;
 
     public override void _Ready(){
         this.ResetActiveState(this.InitialState);
@@ -106,8 +106,6 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                 //Save relevant collision info to this
                 this.currentTravel = collision.Travel;
                 this.currentNormal = collision.Normal;
-                this.velocity.x += collision.Remainder.x;
-                this.velocity.y += collision.Remainder.y;
                 //Calculate the Forward movement
                 var forwardAngle = this.calculateForwardAngle();
                 if (Math.Abs(this.velocity.Length()) <= MAX_SPEED){
@@ -125,9 +123,19 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
             }
             if(collision.Collider is SpeedBoost){
                 var speedBoost = (SpeedBoost)collision.Collider;
-                this.ATV.SetVelocityOfTwoWheels(speedBoost.ForwardVelocityToApply);
+                this.ATV.SetVelocityOfTwoWheels(speedBoost.VelocityToApply);
+                var accellMagnitude = MAX_FORWARD_ACCEL * 2;
+                if(speedBoost.IsForward){
+                    this.ATV.SetAccellOfTwoWheels(accellMagnitude);
+                } else if(speedBoost.IsBackward){
+                    this.ATV.SetAccellOfTwoWheels(-accellMagnitude);
+                }
+                this.ATV.FrontWheel.forwardAccell = MAX_BACKWARD_ACCEL * 3;
+                this.ATV.BackWheel.forwardAccell = MAX_BACKWARD_ACCEL * 3;
+                //this.ATV.AdjustVelocityAndAccelOfTwoWheels(1f, 3f);
                 speedBoost.GetHitBy(this);
                 GD.Print("I hit a speedboost!");
+                GD.Print(speedBoost.VelocityToApply);
             }}}
 
     /// "Normal" is defined as the direction "up" away from the platform.

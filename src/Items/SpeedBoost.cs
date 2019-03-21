@@ -10,10 +10,12 @@ public class SpeedBoost : FSMKinematicBody2D<SpeedBoostState>
 
     public override SpeedBoostState InitialState { get { return SpeedBoostState.READY_TO_BE_HIT;}}
     public Sprite Sprite;
-    public Vector2 ForwardDirection;
-    public float ForwardMagnitude;
-    public Vector2 ForwardVelocityToApply;
+    public Vector2 Direction;
+    public float Magnitude;
+    public Vector2 VelocityToApply;
     public CollisionShape2D CollisionShape2D;
+    public Boolean IsForward = false;
+    public Boolean IsBackward = false;
     const float RESET_TIME_SECONDS = 2f;
 
     public override void _Ready(){
@@ -24,9 +26,12 @@ public class SpeedBoost : FSMKinematicBody2D<SpeedBoostState>
                 this.CollisionShape2D = (CollisionShape2D)child;
             }
         }
-        this.ForwardDirection = new Vector2(1,0).Rotated(this.Rotation);
-        this.ForwardMagnitude = (float)Convert.ToDouble(this.Sprite.Name);
-        this.ForwardVelocityToApply = this.ForwardMagnitude * this.ForwardDirection;}
+        this.IsForward = this.CollisionShape2D.Name.ToLower().Contains("forward");
+        this.IsBackward = this.CollisionShape2D.Name.ToLower().Contains("backward");
+        this.Direction = new Vector2(1,0).Rotated(this.Rotation);
+        this.Magnitude = (float)Convert.ToDouble(this.Sprite.Name);
+        this.VelocityToApply = new Vector2(this.Direction.x * this.Magnitude,
+                                                this.Direction.y * this.Magnitude);}
 
     public void GetHitBy(Node node){
         this.SetActiveState(SpeedBoostState.TRIGGER_HIT_OF_BOOST, 100);

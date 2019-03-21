@@ -62,6 +62,11 @@ public class ATV : FSMNode2D<ATVState> {
         this.BackWheel.velocity = velocity;
     }
 
+    public void SetAccellOfTwoWheels(float accell){
+        this.FrontWheel.forwardAccell = accell;
+        this.BackWheel.forwardAccell = accell;
+    }
+
     public void ReattachBear(){
         this.Bear.SetActiveState(BearState.ON_ATV, 100);
         this.moveBearToCenter(-1);
