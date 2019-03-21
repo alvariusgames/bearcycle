@@ -13,6 +13,7 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
     private Player activePlayer;
     private TextureProgress healthProgressBar;
     private Label totalCaloriesLabel;
+    private Label accellLabel;
     private IFood lastFoodDisplayed;
     private Label lastFoodEatenDisplayLabel;
     private Container lastFoodEatenContainer;
@@ -26,6 +27,8 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
                 this.healthProgressBar = (TextureProgress)child;}
             if((child is Label) && (child.GetName().ToLower().Contains("total"))){
                 this.totalCaloriesLabel= (Label)child;}
+             if((child is Label) && (child.GetName().ToLower().Contains("accell"))){
+                this.accellLabel= (Label)child;}
             if(child is Container){
                 this.lastFoodEatenContainer = (Container)child;
                 foreach(Node subChild in child.GetChildren()){
@@ -56,6 +59,7 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
     {
         this.healthProgressBar.Value = this.activePlayer.CurrentHealth;
         this.totalCaloriesLabel.Text = "Calories: " + this.activePlayer.TotalCalories.ToString();
+        this.accellLabel.Text = "Speed: " + (int)this.activePlayer.ATV.GetAccellOfTwoWheels();
     }
 
     public override void UpdateState(float delta){

@@ -62,6 +62,9 @@ public class ATV : FSMNode2D<ATVState> {
         this.BackWheel.velocity = velocity;
     }
 
+    public float GetAccellOfTwoWheels() {
+        return (this.FrontWheel.forwardAccell + this.BackWheel.forwardAccell) / 2f;}
+
     public void SetAccellOfTwoWheels(float accell){
         this.FrontWheel.forwardAccell = accell;
         this.BackWheel.forwardAccell = accell;
