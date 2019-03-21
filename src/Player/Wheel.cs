@@ -21,13 +21,15 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     private Vector2 currentNormal = new Vector2(0,-1);
     private const float GRAVITY  = 600.0f;
     private const float MAX_GRAVITY_SPEED = 600f;
-    private const float MAX_FORWARD_ACCEL = 60f;
+    private const float MAX_FORWARD_ACCEL = 65f;
     private const float MAX_BACKWARD_ACCEL = - MAX_FORWARD_ACCEL;
     private const float MAX_SPEED = 600f;
     private const float FORWARD_ACCEL_UNIT = 3f;
     private const float DECELL_EFFECT = 0.90f;
     private const float LOCKING_EFFECT = 0.90f;
     private const float DEFAULT_FRICTION_EFFECT = 0.90f;
+    ///when speedbosting, what slowdown effect to go back down to normal speed
+    private const float SPEED_BOOST_SLOWDOWN_EFFECT = 0.99f;
 
     public override void _Ready(){
         this.ResetActiveState(this.InitialState);
@@ -49,17 +51,26 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     }
 
     public override void ReactToState(float delta){
+        GD.Print(this.forwardAccell);
         switch(this.ActiveState){
             case WheelState.ACCELERATING:
                 if(this.forwardAccell <= MAX_FORWARD_ACCEL){  
                     this.forwardAccell += FORWARD_ACCEL_UNIT;
-                }
+                } else {
+                    //we're in 'speed boost mode', slow us down a bit
+                    this.forwardAccell *= SPEED_BOOST_SLOWDOWN_EFFECT;}
+ 
+                //this.forwardAccell *= 0.95f; 
                 reactToSlideCollision(delta);
+
                 break;
             case WheelState.DECELERATING:
                 if(this.forwardAccell >= MAX_BACKWARD_ACCEL){
                     this.forwardAccell -= FORWARD_ACCEL_UNIT;
-                }
+                } else {
+                    //we're in 'speed boost mode', slow us down a bit
+                    this.forwardAccell *= SPEED_BOOST_SLOWDOWN_EFFECT;}
+                //this.forwardAccell *= 0.95f;
                 reactToSlideCollision(delta);
                 break;
             case WheelState.IDLING:
@@ -130,12 +141,8 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                 } else if(speedBoost.IsBackward){
                     this.ATV.SetAccellOfTwoWheels(-accellMagnitude);
                 }
-                this.ATV.FrontWheel.forwardAccell = MAX_BACKWARD_ACCEL * 3;
-                this.ATV.BackWheel.forwardAccell = MAX_BACKWARD_ACCEL * 3;
                 //this.ATV.AdjustVelocityAndAccelOfTwoWheels(1f, 3f);
                 speedBoost.GetHitBy(this);
-                GD.Print("I hit a speedboost!");
-                GD.Print(speedBoost.VelocityToApply);
             }}}
 
     /// "Normal" is defined as the direction "up" away from the platform.
