@@ -501,7 +501,7 @@ collision_mask = 1
 collision/safe_margin = 0.08
 script = ExtResource( 19 )
 
-[node name="500" type="Sprite" parent="Items/SpeedBoost" index="0"]
+[node name="3000" type="Sprite" parent="Items/SpeedBoost" index="0"]
 
 position = Vector2( 1.63123, -24.7805 )
 rotation = -6.26459
@@ -509,6 +509,27 @@ scale = Vector2( 0.218074, 0.218074 )
 texture = ExtResource( 20 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SpeedBoost" index="1"]
+
+shape = SubResource( 6 )
+
+[node name="SpeedBoost2" type="KinematicBody2D" parent="Items" index="9"]
+
+position = Vector2( 3046.76, 443.581 )
+rotation = -6.27531
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+collision/safe_margin = 0.08
+script = ExtResource( 19 )
+
+[node name="3000" type="Sprite" parent="Items/SpeedBoost2" index="0"]
+
+position = Vector2( 0.883545, 24.7126 )
+rotation = -6.26459
+scale = Vector2( 0.218074, 0.218074 )
+texture = ExtResource( 20 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SpeedBoost2" index="1"]
 
 shape = SubResource( 6 )
 

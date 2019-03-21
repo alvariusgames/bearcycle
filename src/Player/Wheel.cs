@@ -23,7 +23,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     private const float MAX_GRAVITY_SPEED = 600f;
     private const float MAX_FORWARD_ACCEL = 60f;
     private const float MAX_BACKWARD_ACCEL = - MAX_FORWARD_ACCEL;
-    private const float MAX_SPEED = 900f;
+    private const float MAX_SPEED = 3000f;
     private const float FORWARD_ACCEL_UNIT = 3f;
     private const float DECELL_EFFECT = 0.9f;
     private const float LOCKING_EFFECT = 0.9f;
@@ -106,11 +106,14 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                 //Save relevant collision info to this
                 this.currentTravel = collision.Travel;
                 this.currentNormal = collision.Normal;
+                this.velocity.x += collision.Remainder.x;
+                this.velocity.y += collision.Remainder.y;
                 //Calculate the Forward movement
                 var forwardAngle = this.calculateForwardAngle();
                 if (Math.Abs(this.velocity.Length()) <= MAX_SPEED){
                         this.velocity.x += forwardAngle.x*forwardAccell;
-                        this.velocity.y += forwardAngle.y*forwardAccell;}
+                        this.velocity.y += forwardAngle.y*forwardAccell;
+                        }
                     //Apply the friction effect
                     this.velocity *= frictionEffect;}
             if(collision.Collider is IConsumeable){
@@ -123,7 +126,6 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
             if(collision.Collider is SpeedBoost){
                 var speedBoost = (SpeedBoost)collision.Collider;
                 this.ATV.SetVelocityOfTwoWheels(speedBoost.ForwardVelocityToApply);
-                this.ATV.AdjustVelocityAndAccelOfTwoWheels(1, 0f);
                 speedBoost.GetHitBy(this);
                 GD.Print("I hit a speedboost!");
             }}}
