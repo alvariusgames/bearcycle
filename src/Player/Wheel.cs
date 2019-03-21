@@ -9,6 +9,7 @@ public enum WheelState {
 
 public class Wheel : FSMKinematicBody2D<WheelState>{
     public override WheelState InitialState { get { return WheelState.IDLING;}}
+    public Vector2 userControlledVelocity = new Vector2(0,0);
     public Vector2 velocity = new Vector2(0,0);
     public Sprite sprite;
     public CollisionShape2D collisionShape2D;
@@ -77,7 +78,6 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
         this.applyGravity(delta);
         MoveAndSlide(linearVelocity: this.velocity);
         this.updateSprite(delta);
-        GD.Print(this.ActiveState);
     }
 
     private void reactToInput(float delta){
@@ -119,6 +119,13 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                 var npc = (NPC)collision.Collider;
                 npc.GetHitBy(this);
                 this.ATV.Player.GetHitBy(npc);
+            }
+            if(collision.Collider is SpeedBoost){
+                var speedBoost = (SpeedBoost)collision.Collider;
+                this.ATV.SetVelocityOfTwoWheels(speedBoost.ForwardVelocityToApply);
+                this.ATV.AdjustVelocityAndAccelOfTwoWheels(1, 0f);
+                speedBoost.GetHitBy(this);
+                GD.Print("I hit a speedboost!");
             }}}
 
     /// "Normal" is defined as the direction "up" away from the platform.

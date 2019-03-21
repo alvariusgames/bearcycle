@@ -84,7 +84,6 @@ public class Player : FSMNode2D<PlayerState>{
         if(node is NPC){
             var npc = (NPC)node;
             var slowDownFactor = 0.3f;
-            var numSecondsToIdle = 100f;
             this.ATV.AdjustVelocityAndAccelOfTwoWheels(slowDownFactor, 0f);}}
 
 //    public override void _Process(float delta)

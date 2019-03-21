@@ -54,6 +54,7 @@
     <Compile Include="src\Items\Food.cs" />
     <Compile Include="src\Items\IConsumeable.cs" />
     <Compile Include="src\Items\SafetyCheckPoint.cs" />
+    <Compile Include="src\Items\SpeedBoost.cs" />
     <Compile Include="src\NPC\NPC.cs" />
     <Compile Include="src\Platforms\PlatformCollision.cs" />
     <Compile Include="src\Platforms\Platforms.cs" />
