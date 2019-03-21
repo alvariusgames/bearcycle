@@ -47,6 +47,16 @@ public class ATV : FSMNode2D<ATVState> {
         this.moveBearToCenter(-1);
     }
 
+    public Vector2 GetVelocityOfTwoWheels(){
+        return (this.FrontWheel.velocity + this.BackWheel.velocity) / 2f;
+    }
+
+    public void AdjustVelocityAndAccelOfTwoWheels(
+        float velocityMultiplier, float accellMultiplier){
+            this.FrontWheel.AdjustVelocityAndAccell(velocityMultiplier, accellMultiplier);
+            this.BackWheel.AdjustVelocityAndAccell(velocityMultiplier, accellMultiplier);
+    }
+
     public void ReattachBear(){
         this.Bear.SetActiveState(BearState.ON_ATV, 100);
         this.moveBearToCenter(-1);
@@ -102,6 +112,7 @@ public class ATV : FSMNode2D<ATVState> {
         }
     }
 
+   
     private void holdWheelsTogether(float delta){
         //Do physics for a joint between frontwheel and backwheel
         var fcenter = this.FrontWheel.GetGlobalPosition();

@@ -71,7 +71,9 @@ public class Bear : FSMKinematicBody2D<BearState>{
                         this.commonHitFunctionality();
                         var npc = ((NPC)collision.Collider);
                         npc.GetHitBy(this);
-                        this.ATV.Player.GetHitBy(npc);}}
+                        this.ATV.Player.GetHitBy(npc);}
+                    if(collision.Collider is IConsumeable){
+                        ((IConsumeable)collision.Collider).consume(this);}}
                 this.Sprite.Play("default");
                 break;
             default:

@@ -4,8 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public enum PlayerState {NORMAL, TRIGGER_ATTACK, ATTACK}
-public class Player : FSMNode2D<PlayerState>
-{
+public class Player : FSMNode2D<PlayerState>{
     public override PlayerState InitialState {get { return PlayerState.NORMAL;}}
     public AttackWindow AttackWindow;
     public ATV ATV;
@@ -82,7 +81,11 @@ public class Player : FSMNode2D<PlayerState>
             this.CurrentHealth = tentativeHealth;}}
 
     public void GetHitBy(Node node){
-    }
+        if(node is NPC){
+            var npc = (NPC)node;
+            var slowDownFactor = 0.3f;
+            var numSecondsToIdle = 100f;
+            this.ATV.AdjustVelocityAndAccelOfTwoWheels(slowDownFactor, 0f);}}
 
 //    public override void _Process(float delta)
 //    {

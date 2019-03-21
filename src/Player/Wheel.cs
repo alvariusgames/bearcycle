@@ -77,6 +77,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
         this.applyGravity(delta);
         MoveAndSlide(linearVelocity: this.velocity);
         this.updateSprite(delta);
+        GD.Print(this.ActiveState);
     }
 
     private void reactToInput(float delta){
@@ -140,6 +141,12 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
         var unadjustedForwardAngle = normalAngle.Rotated((float)Math.PI / 2f).Normalized();
         var adjustedForwardAngle = unadjustedForwardAngle.Rotated(angleAbove);
         return adjustedForwardAngle;
+    }
+
+    public void AdjustVelocityAndAccell(float velocityMultiplier, float accellVelocityMultiplier){
+        ///args: 1 means no change, 0.7f means 30% less, 2f means twice as fast, etc.
+        this.velocity = this.velocity * velocityMultiplier;
+        this.forwardAccell = this.forwardAccell * accellVelocityMultiplier;
     }
 
     private void updateSprite(float delta){
