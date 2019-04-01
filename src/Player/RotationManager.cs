@@ -11,8 +11,10 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
     private float phiRotationToApply = 0f;
 
     private const float ROTATION_ACCELL_UNIT_HOLDING = 0.005f;
-    private const float ROTATION_ACCELL_UNIT_MASHING = 0.2f;
+    private const float ROTATION_ACCELL_UNIT_MASHING = 0.03f;
     private const float MAX_ROTATION_MAGNITUDE = 0.05f;
+    private const float MASH_BOOST_SLOWDOWN_EFFECT=0.99f;
+    private const float FRICTION_EFFECT=0.9f;
 
     public override void _Ready(){
         var parent = this.GetParent();
@@ -27,24 +29,33 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
         switch(this.ActiveState){
             case RotationManagerState.OPEN_TO_ROTATING_FROM_INPUT:
                 if(Input.IsActionPressed("ui_left")){
+                    this.ATV.CancelAllRotationalEnergy();
                     if(Math.Abs(this.phiRotationToApply) < MAX_ROTATION_MAGNITUDE){
                         this.phiRotationToApply -= ROTATION_ACCELL_UNIT_HOLDING;
                     } else if (this.phiRotationToApply > 0f ){
                         this.phiRotationToApply = 0f;
+                    } else {
+                        //We're in "Mash Boost" of mashing of rotation
+                        this.phiRotationToApply *= MASH_BOOST_SLOWDOWN_EFFECT;
                     }
-                    if(false && Input.IsActionJustPressed("ui_left")){
+                    if(Input.IsActionJustPressed("ui_accept")){
+                        //this.phiRotationToApply -= ROTATION_ACCELL_UNIT_MASHING;
                         this.phiRotationToApply -= ROTATION_ACCELL_UNIT_MASHING;
                     }
                 } else if(Input.IsActionPressed("ui_right")){
+                    this.ATV.CancelAllRotationalEnergy();
                     if(Math.Abs(this.phiRotationToApply) < MAX_ROTATION_MAGNITUDE){
                         this.phiRotationToApply += ROTATION_ACCELL_UNIT_HOLDING;
                     } else if (this.phiRotationToApply < 0f){
                         this.phiRotationToApply = 0f;
-                    }
-                    if(Input.IsActionJustPressed("ui_right")){
-                        this.phiRotationToApply += ROTATION_ACCELL_UNIT_HOLDING;
+                    } else {
+                        //We're in "Mash Boost" of mashing of rotation
+                        this.phiRotationToApply *= MASH_BOOST_SLOWDOWN_EFFECT;
                     }
  
+                    if(Input.IsActionJustPressed("ui_accept")){
+                        this.phiRotationToApply += ROTATION_ACCELL_UNIT_MASHING;
+                    }
                 } else {
                     this.phiRotationToApply = 0f;
                 }
@@ -58,7 +69,6 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
     public override void UpdateState(float delta){
         if(this.ATV.IsInAirNormalized() && this.ATV.ActiveState == ATVState.WITH_BEAR){
             this.SetActiveState(RotationManagerState.OPEN_TO_ROTATING_FROM_INPUT, 100);
-        } else {
-            this.SetActiveState(RotationManagerState.NOT_OPEN_TO_ROTATING_FROM_INPUT, 100);}
-    }
-}
+        }else{
+            this.SetActiveState(RotationManagerState.NOT_OPEN_TO_ROTATING_FROM_INPUT, 100);
+            }}}

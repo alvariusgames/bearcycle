@@ -131,6 +131,11 @@ public class ATV : FSMNode2D<ATVState> {
         }
     }
 
+    public void CancelAllRotationalEnergy(){
+        var avg = (this.FrontWheel.velocity + this.BackWheel.velocity) / 2f;
+        this.SetVelocityOfTwoWheels(avg);
+    }
+
     public override void UpdateState(float delta){
         if(this.FrontWheel.ActiveState == WheelState.ACCELERATING){
             this.Direction = ATVDirection.FORWARD;
