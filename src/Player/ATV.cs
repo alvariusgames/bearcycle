@@ -85,22 +85,26 @@ public class ATV : FSMNode2D<ATVState> {
        return this.OngoingIsInAirs.ToArray().All(x => x == true);}
 
     public void RotateTwoWheels(float phi){
+        phi = -phi; //My math was backwards, too lazy to fix...
         var center = this.GetGlobalCenterOfTwoWheels();
         var front = this.FrontWheel.GetGlobalPosition();
         var back = this.BackWheel.GetGlobalPosition();
 
         var centerToFront = (front - center);
-        var centerToBack = (center - back);
+        var centerToBack = (back - center);
 
         var rotatedCenterToFront = centerToFront.Rotated(phi);
-        var rotateBackToFront = BackToFrontVector.Rotated(phi);
+        var rotatedCenterToBack = centerToBack.Rotated(phi);
 
         var newFront = center + rotatedCenterToFront;
         this.FrontWheel.SetGlobalPosition(newFront);
         GD.Print("Front from " + front + " to " + newFront);
-        var newBack = center + centerToBack;
+        var newBack = center + rotatedCenterToBack;
         GD.Print("Back from " + back + " to " + newBack);
         this.BackWheel.SetGlobalPosition(newBack);
+
+        this.moveBearToCenter(-1);
+
     }
 
     public void ReattachBear(){
@@ -175,8 +179,6 @@ public class ATV : FSMNode2D<ATVState> {
         var bBodyEndCoor = bcenter - ((bcenter - fcenter).Normalized()) * (this.BodyLength + actualBodyLength) / 2f;
         this.FrontWheel.SetGlobalPosition(bBodyEndCoor);
         this.BackWheel.SetGlobalPosition(fBodyEndCoord);
-
-        GD.Print("body length = " + this.FrontWheel.GetGlobalPosition().DistanceTo(this.BackWheel.GetGlobalPosition()));
     }
     private void moveBearToCenter(float delta){
         var fcenter = this.FrontWheel.GetGlobalPosition();

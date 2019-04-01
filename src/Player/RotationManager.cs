@@ -24,9 +24,9 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
         switch(this.ActiveState){
             case RotationManagerState.OPEN_TO_ROTATING_FROM_INPUT:
                 if(Input.IsActionPressed("ui_left")){
-                    //this.ATV.RotateTwoWheels(0.0001f);
+                    this.ATV.RotateTwoWheels(0.1f);
                 } else if(Input.IsActionPressed("ui_right")){
-                    //this.ATV.RotateTwoWheels(-0.0001f);
+                    this.ATV.RotateTwoWheels(-0.1f);
                 }
                 break;
             case RotationManagerState.NOT_OPEN_TO_ROTATING_FROM_INPUT:
