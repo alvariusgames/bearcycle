@@ -20,7 +20,7 @@ public class ATV : FSMNode2D<ATVState> {
     public Bear Bear;
     public Player Player;
     public float BodyLength;
-    private int LastInAirsLength = 5;
+    private int LastInAirsLength = 15;
     private Queue<Boolean> OngoingIsInAirs = new Queue<Boolean>();
        public override void _Ready(){
         this.ResetActiveState(this.InitialState);
@@ -84,6 +84,25 @@ public class ATV : FSMNode2D<ATVState> {
     public Boolean IsInAirNormalized(){
        return this.OngoingIsInAirs.ToArray().All(x => x == true);}
 
+    public void RotateTwoWheels(float phi){
+        var center = this.GetGlobalCenterOfTwoWheels();
+        var front = this.FrontWheel.GetGlobalPosition();
+        var back = this.BackWheel.GetGlobalPosition();
+
+        var centerToFront = (front - center);
+        var centerToBack = (center - back);
+
+        var rotatedCenterToFront = centerToFront.Rotated(phi);
+        var rotateBackToFront = BackToFrontVector.Rotated(phi);
+
+        var newFront = center + rotatedCenterToFront;
+        this.FrontWheel.SetGlobalPosition(newFront);
+        GD.Print("Front from " + front + " to " + newFront);
+        var newBack = center + centerToBack;
+        GD.Print("Back from " + back + " to " + newBack);
+        this.BackWheel.SetGlobalPosition(newBack);
+    }
+
     public void ReattachBear(){
         this.Bear.SetActiveState(BearState.ON_ATV, 100);
         this.moveBearToCenter(-1);
@@ -145,16 +164,19 @@ public class ATV : FSMNode2D<ATVState> {
                 throw new Exception("ATV must have state");
         }
     }
-
    
     private void holdWheelsTogether(float delta){
         //Do physics for a joint between frontwheel and backwheel
         var fcenter = this.FrontWheel.GetGlobalPosition();
         var bcenter = this.BackWheel.GetGlobalPosition();
-        var fBodyEndCoord = fcenter - ((fcenter - bcenter).Normalized()) * this.BodyLength;
-        var bBodyEndCoor = bcenter - ((bcenter - fcenter).Normalized()) * this.BodyLength;
+        var actualBodyLength =  this.FrontWheel.GetGlobalPosition().DistanceTo(this.BackWheel.GetGlobalPosition());
+
+        var fBodyEndCoord = fcenter - ((fcenter - bcenter).Normalized()) * (this.BodyLength + actualBodyLength) / 2f;
+        var bBodyEndCoor = bcenter - ((bcenter - fcenter).Normalized()) * (this.BodyLength + actualBodyLength) / 2f;
         this.FrontWheel.SetGlobalPosition(bBodyEndCoor);
         this.BackWheel.SetGlobalPosition(fBodyEndCoord);
+
+        GD.Print("body length = " + this.FrontWheel.GetGlobalPosition().DistanceTo(this.BackWheel.GetGlobalPosition()));
     }
     private void moveBearToCenter(float delta){
         var fcenter = this.FrontWheel.GetGlobalPosition();

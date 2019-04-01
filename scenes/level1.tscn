@@ -73,7 +73,7 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="Player" type="Node2D" parent="." index="0"]
 
-position = Vector2( 868.33, 111.025 )
+position = Vector2( 6538.67, 466.836 )
 script = ExtResource( 1 )
 
 [node name="AttackWindow" type="KinematicBody2D" parent="Player" index="0"]
@@ -281,7 +281,7 @@ _sections_unfolded = [ "Pause" ]
 
 position = Vector2( 2828.67, 943.386 )
 build_mode = 0
-polygon = PoolVector2Array( 1154.98, -382.713, 1301.39, -372.953, 4175.42, -327.249, 3459.4, -1445.27, 3782.53, -797.287, 3493.67, -411.917, 2351.63, -455.885, 2275.63, -494.835, 2169.23, -449.235, 2193.93, -537.586, 2062.3, -439.926, 1174.5, -444.531 )
+polygon = PoolVector2Array( 1154.98, -382.713, 1301.39, -372.953, 3760.37, -360.025, 3733.2, -414.365, 3640.83, -452.404, 3493.67, -411.917, 2351.63, -455.885, 2275.63, -494.835, 2238.1, -525.025, 2193.93, -537.586, 2062.3, -439.926, 1174.5, -444.531 )
 script = ExtResource( 13 )
 
 [node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision5" index="0"]
