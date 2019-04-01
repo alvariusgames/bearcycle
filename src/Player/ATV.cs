@@ -85,7 +85,6 @@ public class ATV : FSMNode2D<ATVState> {
        return this.OngoingIsInAirs.ToArray().All(x => x == true);}
 
     public void RotateTwoWheels(float phi){
-        phi = -phi; //My math was backwards, too lazy to fix...
         var center = this.GetGlobalCenterOfTwoWheels();
         var front = this.FrontWheel.GetGlobalPosition();
         var back = this.BackWheel.GetGlobalPosition();
@@ -98,13 +97,10 @@ public class ATV : FSMNode2D<ATVState> {
 
         var newFront = center + rotatedCenterToFront;
         this.FrontWheel.SetGlobalPosition(newFront);
-        GD.Print("Front from " + front + " to " + newFront);
         var newBack = center + rotatedCenterToBack;
-        GD.Print("Back from " + back + " to " + newBack);
         this.BackWheel.SetGlobalPosition(newBack);
 
-        this.moveBearToCenter(-1);
-
+        //this.moveBearToCenter(-1);
     }
 
     public void ReattachBear(){
