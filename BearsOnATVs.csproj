@@ -62,6 +62,7 @@
     <Compile Include="src\Player\ATV.cs" />
     <Compile Include="src\Player\Bear.cs" />
     <Compile Include="src\Player\Player.cs" />
+    <Compile Include="src\Player\RotationManager.cs" />
     <Compile Include="src\Player\Wheel.cs" />
     <Compile Include="src\FSMComponents\IFSMObject.cs" />
     <Compile Include="src\FSMComponents\FSMNode2D.cs" />

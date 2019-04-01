@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public enum ATVState {WITH_BEAR, WITHOUT_BEAR}
 
@@ -18,7 +20,9 @@ public class ATV : FSMNode2D<ATVState> {
     public Bear Bear;
     public Player Player;
     public float BodyLength;
-    public override void _Ready(){
+    private int LastInAirsLength = 5;
+    private Queue<Boolean> OngoingIsInAirs = new Queue<Boolean>();
+       public override void _Ready(){
         this.ResetActiveState(this.InitialState);
         foreach(Node2D child in this.GetChildren()){
             if(child.Name.Equals("FrontWheel")){
@@ -29,7 +33,10 @@ public class ATV : FSMNode2D<ATVState> {
                 this.Bear = (Bear)child;}}
         this.Player = (Player)this.GetParent();
         this.BodyLength = this.FrontWheel.Position.DistanceTo(
-            this.BackWheel.Position);}
+            this.BackWheel.Position);
+        for(int i=0; i<this.LastInAirsLength; i++){
+            this.OngoingIsInAirs.Enqueue(false);
+        }}
 
     public Vector2 GetGlobalCenterOfTwoWheels(){
         return (this.FrontWheel.GetGlobalPosition() + this.BackWheel.GetGlobalPosition()) / 2f;}
@@ -70,6 +77,13 @@ public class ATV : FSMNode2D<ATVState> {
         this.BackWheel.forwardAccell = accell;
     }
 
+    public Boolean IsInAir(){
+        return this.FrontWheel.IsInAir() && this.BackWheel.IsInAir();
+    }
+
+    public Boolean IsInAirNormalized(){
+       return this.OngoingIsInAirs.ToArray().All(x => x == true);}
+
     public void ReattachBear(){
         this.Bear.SetActiveState(BearState.ON_ATV, 100);
         this.moveBearToCenter(-1);
@@ -109,6 +123,13 @@ public class ATV : FSMNode2D<ATVState> {
 
     public override void ReactStateless(float delta){
         this.holdWheelsTogether(delta);
+        this.updateLastInAirs(delta);
+    }
+
+    private void updateLastInAirs(float delta){
+        this.OngoingIsInAirs.Dequeue();
+        var inAir = this.IsInAir();
+        this.OngoingIsInAirs.Enqueue(inAir);
     }
 
     public override void ReactToState(float delta){

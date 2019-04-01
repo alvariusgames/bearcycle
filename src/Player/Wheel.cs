@@ -29,7 +29,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     private const float LOCKING_EFFECT = 0.90f;
     private const float DEFAULT_FRICTION_EFFECT = 0.90f;
     ///when speedbosting, what slowdown effect to go back down to normal speed
-    private const float SPEED_BOOST_SLOWDOWN_EFFECT = 0.99f;
+    private const float SPEED_BOOST_SLOWDOWN_EFFECT = 0.995f;
 
     public override void _Ready(){
         this.ResetActiveState(this.InitialState);
@@ -51,7 +51,6 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     }
 
     public override void ReactToState(float delta){
-        GD.Print(this.forwardAccell);
         switch(this.ActiveState){
             case WheelState.ACCELERATING:
                 if(this.forwardAccell <= MAX_FORWARD_ACCEL){  
@@ -171,6 +170,10 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
         ///args: 1 means no change, 0.7f means 30% less, 2f means twice as fast, etc.
         this.velocity = this.velocity * velocityMultiplier;
         this.forwardAccell = this.forwardAccell * accellVelocityMultiplier;
+    }
+
+    public Boolean IsInAir(){
+        return this.GetSlideCount() <= 0;
     }
 
     private void updateSprite(float delta){
