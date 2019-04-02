@@ -22,14 +22,14 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
             this.ATV = (ATV)parent;}}
 
     public override void ReactStateless(float delta){
-        GD.Print("Applying " + this.phiRotationToApply);
         this.ATV.RotateTwoWheels(this.phiRotationToApply);}
 
     public override void ReactToState(float delta){
         switch(this.ActiveState){
             case RotationManagerState.OPEN_TO_ROTATING_FROM_INPUT:
-                if(Input.IsActionPressed("ui_left")){
+                if(Input.IsActionPressed("ui_left") && this.ATV.ActiveState == ATVState.WITH_BEAR){
                     this.ATV.CancelAllRotationalEnergy();
+                    this.ATV.CancelAllForwardTwoWheelEnergy();
                     if(Math.Abs(this.phiRotationToApply) < MAX_ROTATION_MAGNITUDE){
                         this.phiRotationToApply -= ROTATION_ACCELL_UNIT_HOLDING;
                     } else if (this.phiRotationToApply > 0f ){
@@ -42,8 +42,9 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
                         //this.phiRotationToApply -= ROTATION_ACCELL_UNIT_MASHING;
                         this.phiRotationToApply -= ROTATION_ACCELL_UNIT_MASHING;
                     }
-                } else if(Input.IsActionPressed("ui_right")){
+                } else if(Input.IsActionPressed("ui_right") && this.ATV.ActiveState == ATVState.WITH_BEAR){
                     this.ATV.CancelAllRotationalEnergy();
+                    this.ATV.CancelAllBackwardTwoWheelEnergy();
                     if(Math.Abs(this.phiRotationToApply) < MAX_ROTATION_MAGNITUDE){
                         this.phiRotationToApply += ROTATION_ACCELL_UNIT_HOLDING;
                     } else if (this.phiRotationToApply < 0f){

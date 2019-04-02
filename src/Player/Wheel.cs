@@ -91,12 +91,15 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     }
 
     private void reactToInput(float delta){
-        if (Input.IsActionPressed("ui_left")){
-            this.SetActiveState(WheelState.DECELERATING, 100);}
-        else if (Input.IsActionPressed("ui_right")){
-            this.SetActiveState(WheelState.ACCELERATING, 100);}
-        else{
-            this.SetActiveState(WheelState.IDLING, 100);
+        if(!this.ATV.IsInAirNormalized()){
+            ///Only change wheel state from input if on ground
+            if (Input.IsActionPressed("ui_left")){
+                this.SetActiveState(WheelState.DECELERATING, 100);}
+            else if (Input.IsActionPressed("ui_right")){
+                this.SetActiveState(WheelState.ACCELERATING, 100);}
+            else{
+                this.SetActiveState(WheelState.IDLING, 100);
+            }
         }
     }
 

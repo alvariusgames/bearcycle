@@ -51,7 +51,7 @@ public class Player : FSMNode2D<PlayerState>{
     }
 
     public void reactToInput(float delta){
-        if(Input.IsActionJustPressed("ui_accept")){
+        if(Input.IsActionJustPressed("ui_accept") && this.ATV.ActiveState == ATVState.WITH_BEAR){
             this.SetActiveState(PlayerState.TRIGGER_ATTACK, 100);
         } else {
             this.SetActiveState(PlayerState.NORMAL, 100);
@@ -83,7 +83,7 @@ public class Player : FSMNode2D<PlayerState>{
     public void GetHitBy(Node node){
         if(node is NPC){
             var npc = (NPC)node;
-            var slowDownFactor = 0.3f;
+            var slowDownFactor = 0.1f;
             this.ATV.AdjustVelocityAndAccelOfTwoWheels(slowDownFactor, 0f);}}
 
 //    public override void _Process(float delta)
