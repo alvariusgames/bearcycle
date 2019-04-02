@@ -153,10 +153,10 @@ public class ATV : FSMNode2D<ATVState> {
             this.BackWheel.ResetActiveState(WheelState.IDLING);}}
 
     public override void UpdateState(float delta){
-        if(this.FrontWheel.ActiveState == WheelState.ACCELERATING){
+        if(this.FrontWheel.ActiveState == WheelState.ACCELERATING || Input.IsActionPressed("ui_right")){
             this.Direction = ATVDirection.FORWARD;
         }
-        else if(this.FrontWheel.ActiveState == WheelState.DECELERATING){
+        else if(this.FrontWheel.ActiveState == WheelState.DECELERATING || Input.IsActionPressed("ui_left")){
             this.Direction = ATVDirection.BACKWARD;
         }
     }
