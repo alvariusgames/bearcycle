@@ -68,7 +68,7 @@ extents = Vector2( 37.297, 10 )
 
 [node name="main" type="Node2D" index="0"]
 
-position = Vector2( 24, 0 )
+position = Vector2( -115, 0 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="Player" type="Node2D" parent="." index="0"]

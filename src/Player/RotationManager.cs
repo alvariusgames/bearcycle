@@ -14,8 +14,8 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
 
     private float SecondsInAirPressingRight = 0f;
     private float SecondsInAirPressingLeft = 0f;
-    private const float ROTATION_ACCELL_UNIT = 0.005f;
-    private const float MAX_SLOW_ROTATION_MAG = 0.05f;
+    private const float ROTATION_ACCELL_UNIT = 0.03f;
+    private const float MAX_SLOW_ROTATION_MAG = 0.2f;
     private const float MAX_FAST_ROTATION_MAG = 0.90f;
     private const float SEC_HOLDING_BUTTON_TO_FAST_ROT = 4f;
     private const float FRICTION_EFFECT=0.9f;
@@ -25,17 +25,24 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
             this.ATV = (ATV)parent;}}
 
     public override void ReactStateless(float delta){
-        GD.Print(this.SecondsInAirPressingLeft);
+        GD.Print(this.SecondsInAirPressingRight);
         this.ATV.RotateTwoWheels(this.phiRotationToApply);
-        if(this.ATV.IsInAir() && Input.IsActionPressed("ui_left")){
-            this.SecondsInAirPressingLeft += delta;}
-        else {
-            this.SecondsInAirPressingLeft = 0f;}
-        if(this.ATV.IsInAir() && Input.IsActionJustPressed("ui_right")){
-            this.SecondsInAirPressingRight += delta;
-        } else {
-            this.SecondsInAirPressingRight = 0f;}
+        if(this.ATV.IsInAir() && 
+           Input.IsActionPressed("ui_left") &&
+           Input.IsActionPressed("ui_right")){
+               this.SecondsInAirPressingLeft = 0f;
+               this.SecondsInAirPressingRight = 0f;
         }
+        if(this.ATV.IsInAir() &&
+           Input.IsActionPressed("ui_left")){
+                this.SecondsInAirPressingLeft += delta;}
+        else{
+                this.SecondsInAirPressingLeft = 0f;}
+        if(this.ATV.IsInAir() &&
+           Input.IsActionPressed("ui_right")){
+                this.SecondsInAirPressingRight += delta;
+        } else {
+                this.SecondsInAirPressingRight = 0f;}}
 
     public override void ReactToState(float delta){
         switch(this.ActiveState){
@@ -81,16 +88,16 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
             if(Input.IsActionPressed("ui_right") && Input.IsActionPressed("ui_left")){
                 this.SetActiveState(RotationManagerState.NOT_ROTATING, 100);}
             else if(Input.IsActionPressed("ui_right")){
-                if(this.SecondsInAirPressingRight < SEC_HOLDING_BUTTON_TO_FAST_ROT){
+                if(this.SecondsInAirPressingRight > SEC_HOLDING_BUTTON_TO_FAST_ROT){
                     this.SetActiveState(RotationManagerState.ROTATE_FAST_FORWARD, 100);}
                 else if(this.SecondsInAirPressingRight <= SEC_HOLDING_BUTTON_TO_FAST_ROT){
                    this.SetActiveState(RotationManagerState.ROTATE_SLOW_FORWARD, 100);}
                 else{
                     this.SetActiveState(RotationManagerState.NOT_ROTATING, 100);}}
             else if(Input.IsActionPressed("ui_left")){
-               if(this.SecondsInAirPressingLeft < SEC_HOLDING_BUTTON_TO_FAST_ROT){
+               if(this.SecondsInAirPressingLeft > SEC_HOLDING_BUTTON_TO_FAST_ROT){
                     this.SetActiveState(RotationManagerState.ROTATE_FAST_BACKWARD, 100);}
-               else if (this.SecondsInAirPressingLeft >= SEC_HOLDING_BUTTON_TO_FAST_ROT){
+               else if (this.SecondsInAirPressingLeft <= SEC_HOLDING_BUTTON_TO_FAST_ROT){
                    this.SetActiveState(RotationManagerState.ROTATE_SLOW_BACKWARD, 100);}
                else{
                     this.SetActiveState(RotationManagerState.NOT_ROTATING, 100);}}
