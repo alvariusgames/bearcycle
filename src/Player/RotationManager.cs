@@ -73,14 +73,14 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
                 break;
             case RotationManagerState.NOT_ROTATING:
                 this.phiRotationToApply = 0f;
-                break;
-       }
-    }
+                break;}}
 
     public override void UpdateState(float delta){
         if(this.ATV.IsInAirNormalized() && this.ATV.ActiveState == ATVState.WITH_BEAR){
             ///If we're in the right situation to be able to accept input
-            if(Input.IsActionPressed("ui_right")){
+            if(Input.IsActionPressed("ui_right") && Input.IsActionPressed("ui_left")){
+                this.SetActiveState(RotationManagerState.NOT_ROTATING, 100);}
+            else if(Input.IsActionPressed("ui_right")){
                 if(this.SecondsInAirPressingRight < SEC_HOLDING_BUTTON_TO_FAST_ROT){
                     this.SetActiveState(RotationManagerState.ROTATE_FAST_FORWARD, 100);}
                 else if(this.SecondsInAirPressingRight <= SEC_HOLDING_BUTTON_TO_FAST_ROT){
@@ -93,8 +93,9 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
                else if (this.SecondsInAirPressingLeft >= SEC_HOLDING_BUTTON_TO_FAST_ROT){
                    this.SetActiveState(RotationManagerState.ROTATE_SLOW_BACKWARD, 100);}
                else{
-                    this.SetActiveState(RotationManagerState.NOT_ROTATING, 100);}
+                    this.SetActiveState(RotationManagerState.NOT_ROTATING, 100);}}
+            else{
+                this.SetActiveState(RotationManagerState.NOT_ROTATING, 100);}
         } else {
             this.SetActiveState(RotationManagerState.NOT_ROTATING, 100);}}
     }
-}
