@@ -15,9 +15,9 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
     private float SecondsInAirPressingRight = 0f;
     private float SecondsInAirPressingLeft = 0f;
     private const float ROTATION_ACCELL_UNIT = 0.03f;
-    private const float MAX_SLOW_ROTATION_MAG = 0.2f;
-    private const float MAX_FAST_ROTATION_MAG = 0.90f;
-    private const float SEC_HOLDING_BUTTON_TO_FAST_ROT = 4f;
+    private const float MAX_SLOW_ROTATION_MAG = 0.05f;
+    private const float MAX_FAST_ROTATION_MAG = 0.25f;
+    private const float SEC_HOLDING_BUTTON_TO_FAST_ROT = 0.8f;
     private const float FRICTION_EFFECT=0.9f;
     public override void _Ready(){
         var parent = this.GetParent();
