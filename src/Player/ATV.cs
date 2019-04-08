@@ -207,8 +207,19 @@ public class ATV : FSMNode2D<ATVState> {
         
         //this.Bear.SetGlobalPosition(bearCenter / 90);
         this.Bear.Sprite.SetGlobalRotation((fcenter - bcenter).Angle());
-        this.Bear.SetGlobalPosition(bearCenter);
-    }
-}
+        this.Bear.SetGlobalPosition(bearCenter);}
+
+    public void ApplyPhonyRunOverEffect(Wheel wheel){
+        ////Simulates an ATV squishing something below it
+        GD.Print("Getting Phony");
+        if(wheel.Equals(this.FrontWheel)){
+            this.FrontWheel.PhonyBounceUp(1f);
+            this.BackWheel.PhonyBounceUp(0.5f);
+        } else if(wheel.Equals(this.BackWheel)){
+            this.FrontWheel.PhonyBounceUp(0.5f);
+            this.BackWheel.PhonyBounceUp(1f);
+        } else {
+            throw new Exception("Run over effect only for Front Wheel or Back Wheel!");
+        }}}
 
 

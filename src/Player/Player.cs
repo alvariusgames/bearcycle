@@ -72,7 +72,6 @@ public class Player : FSMNode2D<PlayerState>{
             this.TotalCalories += food.Calories;
             this.foodEaten.Add(food);
             this.lastFoodEaten = food;}}
-
     public void UpdateHealth(float signedHealthUnits){
         var tentativeHealth = this.CurrentHealth + signedHealthUnits;
         if(tentativeHealth >= MAX_HEALTH){
@@ -83,8 +82,9 @@ public class Player : FSMNode2D<PlayerState>{
     public void GetHitBy(Node node){
         if(node is NPC){
             var npc = (NPC)node;
-            var slowDownFactor = 0.1f;
-            this.ATV.AdjustVelocityAndAccelOfTwoWheels(slowDownFactor, 0f);}}
+            //TODO: evaluate if this is needed or not
+    }}
+
 
 //    public override void _Process(float delta)
 //    {

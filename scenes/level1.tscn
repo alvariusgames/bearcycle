@@ -73,7 +73,7 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="Player" type="Node2D" parent="." index="0"]
 
-position = Vector2( 251.822, -563.089 )
+position = Vector2( 3901.96, 415.566 )
 script = ExtResource( 1 )
 
 [node name="AttackWindow" type="KinematicBody2D" parent="Player" index="0"]
@@ -235,7 +235,7 @@ _sections_unfolded = [ "Collision" ]
 
 position = Vector2( -214.273, 158.334 )
 build_mode = 0
-polygon = PoolVector2Array( 183.324, 299.951, 362.623, -663.011, 1060.17, -412.355, 670.669, -266.293, 578.21, -214.152, 508.422, -144.365, 472.236, -86.2088, 450.266, -31.9298, 442.512, 17.1797, 450.266, 77.9205, 466.273, 117.35, 486.273, 158.403, 511.044, 190.617, 560.529, 232.708, 669.432, 259.456, 769.432, 255.245, 850.263, 228.621, 880.41, 204.821, 894.72, 182.608, 996.237, 68.3672, 1053.36, 9.66023, 1108.11, -12.1737, 1146.6, -11.7964, 1169.75, -10.6272, 1185.76, -6.19984, 1195.31, 4.51421, 1196.01, 58.7426, 1193.44, 101.35, 1232.57, 103.787, 1244.09, 109.294, 1274.59, 162.165, 1227.05, 208.58, 1009.69, 285.308, 632.951, 292.008 )
+polygon = PoolVector2Array( 183.324, 299.951, 518.855, -1072.65, 3028.4, -1074.43, 670.669, -266.293, 578.21, -214.152, 508.422, -144.365, 472.236, -86.2088, 450.266, -31.9298, 442.512, 17.1797, 450.266, 77.9205, 466.273, 117.35, 486.273, 158.403, 511.044, 190.617, 560.529, 232.708, 669.432, 259.456, 769.432, 255.245, 850.263, 228.621, 880.41, 204.821, 894.72, 182.608, 996.237, 68.3672, 1053.36, 9.66023, 1108.11, -12.1737, 1146.6, -11.7964, 1169.75, -10.6272, 1185.76, -6.19984, 1195.31, 4.51421, 1196.01, 58.7426, 1193.44, 101.35, 1232.57, 103.787, 1244.09, 109.294, 1274.59, 162.165, 1227.05, 208.58, 1009.69, 285.308, 632.951, 292.008 )
 script = ExtResource( 13 )
 
 [node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision" index="0"]
@@ -523,7 +523,155 @@ position = Vector2( 2.75938, 4.82353 )
 scale = Vector2( 1.72059, 2.3115 )
 shape = SubResource( 5 )
 
-[node name="SpeedBoost" type="KinematicBody2D" parent="Items" index="8"]
+[node name="NPC4" type="RigidBody2D" parent="Items" index="8"]
+
+position = Vector2( 3580.55, 438.96 )
+input_pickable = false
+collision_layer = 524300
+collision_mask = 524300
+mode = 0
+mass = 1.0
+friction = 1.0
+bounce = 0.0
+gravity_scale = 1.0
+custom_integrator = false
+continuous_cd = 0
+contacts_reported = 0
+contact_monitor = false
+sleeping = false
+can_sleep = true
+linear_velocity = Vector2( 0, 0 )
+linear_damp = -1.0
+angular_velocity = 0.0
+angular_damp = -1.0
+script = ExtResource( 18 )
+_sections_unfolded = [ "Collision" ]
+
+[node name="Sprite" type="Sprite" parent="Items/NPC4" index="0"]
+
+position = Vector2( 2.91019, 3.98184 )
+scale = Vector2( 0.0972942, 0.0972942 )
+texture = ExtResource( 19 )
+_sections_unfolded = [ "Offset" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC4" index="1"]
+
+position = Vector2( 2.75938, 4.82353 )
+scale = Vector2( 1.72059, 2.3115 )
+shape = SubResource( 5 )
+
+[node name="NPC5" type="RigidBody2D" parent="Items" index="9"]
+
+position = Vector2( 3501.27, 424.278 )
+input_pickable = false
+collision_layer = 524300
+collision_mask = 524300
+mode = 0
+mass = 1.0
+friction = 1.0
+bounce = 0.0
+gravity_scale = 1.0
+custom_integrator = false
+continuous_cd = 0
+contacts_reported = 0
+contact_monitor = false
+sleeping = false
+can_sleep = true
+linear_velocity = Vector2( 0, 0 )
+linear_damp = -1.0
+angular_velocity = 0.0
+angular_damp = -1.0
+script = ExtResource( 18 )
+_sections_unfolded = [ "Collision" ]
+
+[node name="Sprite" type="Sprite" parent="Items/NPC5" index="0"]
+
+position = Vector2( 2.91019, 3.98184 )
+scale = Vector2( 0.0972942, 0.0972942 )
+texture = ExtResource( 19 )
+_sections_unfolded = [ "Offset" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC5" index="1"]
+
+position = Vector2( 2.75938, 4.82353 )
+scale = Vector2( 1.72059, 2.3115 )
+shape = SubResource( 5 )
+
+[node name="NPC6" type="RigidBody2D" parent="Items" index="10"]
+
+position = Vector2( 3034.39, 424.278 )
+input_pickable = false
+collision_layer = 524300
+collision_mask = 524300
+mode = 0
+mass = 1.0
+friction = 1.0
+bounce = 0.0
+gravity_scale = 1.0
+custom_integrator = false
+continuous_cd = 0
+contacts_reported = 0
+contact_monitor = false
+sleeping = false
+can_sleep = true
+linear_velocity = Vector2( 0, 0 )
+linear_damp = -1.0
+angular_velocity = 0.0
+angular_damp = -1.0
+script = ExtResource( 18 )
+_sections_unfolded = [ "Collision" ]
+
+[node name="Sprite" type="Sprite" parent="Items/NPC6" index="0"]
+
+position = Vector2( 2.91019, 3.98184 )
+scale = Vector2( 0.0972942, 0.0972942 )
+texture = ExtResource( 19 )
+_sections_unfolded = [ "Offset" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC6" index="1"]
+
+position = Vector2( 2.75938, 4.82353 )
+scale = Vector2( 1.72059, 2.3115 )
+shape = SubResource( 5 )
+
+[node name="NPC7" type="RigidBody2D" parent="Items" index="11"]
+
+position = Vector2( 3101.93, 412.533 )
+input_pickable = false
+collision_layer = 524300
+collision_mask = 524300
+mode = 0
+mass = 1.0
+friction = 1.0
+bounce = 0.0
+gravity_scale = 1.0
+custom_integrator = false
+continuous_cd = 0
+contacts_reported = 0
+contact_monitor = false
+sleeping = false
+can_sleep = true
+linear_velocity = Vector2( 0, 0 )
+linear_damp = -1.0
+angular_velocity = 0.0
+angular_damp = -1.0
+script = ExtResource( 18 )
+_sections_unfolded = [ "Collision" ]
+
+[node name="Sprite" type="Sprite" parent="Items/NPC7" index="0"]
+
+position = Vector2( 2.91019, 3.98184 )
+scale = Vector2( 0.0972942, 0.0972942 )
+texture = ExtResource( 19 )
+_sections_unfolded = [ "Offset" ]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC7" index="1"]
+
+position = Vector2( 2.75938, 4.82353 )
+scale = Vector2( 1.72059, 2.3115 )
+shape = SubResource( 5 )
+
+[node name="SpeedBoost" type="KinematicBody2D" parent="Items" index="12"]
 
 position = Vector2( 506.45, 401.389 )
 rotation = -3.13924
@@ -544,7 +692,7 @@ texture = ExtResource( 21 )
 
 shape = SubResource( 6 )
 
-[node name="SpeedBoost3" type="KinematicBody2D" parent="Items" index="9"]
+[node name="SpeedBoost3" type="KinematicBody2D" parent="Items" index="13"]
 
 position = Vector2( 5227.32, 468.843 )
 rotation = -3.13924
@@ -565,7 +713,7 @@ texture = ExtResource( 21 )
 
 shape = SubResource( 6 )
 
-[node name="SpeedBoost2" type="KinematicBody2D" parent="Items" index="10"]
+[node name="SpeedBoost2" type="KinematicBody2D" parent="Items" index="14"]
 
 position = Vector2( 4814, 479.266 )
 rotation = -6.25955

@@ -25,7 +25,6 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
             this.ATV = (ATV)parent;}}
 
     public override void ReactStateless(float delta){
-        GD.Print(this.SecondsInAirPressingRight);
         this.ATV.RotateTwoWheels(this.phiRotationToApply);
         if(this.ATV.IsInAir() && 
            Input.IsActionPressed("ui_left") &&

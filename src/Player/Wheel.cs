@@ -30,6 +30,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     private const float DEFAULT_FRICTION_EFFECT = 0.90f;
     ///when speedbosting, what slowdown effect to go back down to normal speed
     private const float SPEED_BOOST_SLOWDOWN_EFFECT = 0.995f;
+    private const float BOUNCE_UP_EFFECT_VELOCITY = MAX_SPEED / 4; 
 
     public override void _Ready(){
         this.ResetActiveState(this.InitialState);
@@ -135,7 +136,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                 var npc = (NPC)collision.Collider;
                 npc.GetHitBy(this);
                 this.ATV.Player.GetHitBy(npc);
-            }
+                this.ATV.ApplyPhonyRunOverEffect(this);}
             if(collision.Collider is SpeedBoost){
                 var speedBoost = (SpeedBoost)collision.Collider;
                 this.ATV.SetVelocityOfTwoWheels(speedBoost.VelocityToApply);
@@ -148,6 +149,11 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                 //this.ATV.AdjustVelocityAndAccelOfTwoWheels(1f, 3f);
                 speedBoost.GetHitBy(this);
             }}}
+
+        public void PhonyBounceUp(float magnitude){
+            this.velocity = new Vector2(this.currentNormal.x * magnitude * BOUNCE_UP_EFFECT_VELOCITY,
+                                        this.currentNormal.y * magnitude * BOUNCE_UP_EFFECT_VELOCITY); 
+        }
 
     /// "Normal" is defined as the direction "up" away from the platform.
     ///     - this is calculated automatically for us for each kinematic collision
