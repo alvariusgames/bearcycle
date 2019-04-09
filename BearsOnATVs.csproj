@@ -61,6 +61,7 @@
     <Compile Include="src\Player\AttackWindow.cs" />
     <Compile Include="src\Player\ATV.cs" />
     <Compile Include="src\Player\Bear.cs" />
+    <Compile Include="src\Player\CameraManager.cs" />
     <Compile Include="src\Player\Player.cs" />
     <Compile Include="src\Player\RotationManager.cs" />
     <Compile Include="src\Player\Wheel.cs" />
