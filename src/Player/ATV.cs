@@ -103,6 +103,10 @@ public class ATV : FSMNode2D<ATVState> {
         //this.moveBearToCenter(-1);
     }
 
+    public float GetAngleFromBackWheelToFrontWheel(){
+        return this.BackWheel.GetGlobalPosition().AngleToPoint(this.FrontWheel.GetGlobalPosition());
+    }
+
     public void ReattachBear(){
         this.Bear.SetActiveState(BearState.ON_ATV, 100);
         this.moveBearToCenter(-1);
@@ -211,7 +215,6 @@ public class ATV : FSMNode2D<ATVState> {
 
     public void ApplyPhonyRunOverEffect(Wheel wheel){
         ////Simulates an ATV squishing something below it
-        GD.Print("Getting Phony");
         if(wheel.Equals(this.FrontWheel)){
             this.FrontWheel.PhonyBounceUp(1f);
             this.BackWheel.PhonyBounceUp(0.5f);

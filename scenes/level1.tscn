@@ -214,14 +214,14 @@ smoothing_enabled = true
 smoothing_speed = 7.0
 offset_v = 0.0
 offset_h = 0.0
-drag_margin_left = 0.2
-drag_margin_top = 0.2
-drag_margin_right = 0.2
-drag_margin_bottom = 0.2
+drag_margin_left = 0.3
+drag_margin_top = 0.3
+drag_margin_right = 0.3
+drag_margin_bottom = 0.3
 editor_draw_screen = true
 editor_draw_limits = false
 editor_draw_drag_margin = false
-_sections_unfolded = [ "Smoothing" ]
+_sections_unfolded = [ "Drag Margin", "Smoothing" ]
 
 [node name="Sprite" type="Sprite" parent="Player/ATV/Bear/CameraManager/NodeCameraFollows" index="1"]
 
@@ -293,7 +293,7 @@ _sections_unfolded = [ "Pause" ]
 
 position = Vector2( 2828.67, 943.386 )
 build_mode = 0
-polygon = PoolVector2Array( 1154.98, -382.713, 1301.39, -372.953, 3760.37, -360.025, 3802.82, -1009.26, 3707.16, -428.088, 3493.67, -411.917, 2351.63, -455.885, 2275.63, -494.835, 2238.1, -525.025, 2193.93, -537.586, 2062.3, -439.926, 1174.5, -444.531 )
+polygon = PoolVector2Array( 1154.98, -382.713, 1301.39, -372.953, 3760.37, -360.025, 3802.82, -1009.26, 3569.8, -630.07, 3334.01, -411.122, 3078.22, -483.754, 2937.17, -618.491, 2896.11, -618.491, 2866.64, -595.333, 2835.06, -521.649, 2795.06, -467.964, 2733.96, -441.165, 2351.63, -455.885, 2275.63, -494.835, 2238.1, -525.025, 2193.93, -537.586, 2062.3, -439.926, 1174.5, -444.531 )
 script = ExtResource( 15 )
 
 [node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision5" index="0"]
