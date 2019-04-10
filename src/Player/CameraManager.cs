@@ -1,16 +1,14 @@
 using Godot;
 using System;
 
-public enum CameraManagerState {NOT_MOVING_FOLLOW_NODE, MOVING_FOLLOW_NODE_FORWARD, MOVING_FOLLOW_NODE_BACKWARD};
+public enum CameraManagerState {MOVING_NODE_CAMERA_FOLLOWS};
 
 public class CameraManager : FSMNode2D<CameraManagerState>{
     public override CameraManagerState InitialState {
-        get { return CameraManagerState.NOT_MOVING_FOLLOW_NODE;}}
+        get { return CameraManagerState.MOVING_NODE_CAMERA_FOLLOWS;}}
     public Bear Bear;
     public Node2D NodeCameraFollows;
     public Camera2D Camera2D;
-    private const float PERCENT_FROM_CENTER_TRAVEL_LIMIT = 1f;
-    private const float TRAVEL_SPEED = 100f;
     private Vector2 screenSize;
 
     public override void _Ready()
@@ -31,51 +29,29 @@ public class CameraManager : FSMNode2D<CameraManagerState>{
 
     public override void ReactStateless(float delta){}
 
+    private const float HORIZONTAL_MULTIPLIER_EFFECT = 1.20f;
+    private const float VERTICAL_MULTIPLIER_EFFECT = 0.25f;
+    private const float HORIZONTAL_OFFSET = 0f;
+    private const float VERTICAL_OFFSET = -50f;
+    private const float MAX_POSITION_X = 700f;
+    private const float MAX_POSITION_Y = 700f;
+
     public override void ReactToState(float delta){
-        var followNodePos = this.NodeCameraFollows.GetPosition();
-        var backToFrontAngle = this.Bear.ATV.GetAngleFromBackWheelToFrontWheel();
         switch(this.ActiveState){
-            case CameraManagerState.NOT_MOVING_FOLLOW_NODE:
-                break;
-            case CameraManagerState.MOVING_FOLLOW_NODE_FORWARD:
-                this.NodeCameraFollows.SetPosition(
-                    (new Vector2(0, TRAVEL_SPEED)).Rotated(-backToFrontAngle + (float)Math.PI));
-                break;
-            case CameraManagerState.MOVING_FOLLOW_NODE_BACKWARD:
-                this.NodeCameraFollows.SetPosition(
-                    (new Vector2(0, TRAVEL_SPEED)).Rotated(-backToFrontAngle));
+            case CameraManagerState.MOVING_NODE_CAMERA_FOLLOWS:
+                var vel = this.Bear.ATV.GetRecentAverageVelocityOfTwoWheels();
+                var xPosToApply = vel.x * HORIZONTAL_MULTIPLIER_EFFECT + HORIZONTAL_OFFSET;
+                if(Math.Abs(xPosToApply) > MAX_POSITION_X){
+                    xPosToApply = (Math.Abs(xPosToApply) / xPosToApply) * MAX_POSITION_X;
+                }
+                var yPosToApply = vel.y * VERTICAL_MULTIPLIER_EFFECT + VERTICAL_OFFSET;
+                if(Math.Abs(yPosToApply) > MAX_POSITION_Y){
+                    yPosToApply = (Math.Abs(yPosToApply) / yPosToApply) * MAX_POSITION_Y;
+                }
+                this.NodeCameraFollows.SetPosition(new Vector2(xPosToApply,
+                                                               yPosToApply));
                 break;
             default:
-                throw new Exception("Invalid State");
-        }
-    }
+                throw new Exception("Invalid CameraManagerState");}}
 
-    public override void UpdateState(float delta){
-        var followNodePos = this.NodeCameraFollows.GetPosition();
-        var percentFromCenterTraveled = followNodePos.x / this.screenSize.x;
-        if(this.Bear.ATV.IsInAirNormalized()){
-             this.SetActiveState(CameraManagerState.NOT_MOVING_FOLLOW_NODE, 100);
-        } else if(Input.IsActionPressed("ui_left") && Input.IsActionPressed("ui_right")){
-            this.SetActiveState(CameraManagerState.NOT_MOVING_FOLLOW_NODE, 100);
-        } else if(Input.IsActionPressed("ui_left")){
-            if(percentFromCenterTraveled > -PERCENT_FROM_CENTER_TRAVEL_LIMIT){
-                this.SetActiveState(CameraManagerState.MOVING_FOLLOW_NODE_BACKWARD, 100);
-            } else {
-                this.SetActiveState(CameraManagerState.NOT_MOVING_FOLLOW_NODE, 100);}
-        } else if(Input.IsActionPressed("ui_right")){
-            if(percentFromCenterTraveled < PERCENT_FROM_CENTER_TRAVEL_LIMIT){
-                this.SetActiveState(CameraManagerState.MOVING_FOLLOW_NODE_FORWARD, 100);
-            } else {
-                this.SetActiveState(CameraManagerState.NOT_MOVING_FOLLOW_NODE, 100);}
-        } else {
-            this.SetActiveState(CameraManagerState.NOT_MOVING_FOLLOW_NODE, 100);
-        }
-    }
-
-//    public override void _Process(float delta)
-//    {
-//        // Called every frame. Delta is time since last frame.
-//        // Update game logic here.
-//        
-//    }
-}
+    public override void UpdateState(float delta){}}

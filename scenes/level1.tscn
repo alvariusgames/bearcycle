@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://src/Player/Player.cs" type="Script" id=1]
 [ext_resource path="res://src/Player/AttackWindow.cs" type="Script" id=2]
@@ -11,18 +11,17 @@
 [ext_resource path="res://media/invincibleBear.png" type="Texture" id=9]
 [ext_resource path="res://media/hitBear.png" type="Texture" id=10]
 [ext_resource path="res://src/Player/CameraManager.cs" type="Script" id=11]
-[ext_resource path="res://media/camera.png" type="Texture" id=12]
-[ext_resource path="res://src/Player/RotationManager.cs" type="Script" id=13]
-[ext_resource path="res://src/Platforms/Platforms.cs" type="Script" id=14]
-[ext_resource path="res://src/Platforms/PlatformCollision.cs" type="Script" id=15]
-[ext_resource path="res://src/Items/SafetyCheckPoint.cs" type="Script" id=16]
-[ext_resource path="res://src/Items/Food.cs" type="Script" id=17]
-[ext_resource path="res://media/food.png" type="Texture" id=18]
-[ext_resource path="res://media/hotdog.png" type="Texture" id=19]
-[ext_resource path="res://src/NPC/NPC.cs" type="Script" id=20]
-[ext_resource path="res://media/npc.png" type="Texture" id=21]
-[ext_resource path="res://src/Items/SpeedBoost.cs" type="Script" id=22]
-[ext_resource path="res://media/SpeedBoost.png" type="Texture" id=23]
+[ext_resource path="res://src/Player/RotationManager.cs" type="Script" id=12]
+[ext_resource path="res://src/Platforms/Platforms.cs" type="Script" id=13]
+[ext_resource path="res://src/Platforms/PlatformCollision.cs" type="Script" id=14]
+[ext_resource path="res://src/Items/SafetyCheckPoint.cs" type="Script" id=15]
+[ext_resource path="res://src/Items/Food.cs" type="Script" id=16]
+[ext_resource path="res://media/food.png" type="Texture" id=17]
+[ext_resource path="res://media/hotdog.png" type="Texture" id=18]
+[ext_resource path="res://src/NPC/NPC.cs" type="Script" id=19]
+[ext_resource path="res://media/npc.png" type="Texture" id=20]
+[ext_resource path="res://src/Items/SpeedBoost.cs" type="Script" id=21]
+[ext_resource path="res://media/SpeedBoost.png" type="Texture" id=22]
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -223,13 +222,9 @@ editor_draw_limits = false
 editor_draw_drag_margin = false
 _sections_unfolded = [ "Drag Margin", "Smoothing" ]
 
-[node name="Sprite" type="Sprite" parent="Player/ATV/Bear/CameraManager/NodeCameraFollows" index="1"]
-
-texture = ExtResource( 12 )
-
 [node name="RotationManager" type="Node2D" parent="Player/ATV" index="3"]
 
-script = ExtResource( 13 )
+script = ExtResource( 12 )
 
 [node name="Platforms" type="StaticBody2D" parent="." index="1"]
 
@@ -240,7 +235,7 @@ constant_linear_velocity = Vector2( 0, 0 )
 constant_angular_velocity = 0.0
 friction = 1.0
 bounce = 0.0
-script = ExtResource( 14 )
+script = ExtResource( 13 )
 _sections_unfolded = [ "Collision" ]
 
 [node name="PlatformCollision" type="CollisionPolygon2D" parent="Platforms" index="0"]
@@ -248,7 +243,7 @@ _sections_unfolded = [ "Collision" ]
 position = Vector2( -214.273, 158.334 )
 build_mode = 0
 polygon = PoolVector2Array( 183.324, 299.951, 518.855, -1072.65, 3028.4, -1074.43, 670.669, -266.293, 578.21, -214.152, 508.422, -144.365, 472.236, -86.2088, 450.266, -31.9298, 442.512, 17.1797, 450.266, 77.9205, 466.273, 117.35, 486.273, 158.403, 511.044, 190.617, 560.529, 232.708, 669.432, 259.456, 769.432, 255.245, 850.263, 228.621, 880.41, 204.821, 894.72, 182.608, 996.237, 68.3672, 1053.36, 9.66023, 1108.11, -12.1737, 1146.6, -11.7964, 1169.75, -10.6272, 1185.76, -6.19984, 1195.31, 4.51421, 1196.01, 58.7426, 1193.44, 101.35, 1232.57, 103.787, 1244.09, 109.294, 1274.59, 162.165, 1227.05, 208.58, 1009.69, 285.308, 632.951, 292.008 )
-script = ExtResource( 15 )
+script = ExtResource( 14 )
 
 [node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision" index="0"]
 
@@ -271,7 +266,7 @@ _sections_unfolded = [ "Pause" ]
 position = Vector2( 1011.12, 140.62 )
 build_mode = 0
 polygon = PoolVector2Array( 41.4824, 132.152, 101.813, 227.689, 133.546, 270.529, 163.693, 299.089, 206.533, 322.889, 250.96, 335.583, 300.147, 338.756, 342.987, 322.889, 392.174, 321.303, 423.908, 343.516, 457.228, 359.383, 508.001, 360.97, 582.575, 343.516, 649.216, 329.236, 709.509, 330.823, 820.577, 321.303, 909.43, 311.783, 953.857, 287.983, 1006.22, 268.943, 1028.43, 268.943, 1068.1, 276.876, 1077.62, 284.809, 1133.15, 294.329, 1172.82, 284.809, 1228.35, 268.943, 1275.95, 237.209, 1347.35, 224.516, 1406.06, 188.022, 1442.55, 146.768, 1485.39, 115.035, 1510.78, 78.5414, 1547.27, 54.7413, 1580.11, 55.7209, 1613.47, 67.5278, 1627.33, 81.3881, 1644.98, 176.855, 1682.14, 297.503, 1728.45, 349.863, 1822.06, 356.21, 1890.29, 353.036, 1923.61, 343.516, 1977.55, 313.369, 2036.26, 319.716, 2079.1, 311.783, 2109.25, 300.676, 2153.67, 265.769, 2177.47, 251.489, 2198.1, 256.249, 2215.55, 278.463, 2228.25, 305.436, 2244.11, 324.476, 2282.19, 351.45, 2301.24, 359.383, 2336.14, 375.25, 2364.7, 383.183, 2386.92, 384.77, 2410.72, 381.596, 2440.86, 375.25, 2491.64, 368.903, 2515.44, 356.21, 2611.74, 338.756, 2645.06, 349.863, 2681.55, 346.69, 2706.94, 329.236, 2764.06, 330.823, 2786.27, 335.583, 2862.43, 349.863, 2894.17, 349.863, 2933.83, 349.863, 2985.46, 358.643, 3014.3, 391.089, 3007.09, 423.534, 2953.01, 452.374, 123.055, 423.534, 32.9285, 318.988, 4.08813, 207.232, 0.483032, 145.946, 16.2017, 125.236, 28.275, 126.869 )
-script = ExtResource( 15 )
+script = ExtResource( 14 )
 
 [node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision4" index="0"]
 
@@ -294,7 +289,7 @@ _sections_unfolded = [ "Pause" ]
 position = Vector2( 2828.67, 943.386 )
 build_mode = 0
 polygon = PoolVector2Array( 1154.98, -382.713, 1301.39, -372.953, 3760.37, -360.025, 3802.82, -1009.26, 3569.8, -630.07, 3334.01, -411.122, 3078.22, -483.754, 2937.17, -618.491, 2896.11, -618.491, 2866.64, -595.333, 2835.06, -521.649, 2795.06, -467.964, 2733.96, -441.165, 2351.63, -455.885, 2275.63, -494.835, 2238.1, -525.025, 2193.93, -537.586, 2062.3, -439.926, 1174.5, -444.531 )
-script = ExtResource( 15 )
+script = ExtResource( 14 )
 
 [node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision5" index="0"]
 
@@ -323,7 +318,7 @@ input_pickable = true
 collision_layer = 1
 collision_mask = 1
 collision/safe_margin = 0.08
-script = ExtResource( 16 )
+script = ExtResource( 15 )
 _sections_unfolded = [ "Collision", "Pause" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckPoint1" index="0"]
@@ -340,14 +335,14 @@ input_pickable = false
 collision_layer = 3
 collision_mask = 3
 collision/safe_margin = 0.08
-script = ExtResource( 17 )
+script = ExtResource( 16 )
 _sections_unfolded = [ "Collision" ]
 
 [node name="600" type="Sprite" parent="Items/Chicken Leg" index="0"]
 
 position = Vector2( 3.30399, 0.36363 )
 scale = Vector2( 0.437073, 0.437073 )
-texture = ExtResource( 18 )
+texture = ExtResource( 17 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Chicken Leg" index="1"]
 
@@ -363,14 +358,14 @@ input_pickable = false
 collision_layer = 3
 collision_mask = 3
 collision/safe_margin = 0.08
-script = ExtResource( 17 )
+script = ExtResource( 16 )
 _sections_unfolded = [ "Collision" ]
 
 [node name="600" type="Sprite" parent="Items/Chicken Leg2" index="0"]
 
 position = Vector2( 3.30399, 0.36363 )
 scale = Vector2( 0.437073, 0.437073 )
-texture = ExtResource( 18 )
+texture = ExtResource( 17 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Chicken Leg2" index="1"]
 
@@ -386,14 +381,14 @@ input_pickable = false
 collision_layer = 3
 collision_mask = 3
 collision/safe_margin = 0.08
-script = ExtResource( 17 )
+script = ExtResource( 16 )
 _sections_unfolded = [ "Collision" ]
 
 [node name="400" type="Sprite" parent="Items/Hot Dog" index="0"]
 
 position = Vector2( 3.30399, 0.36363 )
 scale = Vector2( 0.437073, 0.437073 )
-texture = ExtResource( 19 )
+texture = ExtResource( 18 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Hot Dog" index="1"]
 
@@ -409,14 +404,14 @@ input_pickable = false
 collision_layer = 3
 collision_mask = 3
 collision/safe_margin = 0.08
-script = ExtResource( 17 )
+script = ExtResource( 16 )
 _sections_unfolded = [ "Collision" ]
 
 [node name="400" type="Sprite" parent="Items/Hot Dog2" index="0"]
 
 position = Vector2( 3.30399, 0.36363 )
 scale = Vector2( 0.437073, 0.437073 )
-texture = ExtResource( 19 )
+texture = ExtResource( 18 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Hot Dog2" index="1"]
 
@@ -445,14 +440,14 @@ linear_velocity = Vector2( 0, 0 )
 linear_damp = -1.0
 angular_velocity = 0.0
 angular_damp = -1.0
-script = ExtResource( 20 )
+script = ExtResource( 19 )
 _sections_unfolded = [ "Collision" ]
 
 [node name="Sprite" type="Sprite" parent="Items/NPC" index="0"]
 
 position = Vector2( 2.91019, 3.98184 )
 scale = Vector2( 0.0972942, 0.0972942 )
-texture = ExtResource( 21 )
+texture = ExtResource( 20 )
 _sections_unfolded = [ "Offset" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC" index="1"]
@@ -482,14 +477,14 @@ linear_velocity = Vector2( 0, 0 )
 linear_damp = -1.0
 angular_velocity = 0.0
 angular_damp = -1.0
-script = ExtResource( 20 )
+script = ExtResource( 19 )
 _sections_unfolded = [ "Collision" ]
 
 [node name="Sprite" type="Sprite" parent="Items/NPC2" index="0"]
 
 position = Vector2( 2.91019, 3.98184 )
 scale = Vector2( 0.0972942, 0.0972942 )
-texture = ExtResource( 21 )
+texture = ExtResource( 20 )
 _sections_unfolded = [ "Offset" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC2" index="1"]
@@ -519,14 +514,14 @@ linear_velocity = Vector2( 0, 0 )
 linear_damp = -1.0
 angular_velocity = 0.0
 angular_damp = -1.0
-script = ExtResource( 20 )
+script = ExtResource( 19 )
 _sections_unfolded = [ "Collision" ]
 
 [node name="Sprite" type="Sprite" parent="Items/NPC3" index="0"]
 
 position = Vector2( 2.91019, 3.98184 )
 scale = Vector2( 0.0972942, 0.0972942 )
-texture = ExtResource( 21 )
+texture = ExtResource( 20 )
 _sections_unfolded = [ "Offset" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC3" index="1"]
@@ -556,14 +551,14 @@ linear_velocity = Vector2( 0, 0 )
 linear_damp = -1.0
 angular_velocity = 0.0
 angular_damp = -1.0
-script = ExtResource( 20 )
+script = ExtResource( 19 )
 _sections_unfolded = [ "Collision" ]
 
 [node name="Sprite" type="Sprite" parent="Items/NPC4" index="0"]
 
 position = Vector2( 2.91019, 3.98184 )
 scale = Vector2( 0.0972942, 0.0972942 )
-texture = ExtResource( 21 )
+texture = ExtResource( 20 )
 _sections_unfolded = [ "Offset" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC4" index="1"]
@@ -593,14 +588,14 @@ linear_velocity = Vector2( 0, 0 )
 linear_damp = -1.0
 angular_velocity = 0.0
 angular_damp = -1.0
-script = ExtResource( 20 )
+script = ExtResource( 19 )
 _sections_unfolded = [ "Collision" ]
 
 [node name="Sprite" type="Sprite" parent="Items/NPC5" index="0"]
 
 position = Vector2( 2.91019, 3.98184 )
 scale = Vector2( 0.0972942, 0.0972942 )
-texture = ExtResource( 21 )
+texture = ExtResource( 20 )
 _sections_unfolded = [ "Offset" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC5" index="1"]
@@ -630,14 +625,14 @@ linear_velocity = Vector2( 0, 0 )
 linear_damp = -1.0
 angular_velocity = 0.0
 angular_damp = -1.0
-script = ExtResource( 20 )
+script = ExtResource( 19 )
 _sections_unfolded = [ "Collision" ]
 
 [node name="Sprite" type="Sprite" parent="Items/NPC6" index="0"]
 
 position = Vector2( 2.91019, 3.98184 )
 scale = Vector2( 0.0972942, 0.0972942 )
-texture = ExtResource( 21 )
+texture = ExtResource( 20 )
 _sections_unfolded = [ "Offset" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC6" index="1"]
@@ -667,14 +662,14 @@ linear_velocity = Vector2( 0, 0 )
 linear_damp = -1.0
 angular_velocity = 0.0
 angular_damp = -1.0
-script = ExtResource( 20 )
+script = ExtResource( 19 )
 _sections_unfolded = [ "Collision" ]
 
 [node name="Sprite" type="Sprite" parent="Items/NPC7" index="0"]
 
 position = Vector2( 2.91019, 3.98184 )
 scale = Vector2( 0.0972942, 0.0972942 )
-texture = ExtResource( 21 )
+texture = ExtResource( 20 )
 _sections_unfolded = [ "Offset" ]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC7" index="1"]
@@ -691,14 +686,14 @@ input_pickable = false
 collision_layer = 1
 collision_mask = 1
 collision/safe_margin = 0.08
-script = ExtResource( 22 )
+script = ExtResource( 21 )
 
 [node name="800" type="Sprite" parent="Items/SpeedBoost" index="0"]
 
 position = Vector2( 1.63123, -24.7805 )
 rotation = -6.26459
 scale = Vector2( 0.218074, 0.218074 )
-texture = ExtResource( 23 )
+texture = ExtResource( 22 )
 
 [node name="Backward" type="CollisionShape2D" parent="Items/SpeedBoost" index="1"]
 
@@ -712,14 +707,14 @@ input_pickable = false
 collision_layer = 1
 collision_mask = 1
 collision/safe_margin = 0.08
-script = ExtResource( 22 )
+script = ExtResource( 21 )
 
 [node name="800" type="Sprite" parent="Items/SpeedBoost3" index="0"]
 
 position = Vector2( 1.63123, -24.7805 )
 rotation = -6.26459
 scale = Vector2( 0.218074, 0.218074 )
-texture = ExtResource( 23 )
+texture = ExtResource( 22 )
 
 [node name="Backward" type="CollisionShape2D" parent="Items/SpeedBoost3" index="1"]
 
@@ -733,14 +728,14 @@ input_pickable = false
 collision_layer = 1
 collision_mask = 1
 collision/safe_margin = 0.08
-script = ExtResource( 22 )
+script = ExtResource( 21 )
 
 [node name="800" type="Sprite" parent="Items/SpeedBoost2" index="0"]
 
 position = Vector2( -1.27002, 28.1324 )
 rotation = -6.26459
 scale = Vector2( 0.218074, 0.218074 )
-texture = ExtResource( 23 )
+texture = ExtResource( 22 )
 
 [node name="Forward" type="CollisionShape2D" parent="Items/SpeedBoost2" index="1"]
 

@@ -22,6 +22,8 @@ public class ATV : FSMNode2D<ATVState> {
     public float BodyLength;
     private int LastInAirsLength = 15;
     private Queue<Boolean> OngoingIsInAirs = new Queue<Boolean>();
+    private int LastVelocitiesOfTwoWheelsLength = 5;
+    private Queue<Vector2> OngoingVelocitiesOfTwoWheels = new Queue<Vector2>();
        public override void _Ready(){
         this.ResetActiveState(this.InitialState);
         foreach(Node2D child in this.GetChildren()){
@@ -36,7 +38,9 @@ public class ATV : FSMNode2D<ATVState> {
             this.BackWheel.Position);
         for(int i=0; i<this.LastInAirsLength; i++){
             this.OngoingIsInAirs.Enqueue(false);
-        }}
+        }
+        for(int i=0; i<this.LastVelocitiesOfTwoWheelsLength; i++){
+            this.OngoingVelocitiesOfTwoWheels.Enqueue(new Vector2(0,0));}}
 
     public Vector2 GetGlobalCenterOfTwoWheels(){
         return (this.FrontWheel.GetGlobalPosition() + this.BackWheel.GetGlobalPosition()) / 2f;}
@@ -58,10 +62,13 @@ public class ATV : FSMNode2D<ATVState> {
         return (this.FrontWheel.velocity + this.BackWheel.velocity) / 2f;
     }
 
-    public void AdjustVelocityAndAccelOfTwoWheels(
-        float velocityMultiplier, float accellMultiplier){
-            this.FrontWheel.AdjustVelocityAndAccell(velocityMultiplier, accellMultiplier);
-            this.BackWheel.AdjustVelocityAndAccell(velocityMultiplier, accellMultiplier);
+    public Vector2 GetRecentAverageVelocityOfTwoWheels(){
+        var arr = this.OngoingVelocitiesOfTwoWheels.ToArray();
+        var sum = new Vector2(0,0);
+        foreach(var vec in arr){
+            sum += vec;
+        }
+        return sum / arr.Length;
     }
 
     public void SetVelocityOfTwoWheels(Vector2 velocity){
@@ -99,12 +106,6 @@ public class ATV : FSMNode2D<ATVState> {
         this.FrontWheel.SetGlobalPosition(newFront);
         var newBack = center + rotatedCenterToBack;
         this.BackWheel.SetGlobalPosition(newBack);
-
-        //this.moveBearToCenter(-1);
-    }
-
-    public float GetAngleFromBackWheelToFrontWheel(){
-        return this.BackWheel.GetGlobalPosition().AngleToPoint(this.FrontWheel.GetGlobalPosition());
     }
 
     public void ReattachBear(){
@@ -167,8 +168,14 @@ public class ATV : FSMNode2D<ATVState> {
 
     public override void ReactStateless(float delta){
         this.holdWheelsTogether(delta);
+        this.updateLastVelocitiesOfTwoWheels(delta);
         this.updateLastInAirs(delta);
     }
+
+    private void updateLastVelocitiesOfTwoWheels(float delta){
+        this.OngoingVelocitiesOfTwoWheels.Dequeue();
+        var vel = this.GetVelocityOfTwoWheels();
+        this.OngoingVelocitiesOfTwoWheels.Enqueue(vel);}
 
     private void updateLastInAirs(float delta){
         this.OngoingIsInAirs.Dequeue();
