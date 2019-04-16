@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="scenes\main.cs" />
     <Compile Include="src\DisplayHandlers\PlayerStatsDisplayHandler.cs" />
     <Compile Include="src\Items\Food.cs" />
     <Compile Include="src\Items\IConsumeable.cs" />
