@@ -19,11 +19,11 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     // See `this.calculateForwardAngle()` for more information
     private Vector2 currentTravel = new Vector2(0,0);
     private Vector2 currentNormal = new Vector2(0,-1);
-    private const float GRAVITY  = 600.0f;
-    private const float MAX_GRAVITY_SPEED = 600f;
+    private const float GRAVITY  = 700.0f;
+    private const float MAX_GRAVITY_SPEED = 1100f;
     private const float MAX_FORWARD_ACCEL = 65f;
     private const float MAX_BACKWARD_ACCEL = - MAX_FORWARD_ACCEL;
-    private const float MAX_SPEED = 600f;
+    private const float MAX_SPEED = 800f;
     private const float FORWARD_ACCEL_UNIT = 3f;
     private const float DECELL_EFFECT = 0.90f;
     private const float LOCKING_EFFECT = 0.90f;

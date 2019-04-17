@@ -3,20 +3,21 @@
 importer="texture"
 type="StreamTexture"
 path="res://.import/camera.png-8aa465acd8a3dcc8535c0136830a920b.stex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://media/camera.png"
-source_md5="1aab2757909b52a998089334e3b833b1"
-
 dest_files=[ "res://.import/camera.png-8aa465acd8a3dcc8535c0136830a920b.stex" ]
-dest_md5="bd9baae77ec5c880902deff18b99f40b"
 
 [params]
 
 compress/mode=0
 compress/lossy_quality=0.7
 compress/hdr_mode=0
+compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
@@ -26,6 +27,7 @@ flags/srgb=2
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
+process/invert_color=false
 stream=false
 size_limit=0
 detect_3d=true

@@ -3,20 +3,21 @@
 importer="texture"
 type="StreamTexture"
 path="res://.import/SpeedBoost.png-9069bdf97c307a64031175dcfd9b66a1.stex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://media/SpeedBoost.png"
-source_md5="e7cfc444bcd02b1370f449f2295991b3"
-
 dest_files=[ "res://.import/SpeedBoost.png-9069bdf97c307a64031175dcfd9b66a1.stex" ]
-dest_md5="a0c8c4c1671e9ff51e983647dbdd669c"
 
 [params]
 
 compress/mode=0
 compress/lossy_quality=0.7
 compress/hdr_mode=0
+compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
@@ -26,6 +27,7 @@ flags/srgb=2
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
+process/invert_color=false
 stream=false
 size_limit=0
 detect_3d=true
