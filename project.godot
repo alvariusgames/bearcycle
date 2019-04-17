@@ -52,6 +52,19 @@ right_move_up={
  ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="L_Wheel"
+2d_physics/layer_2="L_Bear"
+2d_physics/layer_3="L_Platforms"
+2d_physics/layer_4="L_Attack_Window"
+2d_physics/layer_5="L_Food"
+2d_physics/layer_6="L_NPC"
+2d_physics/layer_7="L_SafetyCheckpoint"
+2d_physics/layer_8="L_SpeedBoost"
+2d_physics/layer_0=false
+
 [rendering]
 
+quality/driver/driver_name="GLES2"
 viewport/default_clear_color=Color( 0, 0, 0, 1 )

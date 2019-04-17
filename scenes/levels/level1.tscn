@@ -24,12 +24,9 @@
 [ext_resource path="res://media/SpeedBoost.png" type="Texture" id=22]
 
 [sub_resource type="CircleShape2D" id=1]
-
-custom_solver_bias = 0.0
 radius = 12.1689
 
 [sub_resource type="SpriteFrames" id=2]
-
 animations = [ {
 "frames": [ ExtResource( 8 ) ],
 "loop": true,
@@ -48,697 +45,286 @@ animations = [ {
 } ]
 
 [sub_resource type="RectangleShape2D" id=3]
-
-custom_solver_bias = 0.0
 extents = Vector2( 23.6071, 10 )
 
 [sub_resource type="RectangleShape2D" id=4]
 
-custom_solver_bias = 0.0
-extents = Vector2( 10, 10 )
-
 [sub_resource type="RectangleShape2D" id=5]
 
-custom_solver_bias = 0.0
-extents = Vector2( 10, 10 )
-
 [sub_resource type="RectangleShape2D" id=6]
-
-custom_solver_bias = 0.0
 extents = Vector2( 37.297, 10 )
 
-[node name="main" type="Node2D" index="0"]
-
+[node name="main" type="Node2D"]
 position = Vector2( -115, 0 )
-_sections_unfolded = [ "Transform" ]
 
-[node name="Player" type="Node2D" parent="." index="0"]
-
-position = Vector2( 3901.96, 415.566 )
+[node name="Player" type="Node2D" parent="."]
+position = Vector2( 2190.72, 175.414 )
 script = ExtResource( 1 )
 
-[node name="AttackWindow" type="KinematicBody2D" parent="Player" index="0"]
-
+[node name="AttackWindow" type="KinematicBody2D" parent="Player"]
 editor/display_folded = true
-input_pickable = false
-collision_layer = 524288
-collision_mask = 524288
-collision/safe_margin = 0.08
+collision_layer = 8
+collision_mask = 32
 script = ExtResource( 2 )
-_sections_unfolded = [ "Collision" ]
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Player/AttackWindow" index="0"]
-
-build_mode = 0
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Player/AttackWindow"]
 polygon = PoolVector2Array( -6.81158, 1.35684, 2.42856, -26.8769, 35.7957, -54.084, 87.1299, -65.3775, 121.524, -52.544, 130.764, -27.9036, 126.657, -0.183167, 99.9634, 17.2704, 51.196, 26.5106, 2.9419, 25.4839, -5.27157, 16.2437 )
 
-[node name="Polygon2D" type="Polygon2D" parent="Player/AttackWindow/CollisionPolygon2D" index="0"]
-
-polygon = PoolVector2Array(  )
-uv = PoolVector2Array(  )
+[node name="Polygon2D" type="Polygon2D" parent="Player/AttackWindow/CollisionPolygon2D"]
 color = Color( 1, 0, 0, 1 )
-vertex_colors = PoolColorArray(  )
-offset = Vector2( 0, 0 )
-antialiased = false
-texture = null
-texture_offset = Vector2( 0, 0 )
-texture_scale = Vector2( 1, 1 )
-texture_rotation_degrees = 0.0
-invert_enable = false
-invert_border = 100.0
 
-[node name="ATV" type="Node2D" parent="Player" index="1"]
-
+[node name="ATV" type="Node2D" parent="Player"]
 position = Vector2( 5.11925, 16.4953 )
 script = ExtResource( 3 )
 
-[node name="FrontWheel" type="KinematicBody2D" parent="Player/ATV" index="0"]
-
+[node name="FrontWheel" type="KinematicBody2D" parent="Player/ATV"]
 editor/display_folded = true
 position = Vector2( 39.057, 0.0374146 )
 scale = Vector2( 0.449839, 0.449839 )
 input_pickable = true
-collision_layer = 174421
-collision_mask = 174421
-collision/safe_margin = 0.08
+collision_mask = 244
 script = ExtResource( 4 )
-_sections_unfolded = [ "Collision" ]
 
-[node name="Sprite" type="Sprite" parent="Player/ATV/FrontWheel" index="0"]
-
+[node name="Sprite" type="Sprite" parent="Player/ATV/FrontWheel"]
 position = Vector2( 1.90122, -0.550384 )
 scale = Vector2( 0.758414, 0.758414 )
 texture = ExtResource( 5 )
-_sections_unfolded = [ "Transform" ]
 
-[node name="Collision" type="CollisionShape2D" parent="Player/ATV/FrontWheel" index="1"]
-
+[node name="Collision" type="CollisionShape2D" parent="Player/ATV/FrontWheel"]
 position = Vector2( 2.26027, -0.168106 )
 scale = Vector2( 2.61779, 2.61213 )
 shape = SubResource( 1 )
 
-[node name="BackWheel" type="KinematicBody2D" parent="Player/ATV" index="1"]
-
+[node name="BackWheel" type="KinematicBody2D" parent="Player/ATV"]
 editor/display_folded = true
 position = Vector2( -15.0926, -0.303162 )
 scale = Vector2( 0.449839, 0.449839 )
 input_pickable = true
-collision_layer = 174421
-collision_mask = 174421
-collision/safe_margin = 0.08
+collision_mask = 244
 script = ExtResource( 4 )
-_sections_unfolded = [ "Collision" ]
 
-[node name="Sprite" type="Sprite" parent="Player/ATV/BackWheel" index="0"]
-
+[node name="Sprite" type="Sprite" parent="Player/ATV/BackWheel"]
 position = Vector2( 4.12424, -0.550384 )
 scale = Vector2( 0.758414, 0.758414 )
 texture = ExtResource( 6 )
-_sections_unfolded = [ "Transform" ]
 
-[node name="Collision" type="CollisionShape2D" parent="Player/ATV/BackWheel" index="1"]
-
+[node name="Collision" type="CollisionShape2D" parent="Player/ATV/BackWheel"]
 position = Vector2( 2.26027, -0.168106 )
 scale = Vector2( 2.61779, 2.61213 )
 shape = SubResource( 1 )
 
-[node name="Bear" type="KinematicBody2D" parent="Player/ATV" index="2"]
-
+[node name="Bear" type="KinematicBody2D" parent="Player/ATV"]
+editor/display_folded = true
 position = Vector2( 11.812, -20.737 )
 scale = Vector2( 0.449839, 0.449839 )
 input_pickable = true
-collision_layer = 349866
-collision_mask = 349866
-collision/safe_margin = 0.08
+collision_layer = 2
+collision_mask = 244
 script = ExtResource( 7 )
-_sections_unfolded = [ "Collision", "collision" ]
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Player/ATV/Bear" index="0"]
-
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Player/ATV/Bear"]
 position = Vector2( 1.91968, -0.997475 )
 scale = Vector2( 0.126081, 0.126081 )
 frames = SubResource( 2 )
-animation = "default"
-_sections_unfolded = [ "Transform" ]
 
-[node name="Collision" type="CollisionShape2D" parent="Player/ATV/Bear" index="1"]
-
+[node name="Collision" type="CollisionShape2D" parent="Player/ATV/Bear"]
 position = Vector2( 2.26027, -0.168106 )
 scale = Vector2( 2.61779, 2.61213 )
 shape = SubResource( 1 )
 
-[node name="CameraManager" type="Node2D" parent="Player/ATV/Bear" index="2"]
-
+[node name="CameraManager" type="Node2D" parent="Player/ATV/Bear"]
 script = ExtResource( 11 )
-_sections_unfolded = [ "Transform" ]
 
-[node name="NodeCameraFollows" type="Node2D" parent="Player/ATV/Bear/CameraManager" index="0"]
+[node name="NodeCameraFollows" type="Node2D" parent="Player/ATV/Bear/CameraManager"]
 
-[node name="Camera2D" type="Camera2D" parent="Player/ATV/Bear/CameraManager/NodeCameraFollows" index="0"]
-
+[node name="Camera2D" type="Camera2D" parent="Player/ATV/Bear/CameraManager/NodeCameraFollows"]
 position = Vector2( -37.6387, 9.42914 )
 scale = Vector2( 2.22302, 2.22302 )
-anchor_mode = 1
-rotating = false
 current = true
-zoom = Vector2( 1, 1 )
-limit_left = -10000000
-limit_top = -10000000
-limit_right = 10000000
-limit_bottom = 10000000
-limit_smoothed = false
-drag_margin_h_enabled = true
-drag_margin_v_enabled = true
 smoothing_enabled = true
 smoothing_speed = 7.0
-offset_v = 0.0
-offset_h = 0.0
 drag_margin_left = 0.3
 drag_margin_top = 0.3
 drag_margin_right = 0.3
 drag_margin_bottom = 0.3
-editor_draw_screen = true
-editor_draw_limits = false
-editor_draw_drag_margin = false
-_sections_unfolded = [ "Drag Margin", "Smoothing" ]
 
-[node name="RotationManager" type="Node2D" parent="Player/ATV" index="3"]
-
+[node name="RotationManager" type="Node2D" parent="Player/ATV"]
 script = ExtResource( 12 )
 
-[node name="Platforms" type="StaticBody2D" parent="." index="1"]
-
-input_pickable = false
-collision_layer = 524287
-collision_mask = 524287
-constant_linear_velocity = Vector2( 0, 0 )
-constant_angular_velocity = 0.0
-friction = 1.0
-bounce = 0.0
+[node name="Platforms" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 35
 script = ExtResource( 13 )
-_sections_unfolded = [ "Collision" ]
 
-[node name="PlatformCollision" type="CollisionPolygon2D" parent="Platforms" index="0"]
-
+[node name="PlatformCollision" type="CollisionPolygon2D" parent="Platforms"]
 position = Vector2( -214.273, 158.334 )
-build_mode = 0
 polygon = PoolVector2Array( 183.324, 299.951, 518.855, -1072.65, 3028.4, -1074.43, 670.669, -266.293, 578.21, -214.152, 508.422, -144.365, 472.236, -86.2088, 450.266, -31.9298, 442.512, 17.1797, 450.266, 77.9205, 466.273, 117.35, 486.273, 158.403, 511.044, 190.617, 560.529, 232.708, 669.432, 259.456, 769.432, 255.245, 850.263, 228.621, 880.41, 204.821, 894.72, 182.608, 996.237, 68.3672, 1053.36, 9.66023, 1108.11, -12.1737, 1146.6, -11.7964, 1169.75, -10.6272, 1185.76, -6.19984, 1195.31, 4.51421, 1196.01, 58.7426, 1193.44, 101.35, 1232.57, 103.787, 1244.09, 109.294, 1274.59, 162.165, 1227.05, 208.58, 1009.69, 285.308, 632.951, 292.008 )
 script = ExtResource( 14 )
 
-[node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision" index="0"]
+[node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision"]
 
-polygon = PoolVector2Array(  )
-uv = PoolVector2Array(  )
-color = Color( 1, 1, 1, 1 )
-vertex_colors = PoolColorArray(  )
-offset = Vector2( 0, 0 )
-antialiased = false
-texture = null
-texture_offset = Vector2( 0, 0 )
-texture_scale = Vector2( 1, 1 )
-texture_rotation_degrees = 0.0
-invert_enable = false
-invert_border = 100.0
-_sections_unfolded = [ "Pause" ]
-
-[node name="PlatformCollision4" type="CollisionPolygon2D" parent="Platforms" index="1"]
-
+[node name="PlatformCollision4" type="CollisionPolygon2D" parent="Platforms"]
 position = Vector2( 1011.12, 140.62 )
-build_mode = 0
 polygon = PoolVector2Array( 41.4824, 132.152, 101.813, 227.689, 133.546, 270.529, 163.693, 299.089, 206.533, 322.889, 250.96, 335.583, 300.147, 338.756, 342.987, 322.889, 392.174, 321.303, 423.908, 343.516, 457.228, 359.383, 508.001, 360.97, 582.575, 343.516, 649.216, 329.236, 709.509, 330.823, 820.577, 321.303, 909.43, 311.783, 953.857, 287.983, 1006.22, 268.943, 1028.43, 268.943, 1068.1, 276.876, 1077.62, 284.809, 1133.15, 294.329, 1172.82, 284.809, 1228.35, 268.943, 1275.95, 237.209, 1347.35, 224.516, 1406.06, 188.022, 1442.55, 146.768, 1485.39, 115.035, 1510.78, 78.5414, 1547.27, 54.7413, 1580.11, 55.7209, 1613.47, 67.5278, 1627.33, 81.3881, 1644.98, 176.855, 1682.14, 297.503, 1728.45, 349.863, 1822.06, 356.21, 1890.29, 353.036, 1923.61, 343.516, 1977.55, 313.369, 2036.26, 319.716, 2079.1, 311.783, 2109.25, 300.676, 2153.67, 265.769, 2177.47, 251.489, 2198.1, 256.249, 2215.55, 278.463, 2228.25, 305.436, 2244.11, 324.476, 2282.19, 351.45, 2301.24, 359.383, 2336.14, 375.25, 2364.7, 383.183, 2386.92, 384.77, 2410.72, 381.596, 2440.86, 375.25, 2491.64, 368.903, 2515.44, 356.21, 2611.74, 338.756, 2645.06, 349.863, 2681.55, 346.69, 2706.94, 329.236, 2764.06, 330.823, 2786.27, 335.583, 2862.43, 349.863, 2894.17, 349.863, 2933.83, 349.863, 2985.46, 358.643, 3014.3, 391.089, 3007.09, 423.534, 2953.01, 452.374, 123.055, 423.534, 32.9285, 318.988, 4.08813, 207.232, 0.483032, 145.946, 16.2017, 125.236, 28.275, 126.869 )
 script = ExtResource( 14 )
 
-[node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision4" index="0"]
+[node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision4"]
 
-polygon = PoolVector2Array(  )
-uv = PoolVector2Array(  )
-color = Color( 1, 1, 1, 1 )
-vertex_colors = PoolColorArray(  )
-offset = Vector2( 0, 0 )
-antialiased = false
-texture = null
-texture_offset = Vector2( 0, 0 )
-texture_scale = Vector2( 1, 1 )
-texture_rotation_degrees = 0.0
-invert_enable = false
-invert_border = 100.0
-_sections_unfolded = [ "Pause" ]
-
-[node name="PlatformCollision5" type="CollisionPolygon2D" parent="Platforms" index="2"]
-
+[node name="PlatformCollision5" type="CollisionPolygon2D" parent="Platforms"]
 position = Vector2( 2828.67, 943.386 )
-build_mode = 0
 polygon = PoolVector2Array( 1154.98, -382.713, 1301.39, -372.953, 3760.37, -360.025, 3802.82, -1009.26, 3569.8, -630.07, 3334.01, -411.122, 3078.22, -483.754, 2937.17, -618.491, 2896.11, -618.491, 2866.64, -595.333, 2835.06, -521.649, 2795.06, -467.964, 2733.96, -441.165, 2351.63, -455.885, 2275.63, -494.835, 2238.1, -525.025, 2193.93, -537.586, 2062.3, -439.926, 1174.5, -444.531 )
 script = ExtResource( 14 )
 
-[node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision5" index="0"]
+[node name="VisiblePolygon" type="Polygon2D" parent="Platforms/PlatformCollision5"]
 
-polygon = PoolVector2Array(  )
-uv = PoolVector2Array(  )
-color = Color( 1, 1, 1, 1 )
-vertex_colors = PoolColorArray(  )
-offset = Vector2( 0, 0 )
-antialiased = false
-texture = null
-texture_offset = Vector2( 0, 0 )
-texture_scale = Vector2( 1, 1 )
-texture_rotation_degrees = 0.0
-invert_enable = false
-invert_border = 100.0
-_sections_unfolded = [ "Pause" ]
+[node name="Items" type="Node2D" parent="."]
 
-[node name="Items" type="Node2D" parent="." index="2"]
-
-[node name="SafetyCheckPoint1" type="KinematicBody2D" parent="Items" index="0"]
-
+[node name="SafetyCheckPoint1" type="KinematicBody2D" parent="Items"]
 editor/display_folded = true
 position = Vector2( 1865.86, 449.173 )
 scale = Vector2( 1, 2.09352 )
 input_pickable = true
-collision_layer = 1
-collision_mask = 1
-collision/safe_margin = 0.08
+collision_layer = 64
+collision_mask = 3
 script = ExtResource( 15 )
-_sections_unfolded = [ "Collision", "Pause" ]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckPoint1" index="0"]
-
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckPoint1"]
 position = Vector2( -163.191, -7.72478 )
 shape = SubResource( 3 )
-_sections_unfolded = [ "Pause" ]
 
-[node name="Chicken Leg" type="KinematicBody2D" parent="Items" index="1"]
-
+[node name="Chicken Leg" type="KinematicBody2D" parent="Items"]
 editor/display_folded = true
 position = Vector2( 403.461, 353.511 )
-input_pickable = false
-collision_layer = 3
+collision_layer = 16
 collision_mask = 3
-collision/safe_margin = 0.08
 script = ExtResource( 16 )
-_sections_unfolded = [ "Collision" ]
 
-[node name="600" type="Sprite" parent="Items/Chicken Leg" index="0"]
-
+[node name="600" type="Sprite" parent="Items/Chicken Leg"]
 position = Vector2( 3.30399, 0.36363 )
 scale = Vector2( 0.437073, 0.437073 )
 texture = ExtResource( 17 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Chicken Leg" index="1"]
-
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Chicken Leg"]
 position = Vector2( 3.35304, 0.725145 )
 scale = Vector2( 1.32531, 1.32531 )
 shape = SubResource( 4 )
 
-[node name="Chicken Leg2" type="KinematicBody2D" parent="Items" index="2"]
-
+[node name="Chicken Leg2" type="KinematicBody2D" parent="Items"]
 editor/display_folded = true
 position = Vector2( 2825.62, 462.078 )
-input_pickable = false
-collision_layer = 3
+collision_layer = 16
 collision_mask = 3
-collision/safe_margin = 0.08
 script = ExtResource( 16 )
-_sections_unfolded = [ "Collision" ]
 
-[node name="600" type="Sprite" parent="Items/Chicken Leg2" index="0"]
-
+[node name="600" type="Sprite" parent="Items/Chicken Leg2"]
 position = Vector2( 3.30399, 0.36363 )
 scale = Vector2( 0.437073, 0.437073 )
 texture = ExtResource( 17 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Chicken Leg2" index="1"]
-
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Chicken Leg2"]
 position = Vector2( 3.35304, 0.725145 )
 scale = Vector2( 1.32531, 1.32531 )
 shape = SubResource( 4 )
 
-[node name="Hot Dog" type="KinematicBody2D" parent="Items" index="3"]
-
+[node name="Hot Dog" type="KinematicBody2D" parent="Items"]
 editor/display_folded = true
 position = Vector2( 1381.51, 435.085 )
-input_pickable = false
-collision_layer = 3
+collision_layer = 16
 collision_mask = 3
-collision/safe_margin = 0.08
 script = ExtResource( 16 )
-_sections_unfolded = [ "Collision" ]
 
-[node name="400" type="Sprite" parent="Items/Hot Dog" index="0"]
-
+[node name="400" type="Sprite" parent="Items/Hot Dog"]
 position = Vector2( 3.30399, 0.36363 )
 scale = Vector2( 0.437073, 0.437073 )
 texture = ExtResource( 18 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Hot Dog" index="1"]
-
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Hot Dog"]
 position = Vector2( 3.35304, 0.725145 )
 scale = Vector2( 1.32531, 1.32531 )
 shape = SubResource( 4 )
 
-[node name="Hot Dog2" type="KinematicBody2D" parent="Items" index="4"]
-
+[node name="Hot Dog2" type="KinematicBody2D" parent="Items"]
 editor/display_folded = true
 position = Vector2( 317.956, 71.0243 )
-input_pickable = false
-collision_layer = 3
+collision_layer = 16
 collision_mask = 3
-collision/safe_margin = 0.08
 script = ExtResource( 16 )
-_sections_unfolded = [ "Collision" ]
 
-[node name="400" type="Sprite" parent="Items/Hot Dog2" index="0"]
-
+[node name="400" type="Sprite" parent="Items/Hot Dog2"]
 position = Vector2( 3.30399, 0.36363 )
 scale = Vector2( 0.437073, 0.437073 )
 texture = ExtResource( 18 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Hot Dog2" index="1"]
-
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Hot Dog2"]
 position = Vector2( 3.35304, 0.725145 )
 scale = Vector2( 1.32531, 1.32531 )
 shape = SubResource( 4 )
 
-[node name="NPC" type="RigidBody2D" parent="Items" index="5"]
-
+[node name="NPC" type="RigidBody2D" parent="Items"]
+editor/display_folded = true
 position = Vector2( 2389.81, 153.341 )
-input_pickable = false
-collision_layer = 524300
-collision_mask = 524300
-mode = 0
-mass = 1.0
-friction = 1.0
-bounce = 0.0
-gravity_scale = 1.0
-custom_integrator = false
-continuous_cd = 0
-contacts_reported = 0
-contact_monitor = false
-sleeping = false
-can_sleep = true
-linear_velocity = Vector2( 0, 0 )
-linear_damp = -1.0
-angular_velocity = 0.0
-angular_damp = -1.0
+collision_layer = 32
+collision_mask = 15
 script = ExtResource( 19 )
-_sections_unfolded = [ "Collision" ]
 
-[node name="Sprite" type="Sprite" parent="Items/NPC" index="0"]
-
+[node name="Sprite" type="Sprite" parent="Items/NPC"]
 position = Vector2( 2.91019, 3.98184 )
 scale = Vector2( 0.0972942, 0.0972942 )
 texture = ExtResource( 20 )
-_sections_unfolded = [ "Offset" ]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC" index="1"]
-
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC"]
 position = Vector2( 2.75938, 4.82353 )
 scale = Vector2( 1.72059, 2.3115 )
 shape = SubResource( 5 )
 
-[node name="NPC2" type="RigidBody2D" parent="Items" index="6"]
-
-position = Vector2( 3675.16, 447.806 )
-input_pickable = false
-collision_layer = 524300
-collision_mask = 524300
-mode = 0
-mass = 1.0
-friction = 1.0
-bounce = 0.0
-gravity_scale = 1.0
-custom_integrator = false
-continuous_cd = 0
-contacts_reported = 0
-contact_monitor = false
-sleeping = false
-can_sleep = true
-linear_velocity = Vector2( 0, 0 )
-linear_damp = -1.0
-angular_velocity = 0.0
-angular_damp = -1.0
-script = ExtResource( 19 )
-_sections_unfolded = [ "Collision" ]
-
-[node name="Sprite" type="Sprite" parent="Items/NPC2" index="0"]
-
-position = Vector2( 2.91019, 3.98184 )
-scale = Vector2( 0.0972942, 0.0972942 )
-texture = ExtResource( 20 )
-_sections_unfolded = [ "Offset" ]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC2" index="1"]
-
-position = Vector2( 2.75938, 4.82353 )
-scale = Vector2( 1.72059, 2.3115 )
-shape = SubResource( 5 )
-
-[node name="NPC3" type="RigidBody2D" parent="Items" index="7"]
-
-position = Vector2( 3747.92, 424.278 )
-input_pickable = false
-collision_layer = 524300
-collision_mask = 524300
-mode = 0
-mass = 1.0
-friction = 1.0
-bounce = 0.0
-gravity_scale = 1.0
-custom_integrator = false
-continuous_cd = 0
-contacts_reported = 0
-contact_monitor = false
-sleeping = false
-can_sleep = true
-linear_velocity = Vector2( 0, 0 )
-linear_damp = -1.0
-angular_velocity = 0.0
-angular_damp = -1.0
-script = ExtResource( 19 )
-_sections_unfolded = [ "Collision" ]
-
-[node name="Sprite" type="Sprite" parent="Items/NPC3" index="0"]
-
-position = Vector2( 2.91019, 3.98184 )
-scale = Vector2( 0.0972942, 0.0972942 )
-texture = ExtResource( 20 )
-_sections_unfolded = [ "Offset" ]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC3" index="1"]
-
-position = Vector2( 2.75938, 4.82353 )
-scale = Vector2( 1.72059, 2.3115 )
-shape = SubResource( 5 )
-
-[node name="NPC4" type="RigidBody2D" parent="Items" index="8"]
-
-position = Vector2( 3580.55, 438.96 )
-input_pickable = false
-collision_layer = 524300
-collision_mask = 524300
-mode = 0
-mass = 1.0
-friction = 1.0
-bounce = 0.0
-gravity_scale = 1.0
-custom_integrator = false
-continuous_cd = 0
-contacts_reported = 0
-contact_monitor = false
-sleeping = false
-can_sleep = true
-linear_velocity = Vector2( 0, 0 )
-linear_damp = -1.0
-angular_velocity = 0.0
-angular_damp = -1.0
-script = ExtResource( 19 )
-_sections_unfolded = [ "Collision" ]
-
-[node name="Sprite" type="Sprite" parent="Items/NPC4" index="0"]
-
-position = Vector2( 2.91019, 3.98184 )
-scale = Vector2( 0.0972942, 0.0972942 )
-texture = ExtResource( 20 )
-_sections_unfolded = [ "Offset" ]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC4" index="1"]
-
-position = Vector2( 2.75938, 4.82353 )
-scale = Vector2( 1.72059, 2.3115 )
-shape = SubResource( 5 )
-
-[node name="NPC5" type="RigidBody2D" parent="Items" index="9"]
-
-position = Vector2( 3501.27, 424.278 )
-input_pickable = false
-collision_layer = 524300
-collision_mask = 524300
-mode = 0
-mass = 1.0
-friction = 1.0
-bounce = 0.0
-gravity_scale = 1.0
-custom_integrator = false
-continuous_cd = 0
-contacts_reported = 0
-contact_monitor = false
-sleeping = false
-can_sleep = true
-linear_velocity = Vector2( 0, 0 )
-linear_damp = -1.0
-angular_velocity = 0.0
-angular_damp = -1.0
-script = ExtResource( 19 )
-_sections_unfolded = [ "Collision" ]
-
-[node name="Sprite" type="Sprite" parent="Items/NPC5" index="0"]
-
-position = Vector2( 2.91019, 3.98184 )
-scale = Vector2( 0.0972942, 0.0972942 )
-texture = ExtResource( 20 )
-_sections_unfolded = [ "Offset" ]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC5" index="1"]
-
-position = Vector2( 2.75938, 4.82353 )
-scale = Vector2( 1.72059, 2.3115 )
-shape = SubResource( 5 )
-
-[node name="NPC6" type="RigidBody2D" parent="Items" index="10"]
-
-position = Vector2( 3034.39, 424.278 )
-input_pickable = false
-collision_layer = 524300
-collision_mask = 524300
-mode = 0
-mass = 1.0
-friction = 1.0
-bounce = 0.0
-gravity_scale = 1.0
-custom_integrator = false
-continuous_cd = 0
-contacts_reported = 0
-contact_monitor = false
-sleeping = false
-can_sleep = true
-linear_velocity = Vector2( 0, 0 )
-linear_damp = -1.0
-angular_velocity = 0.0
-angular_damp = -1.0
-script = ExtResource( 19 )
-_sections_unfolded = [ "Collision" ]
-
-[node name="Sprite" type="Sprite" parent="Items/NPC6" index="0"]
-
-position = Vector2( 2.91019, 3.98184 )
-scale = Vector2( 0.0972942, 0.0972942 )
-texture = ExtResource( 20 )
-_sections_unfolded = [ "Offset" ]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC6" index="1"]
-
-position = Vector2( 2.75938, 4.82353 )
-scale = Vector2( 1.72059, 2.3115 )
-shape = SubResource( 5 )
-
-[node name="NPC7" type="RigidBody2D" parent="Items" index="11"]
-
-position = Vector2( 3101.93, 412.533 )
-input_pickable = false
-collision_layer = 524300
-collision_mask = 524300
-mode = 0
-mass = 1.0
-friction = 1.0
-bounce = 0.0
-gravity_scale = 1.0
-custom_integrator = false
-continuous_cd = 0
-contacts_reported = 0
-contact_monitor = false
-sleeping = false
-can_sleep = true
-linear_velocity = Vector2( 0, 0 )
-linear_damp = -1.0
-angular_velocity = 0.0
-angular_damp = -1.0
-script = ExtResource( 19 )
-_sections_unfolded = [ "Collision" ]
-
-[node name="Sprite" type="Sprite" parent="Items/NPC7" index="0"]
-
-position = Vector2( 2.91019, 3.98184 )
-scale = Vector2( 0.0972942, 0.0972942 )
-texture = ExtResource( 20 )
-_sections_unfolded = [ "Offset" ]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/NPC7" index="1"]
-
-position = Vector2( 2.75938, 4.82353 )
-scale = Vector2( 1.72059, 2.3115 )
-shape = SubResource( 5 )
-
-[node name="SpeedBoost" type="KinematicBody2D" parent="Items" index="12"]
-
+[node name="SpeedBoost" type="KinematicBody2D" parent="Items"]
+editor/display_folded = true
 position = Vector2( 506.45, 401.389 )
 rotation = -3.13924
-input_pickable = false
-collision_layer = 1
-collision_mask = 1
-collision/safe_margin = 0.08
+collision_layer = 128
+collision_mask = 3
 script = ExtResource( 21 )
 
-[node name="800" type="Sprite" parent="Items/SpeedBoost" index="0"]
-
+[node name="800" type="Sprite" parent="Items/SpeedBoost"]
 position = Vector2( 1.63123, -24.7805 )
 rotation = -6.26459
 scale = Vector2( 0.218074, 0.218074 )
 texture = ExtResource( 22 )
 
-[node name="Backward" type="CollisionShape2D" parent="Items/SpeedBoost" index="1"]
-
+[node name="Backward" type="CollisionShape2D" parent="Items/SpeedBoost"]
 shape = SubResource( 6 )
 
-[node name="SpeedBoost3" type="KinematicBody2D" parent="Items" index="13"]
-
-position = Vector2( 5227.32, 468.843 )
+[node name="SpeedBoost3" type="KinematicBody2D" parent="Items"]
+editor/display_folded = true
+position = Vector2( 3379.34, 499.331 )
 rotation = -3.13924
-input_pickable = false
-collision_layer = 1
-collision_mask = 1
-collision/safe_margin = 0.08
+collision_layer = 128
+collision_mask = 3
 script = ExtResource( 21 )
 
-[node name="800" type="Sprite" parent="Items/SpeedBoost3" index="0"]
-
+[node name="800" type="Sprite" parent="Items/SpeedBoost3"]
 position = Vector2( 1.63123, -24.7805 )
 rotation = -6.26459
 scale = Vector2( 0.218074, 0.218074 )
 texture = ExtResource( 22 )
 
-[node name="Backward" type="CollisionShape2D" parent="Items/SpeedBoost3" index="1"]
-
+[node name="Backward" type="CollisionShape2D" parent="Items/SpeedBoost3"]
 shape = SubResource( 6 )
 
-[node name="SpeedBoost2" type="KinematicBody2D" parent="Items" index="14"]
-
+[node name="SpeedBoost2" type="KinematicBody2D" parent="Items"]
+editor/display_folded = true
 position = Vector2( 4814, 479.266 )
 rotation = -6.25955
-input_pickable = false
-collision_layer = 1
-collision_mask = 1
-collision/safe_margin = 0.08
+collision_layer = 128
+collision_mask = 3
 script = ExtResource( 21 )
 
-[node name="800" type="Sprite" parent="Items/SpeedBoost2" index="0"]
-
+[node name="800" type="Sprite" parent="Items/SpeedBoost2"]
 position = Vector2( -1.27002, 28.1324 )
 rotation = -6.26459
 scale = Vector2( 0.218074, 0.218074 )
 texture = ExtResource( 22 )
 
-[node name="Forward" type="CollisionShape2D" parent="Items/SpeedBoost2" index="1"]
-
+[node name="Forward" type="CollisionShape2D" parent="Items/SpeedBoost2"]
 shape = SubResource( 6 )
-
 
