@@ -260,9 +260,9 @@ position = Vector2( 3.35304, 0.725145 )
 scale = Vector2( 1.32531, 1.32531 )
 shape = SubResource( 4 )
 
-[node name="NPC" type="RigidBody2D" parent="Items"]
+[node name="NPC" type="KinematicBody2D" parent="Items"]
 editor/display_folded = true
-position = Vector2( 2389.81, 153.341 )
+position = Vector2( 2359.81, 301.341 )
 collision_layer = 32
 collision_mask = 15
 script = ExtResource( 19 )

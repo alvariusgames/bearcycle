@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class NPC : RigidBody2D{
+public class NPC : KinematicBody2D{
 
     public Sprite Sprite;
    public CollisionShape2D CollisionShape2D;
