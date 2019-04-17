@@ -16,7 +16,7 @@ The idea for this game came when I was hiking with friends in Alaska on a multi-
 
 ## License
 
-Everything on this https://github.com/ludditegames/bears_on_atv.git repository is under the MIT open source license. The following restrictions apply:
+Everything on this https://github.com/ludditegames/bears_on_atvs.git repository is under the MIT open source license. The following restrictions apply:
 
 1) You may not use the trademarks "Bears on ATVs" or "Luddite Games".
 2) You may not use any asset included in the released, distributable software that is not publicly accessible in this https://github.com/ludditegames/bears_on_atvs.git repository.
