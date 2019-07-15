@@ -188,7 +188,13 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     }
 
     private void updateSprite(float delta){
-        const float arbitraryConstant = 400;
-        this.sprite.Rotate(this.forwardAccell / arbitraryConstant);
+        float randJiggleEffect = 0f;
+        if(this.Name == "FrontWheel" && this.forwardAccell != 0f){
+            randJiggleEffect = (float)((new Random().NextDouble() - 0.45f) * 0.1);
+        } else if(this.Name == "BackWheel" && this.forwardAccell != 0f){
+            randJiggleEffect = (float)((new Random().NextDouble() - 0.55f) * 0.1);
+        }
+        const float arbitraryConstant = 400f;
+        this.sprite.Rotate((this.forwardAccell / arbitraryConstant) + randJiggleEffect);
     }
 }

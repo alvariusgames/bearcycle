@@ -85,7 +85,18 @@ public class Bear : FSMKinematicBody2D<BearState>{
         this.SetActiveState(BearState.TRIGGER_HIT_SEQUENCE, 100);
         this.ATV.ThrowBearOffATV();}
 
-    public override void ReactStateless(float delta){}
+    public override void ReactStateless(float delta){
+        drawBear(delta);
+    }
+
+    private void drawBear(float delta){
+        var spriteScale = this.Sprite.GetScale();
+        if(this.ATV.Direction == ATVDirection.FORWARD){
+            this.Sprite.SetScale(new Vector2(Math.Abs(spriteScale[0]),
+                                             spriteScale[1]));
+        } else if(this.ATV.Direction == ATVDirection.BACKWARD){
+            this.Sprite.SetScale(new Vector2(-Math.Abs(spriteScale[0]),
+                                             spriteScale[1]));}}
 
     private void applyGravity(float delta){
         if(this.velocity.y < MAX_GRAVITY_SPEED){

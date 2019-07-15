@@ -20,6 +20,7 @@ public class ATV : FSMNode2D<ATVState> {
     public Bear Bear;
     public Player Player;
     public float BodyLength;
+	public Sprite Sprite;
     private int LastInAirsLength = 15;
     private Queue<Boolean> OngoingIsInAirs = new Queue<Boolean>();
     private int LastVelocitiesOfTwoWheelsLength = 5;
@@ -32,7 +33,9 @@ public class ATV : FSMNode2D<ATVState> {
             else if(child.Name.Equals("BackWheel")){
                 this.BackWheel = (Wheel)child;}
             else if(child.Name.Equals("Bear")){
-                this.Bear = (Bear)child;}}
+                this.Bear = (Bear)child;}
+            else if(child is Sprite){
+                this.Sprite = (Sprite)child;}}
         this.Player = (Player)this.GetParent();
         this.BodyLength = this.FrontWheel.Position.DistanceTo(
             this.BackWheel.Position);
@@ -170,6 +173,7 @@ public class ATV : FSMNode2D<ATVState> {
         this.holdWheelsTogether(delta);
         this.updateLastVelocitiesOfTwoWheels(delta);
         this.updateLastInAirs(delta);
+        this.drawATV(delta);
     }
 
     private void updateLastVelocitiesOfTwoWheels(float delta){
@@ -213,12 +217,34 @@ public class ATV : FSMNode2D<ATVState> {
         var bcenter = this.BackWheel.GetGlobalPosition();
         var center = (bcenter + fcenter) / 2f;
         var angleUpCenter = (fcenter - bcenter).Rotated(3f * (float)Math.PI / 2f).Normalized();
-        var distAbove = 20f;
+        var distAbove = 40f;
         var bearCenter = center + angleUpCenter * distAbove;
         
         //this.Bear.SetGlobalPosition(bearCenter / 90);
         this.Bear.Sprite.SetGlobalRotation((fcenter - bcenter).Angle());
         this.Bear.SetGlobalPosition(bearCenter);}
+
+    public void drawATV(float delta){
+        var fwcenter = this.FrontWheel.GetGlobalPosition();
+        var bwcenter = this.BackWheel.GetGlobalPosition();
+        var bcenter = this.Bear.GetGlobalPosition();
+        var center = (bwcenter + fwcenter) / 2f;
+
+        var angleUpCenter = (fwcenter - bwcenter).Rotated(
+            3f * (float)Math.PI / 2f).Normalized();
+        var distAbove = 20f;
+        var atvPos = center + distAbove * angleUpCenter;
+        this.Sprite.SetGlobalPosition(atvPos);
+        this.Sprite.SetGlobalRotation((fwcenter - bwcenter).Angle());
+        
+        var spriteScale = this.Sprite.GetScale();
+        if(this.Direction == ATVDirection.FORWARD){
+            this.Sprite.SetScale(new Vector2(Math.Abs(spriteScale[0]),
+                                             spriteScale[1]));
+        } else if(this.Direction == ATVDirection.BACKWARD){
+            this.Sprite.SetScale(new Vector2(-Math.Abs(spriteScale[0]),
+                                             spriteScale[1]));
+        }}
 
     public void ApplyPhonyRunOverEffect(Wheel wheel){
         ////Simulates an ATV squishing something below it
