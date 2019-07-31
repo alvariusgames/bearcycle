@@ -15,16 +15,17 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     public CollisionShape2D collisionShape2D;
     public ATV ATV;
     public float forwardAccell = 0f;
+    private int platformCollisions = 0;
     //The below 2 vars auto update, & can be used to calculate all info about "forward"
     // See `this.calculateForwardAngle()` for more information
     private Vector2 currentTravel = new Vector2(0,0);
     private Vector2 currentNormal = new Vector2(0,-1);
-    private const float GRAVITY  = 700.0f;
-    private const float MAX_GRAVITY_SPEED = 1100f;
-    private const float MAX_FORWARD_ACCEL = 65f;
+    private const float GRAVITY  = 1400.0f;
+    private const float MAX_GRAVITY_SPEED = 2200f;
+    private const float MAX_FORWARD_ACCEL = 130f;
     private const float MAX_BACKWARD_ACCEL = - MAX_FORWARD_ACCEL;
-    private const float MAX_SPEED = 800f;
-    private const float FORWARD_ACCEL_UNIT = 3f;
+    private const float MAX_SPEED = 1600f;
+    private const float FORWARD_ACCEL_UNIT = 6f;
     private const float DECELL_EFFECT = 0.90f;
     private const float LOCKING_EFFECT = 0.90f;
     private const float DEFAULT_FRICTION_EFFECT = 0.90f;
@@ -116,9 +117,11 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                                        float frictionEffect = DEFAULT_FRICTION_EFFECT){
         //Process Collision with platforms
         var numCollisions = this.GetSlideCount();
+        this.platformCollisions = 0;
         for(int i = 0; i < this.GetSlideCount(); i++){
            var collision = this.GetSlideCollision(i);
            if(collision.Collider is Platforms){
+                this.platformCollisions++;
                 //Save relevant collision info to this
                 this.currentTravel = collision.Travel;
                 this.currentNormal = collision.Normal;
@@ -184,7 +187,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     }
 
     public Boolean IsInAir(){
-        return this.GetSlideCount() <= 0;
+        return this.platformCollisions <= 0;
     }
 
     private void updateSprite(float delta){
@@ -195,6 +198,10 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
             randJiggleEffect = (float)((new Random().NextDouble() - 0.55f) * 0.1);
         }
         const float arbitraryConstant = 400f;
-        this.sprite.Rotate((this.forwardAccell / arbitraryConstant) + randJiggleEffect);
+        if(Math.Abs(this.forwardAccell) > 5f){
+            this.sprite.Rotate((this.forwardAccell / arbitraryConstant) + randJiggleEffect);
+        } else {
+            this.sprite.Rotate(this.forwardAccell / arbitraryConstant);   
+        }
     }
 }

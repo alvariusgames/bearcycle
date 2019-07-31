@@ -27,12 +27,14 @@ public class CameraManager : FSMNode2D<CameraManagerState>{
         }        
     }
 
-    public override void ReactStateless(float delta){}
+    public override void ReactStateless(float delta){
+        this.SetGlobalRotation(0);
+    }
 
     private const float HORIZONTAL_MULTIPLIER_EFFECT = 1.20f;
     private const float VERTICAL_MULTIPLIER_EFFECT = 0.25f;
     private const float HORIZONTAL_OFFSET = 0f;
-    private const float VERTICAL_OFFSET = -50f;
+    private const float VERTICAL_OFFSET = -100f;
     private const float MAX_POSITION_X = 700f;
     private const float MAX_POSITION_Y = 700f;
 

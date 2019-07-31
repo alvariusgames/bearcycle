@@ -24,8 +24,30 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
         if(parent is ATV){
             this.ATV = (ATV)parent;}}
 
+    private Boolean hasUILeftBeenPressedInAir;
+    private Boolean hasUIRightBeenPressedInAir;
+
+    private bool freshInAir = false;
+
+    private void UIButtonInAirBookKeeping(float delta){
+        if(this.ATV.IsInAir()){
+            this.freshInAir = true;
+        } else {
+            this.freshInAir = false;
+            this.hasUILeftBeenPressedInAir = false;
+            this.hasUIRightBeenPressedInAir = false;            
+        }
+        if(freshInAir && Input.IsActionJustPressed("ui_left")){
+            this.hasUILeftBeenPressedInAir = true;
+        }
+        if(freshInAir && Input.IsActionJustPressed("ui_right")){
+            this.hasUIRightBeenPressedInAir = true;
+        }
+    }
+
     public override void ReactStateless(float delta){
         this.ATV.RotateTwoWheels(this.phiRotationToApply);
+        this.UIButtonInAirBookKeeping(delta);
         if(this.ATV.IsInAir() && 
            Input.IsActionPressed("ui_left") &&
            Input.IsActionPressed("ui_right")){
@@ -86,14 +108,14 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
             ///If we're in the right situation to be able to accept input
             if(Input.IsActionPressed("ui_right") && Input.IsActionPressed("ui_left")){
                 this.SetActiveState(RotationManagerState.NOT_ROTATING, 100);}
-            else if(Input.IsActionPressed("ui_right")){
+            else if(Input.IsActionPressed("ui_right") && this.hasUIRightBeenPressedInAir){
                 if(this.SecondsInAirPressingRight > SEC_HOLDING_BUTTON_TO_FAST_ROT){
                     this.SetActiveState(RotationManagerState.ROTATE_FAST_FORWARD, 100);}
                 else if(this.SecondsInAirPressingRight <= SEC_HOLDING_BUTTON_TO_FAST_ROT){
                    this.SetActiveState(RotationManagerState.ROTATE_SLOW_FORWARD, 100);}
                 else{
                     this.SetActiveState(RotationManagerState.NOT_ROTATING, 100);}}
-            else if(Input.IsActionPressed("ui_left")){
+            else if(Input.IsActionPressed("ui_left") && this.hasUILeftBeenPressedInAir){
                if(this.SecondsInAirPressingLeft > SEC_HOLDING_BUTTON_TO_FAST_ROT){
                     this.SetActiveState(RotationManagerState.ROTATE_FAST_BACKWARD, 100);}
                else if (this.SecondsInAirPressingLeft <= SEC_HOLDING_BUTTON_TO_FAST_ROT){

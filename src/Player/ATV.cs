@@ -25,6 +25,8 @@ public class ATV : FSMNode2D<ATVState> {
     private Queue<Boolean> OngoingIsInAirs = new Queue<Boolean>();
     private int LastVelocitiesOfTwoWheelsLength = 5;
     private Queue<Vector2> OngoingVelocitiesOfTwoWheels = new Queue<Vector2>();
+    private Vector2 initialOffsetFromWheelsToBear;
+
        public override void _Ready(){
         this.ResetActiveState(this.InitialState);
         foreach(Node2D child in this.GetChildren()){
@@ -43,10 +45,16 @@ public class ATV : FSMNode2D<ATVState> {
             this.OngoingIsInAirs.Enqueue(false);
         }
         for(int i=0; i<this.LastVelocitiesOfTwoWheelsLength; i++){
-            this.OngoingVelocitiesOfTwoWheels.Enqueue(new Vector2(0,0));}}
+            this.OngoingVelocitiesOfTwoWheels.Enqueue(new Vector2(0,0));}
+        this.initialOffsetFromWheelsToBear = this.Bear.GetGlobalPosition() - this.GetGlobalCenterOfTwoWheels();
+        }
 
     public Vector2 GetGlobalCenterOfTwoWheels(){
         return (this.FrontWheel.GetGlobalPosition() + this.BackWheel.GetGlobalPosition()) / 2f;}
+
+    public Vector2 GetGlobalCenterOfATV(){
+        return this.GetGlobalCenterOfTwoWheels() + this.initialOffsetFromWheelsToBear;
+    }
     
     public Vector2 GetNormalizedBackToFront(){
         return (this.FrontWheel.GetGlobalPosition() - this.BackWheel.GetGlobalPosition()).Normalized();
@@ -95,9 +103,10 @@ public class ATV : FSMNode2D<ATVState> {
        return this.OngoingIsInAirs.ToArray().All(x => x == true);}
 
     public void RotateTwoWheels(float phi){
-        var center = this.GetGlobalCenterOfTwoWheels();
+        GD.Print(phi);
         var front = this.FrontWheel.GetGlobalPosition();
         var back = this.BackWheel.GetGlobalPosition();
+        var center = this.GetGlobalCenterOfTwoWheels();
 
         var centerToFront = (front - center);
         var centerToBack = (back - center);
@@ -119,6 +128,7 @@ public class ATV : FSMNode2D<ATVState> {
             var swizzle = this.FrontWheel.GetGlobalPosition();
             this.FrontWheel.SetGlobalPosition(this.BackWheel.GetGlobalPosition());
             this.BackWheel.SetGlobalPosition(swizzle);
+            this.drawATV(-1);
             this.moveBearToCenter(-1);}
         if(this.Bear.MoveAndCollide(new Vector2(0,0)) != null){
             //ATV attempted to be flipped, but failed
@@ -217,12 +227,15 @@ public class ATV : FSMNode2D<ATVState> {
         var bcenter = this.BackWheel.GetGlobalPosition();
         var center = (bcenter + fcenter) / 2f;
         var angleUpCenter = (fcenter - bcenter).Rotated(3f * (float)Math.PI / 2f).Normalized();
-        var distAbove = 40f;
-        var bearCenter = center + angleUpCenter * distAbove;
+        //var bearCenter = center + angleUpCenter * distAbove;
         
         //this.Bear.SetGlobalPosition(bearCenter / 90);
-        this.Bear.Sprite.SetGlobalRotation((fcenter - bcenter).Angle());
-        this.Bear.SetGlobalPosition(bearCenter);}
+        this.Bear.SetGlobalPosition(this.Sprite.GetGlobalPosition());
+        this.Bear.SetGlobalRotation((fcenter - bcenter).Angle());
+        //this.Bear.CollisionShape2D.SetGlobalRotation(this.Bear.CutOut.GetGlobalRotation());
+        //this.Sprite.SetGlobalRotation((fcenter - bcenter).Angle());
+        //this.Bear.SetGlobalPosition(this.GetGlobalCenterOfTwoWheels() + this.initialOffsetFromWheelsToBear);}
+    }
 
     public void drawATV(float delta){
         var fwcenter = this.FrontWheel.GetGlobalPosition();
@@ -232,16 +245,16 @@ public class ATV : FSMNode2D<ATVState> {
 
         var angleUpCenter = (fwcenter - bwcenter).Rotated(
             3f * (float)Math.PI / 2f).Normalized();
-        var distAbove = 20f;
+        var distAbove = 40f;
         var atvPos = center + distAbove * angleUpCenter;
         this.Sprite.SetGlobalPosition(atvPos);
         this.Sprite.SetGlobalRotation((fwcenter - bwcenter).Angle());
         
         var spriteScale = this.Sprite.GetScale();
-        if(this.Direction == ATVDirection.FORWARD){
+        if(this.Direction == ATVDirection.FORWARD && !this.IsInAir()){
             this.Sprite.SetScale(new Vector2(Math.Abs(spriteScale[0]),
                                              spriteScale[1]));
-        } else if(this.Direction == ATVDirection.BACKWARD){
+        } else if(this.Direction == ATVDirection.BACKWARD && !this.IsInAir()){
             this.Sprite.SetScale(new Vector2(-Math.Abs(spriteScale[0]),
                                              spriteScale[1]));
         }}

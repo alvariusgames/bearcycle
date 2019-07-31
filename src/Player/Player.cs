@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum PlayerState {NORMAL, TRIGGER_ATTACK, ATTACK}
+public enum PlayerState {NORMAL, TRIGGER_ATTACK, ATTACK, TRIGGER_END_ATTACK}
 public class Player : FSMNode2D<PlayerState>{
     public override PlayerState InitialState {get { return PlayerState.NORMAL;}}
     public AttackWindow AttackWindow;
@@ -19,11 +19,18 @@ public class Player : FSMNode2D<PlayerState>{
 
     public override void _Ready(){
        this.ResetActiveState(this.InitialState);
+       this.setInitialSafetyCheckPoint();
        foreach(var child in this.GetChildren()){
             if(child is ATV){
                 this.ATV = (ATV)child;}
             else if(child is AttackWindow){
                 this.AttackWindow = (AttackWindow)child;}}}
+
+    private void setInitialSafetyCheckPoint(){
+       this.LastSafetyCheckPoint = new SafetyCheckPoint();
+       this.LastSafetyCheckPoint.GlobalPositionToResetTo = this.GetGlobalPosition();
+       this.LastSafetyCheckPoint.BeenActivated = true;
+    }
 
     public override void ReactStateless(float delta){
         this.CurrentHealth -= delta;
@@ -34,18 +41,36 @@ public class Player : FSMNode2D<PlayerState>{
                 this.AttackWindow.ResetActiveState(AttackWindowState.NOT_ATTACKING);
                 break;
             case PlayerState.TRIGGER_ATTACK:
-                var attackDurationS = 0.2f;
-                this.SetActiveState(PlayerState.ATTACK, 200);
-                this.ResetActiveStateAfter(PlayerState.NORMAL, attackDurationS);
+                var delayS = 0.2f;
+                var attackDurationS = 0.3f;
+                this.playBearAnimation("attack1");                
+                this.SetActiveStateAfter(PlayerState.ATTACK, 200, delayS);
+                this.SetActiveStateAfter(PlayerState.TRIGGER_END_ATTACK, 400, delayS + attackDurationS);
                 break;
             case PlayerState.ATTACK:
                 this.AttackWindow.SetActiveState(AttackWindowState.ATTACKING, 100);
+                break;
+            case PlayerState.TRIGGER_END_ATTACK:
+                this.playBearAnimation("idleBounce1");
+                this.ResetActiveState(PlayerState.NORMAL);
                 break;
             default:
                 throw new Exception("Invalid Player State");
         }
 
     }
+
+    public void stopAllBearAnimation(){
+        this.ATV.Bear.CutOutAnimationPlayer.Stop();
+    }
+
+    public void playBearAnimation(params string[] animationNames){
+        Random random = new Random();
+        var animationName = animationNames[random.Next(0, 
+                                           animationNames.Length)];
+        this.ATV.Bear.CutOutAnimationPlayer.Play(animationName);
+    }
+
     public override void UpdateState(float delta){
         this.reactToInput(delta);
     }
