@@ -18,10 +18,15 @@ public class SpeedBoost : FSMKinematicBody2D<SpeedBoostState>
     public Boolean IsBackward = false;
     const float RESET_TIME_SECONDS = 2f;
 
+    public AnimationPlayer AnimationPlayer;
+
     public override void _Ready(){
         foreach(var child in this.GetChildren()){
             if(child is Sprite){
-                this.Sprite = (Sprite)child;}
+                this.Sprite = (Sprite)child;
+                foreach(var child2 in this.Sprite.GetChildren()){
+                    if(child2 is AnimationPlayer){
+                        this.AnimationPlayer = (AnimationPlayer)child2;}}}
             if(child is CollisionShape2D){
                 this.CollisionShape2D = (CollisionShape2D)child;
             }
@@ -31,7 +36,8 @@ public class SpeedBoost : FSMKinematicBody2D<SpeedBoostState>
         this.Direction = new Vector2(1,0).Rotated(this.Rotation);
         this.Magnitude = (float)Convert.ToDouble(this.Sprite.Name);
         this.VelocityToApply = new Vector2(this.Direction.x * this.Magnitude,
-                                                this.Direction.y * this.Magnitude);}
+                                                this.Direction.y * this.Magnitude);
+        this.AnimationPlayer.Play("default");}
 
     public void GetHitBy(Node node){
         this.SetActiveState(SpeedBoostState.TRIGGER_HIT_OF_BOOST, 100);

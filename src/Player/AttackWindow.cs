@@ -31,13 +31,12 @@ public class AttackWindow : FSMKinematicBody2D<AttackWindowState>
                 this.Polygon2D.Polygon = this.CollisionPolygon2D.Polygon;}}}
 
     public override void ReactStateless(float delta){
-        this.SetGlobalPosition(this.Player.ATV.GetGlobalCenterOfTwoWheels());
+        this.SetGlobalPosition(this.Player.ATV.GetDeFactoGlobalPosition());
+        this.SetGlobalRotation(this.Player.ATV.GetDeFactorGlobalRotation());
         if(this.Player.ATV.Direction == ATVDirection.FORWARD){
             this.SetScale(new Vector2(1,1));
-            this.SetGlobalRotation(this.Player.ATV.GetNormalizedBackToFront().Angle());
        } else if (this.Player.ATV.Direction == ATVDirection.BACKWARD){
            this.SetScale(new Vector2(-1,1));
-           this.SetGlobalRotation(this.Player.ATV.GetNormalizedBackToFront().Angle());
        }
     //    GD.Print(this.CollisionPolygon2D.GetGlobalPosition());
     }

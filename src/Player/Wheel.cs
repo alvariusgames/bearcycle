@@ -20,9 +20,14 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     // See `this.calculateForwardAngle()` for more information
     private Vector2 currentTravel = new Vector2(0,0);
     private Vector2 currentNormal = new Vector2(0,-1);
+
+    //public constants
+    public const float MAX_FORWARD_ACCEL = 130f;
+
+    //private constants
+
     private const float GRAVITY  = 1400.0f;
     private const float MAX_GRAVITY_SPEED = 2200f;
-    private const float MAX_FORWARD_ACCEL = 130f;
     private const float MAX_BACKWARD_ACCEL = - MAX_FORWARD_ACCEL;
     private const float MAX_SPEED = 1600f;
     private const float FORWARD_ACCEL_UNIT = 6f;
@@ -140,18 +145,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                 npc.GetHitBy(this);
                 this.ATV.Player.GetHitBy(npc);
                 this.ATV.ApplyPhonyRunOverEffect(this);}
-            if(collision.Collider is SpeedBoost){
-                var speedBoost = (SpeedBoost)collision.Collider;
-                this.ATV.SetVelocityOfTwoWheels(speedBoost.VelocityToApply);
-                var accellMagnitude = MAX_FORWARD_ACCEL * 2;
-                if(speedBoost.IsForward){
-                    this.ATV.SetAccellOfTwoWheels(accellMagnitude);
-                } else if(speedBoost.IsBackward){
-                    this.ATV.SetAccellOfTwoWheels(-accellMagnitude);
-                }
-                //this.ATV.AdjustVelocityAndAccelOfTwoWheels(1f, 3f);
-                speedBoost.GetHitBy(this);
-            }}}
+            }}
 
         public void PhonyBounceUp(float magnitude){
             this.velocity = new Vector2(this.currentNormal.x * magnitude * BOUNCE_UP_EFFECT_VELOCITY,

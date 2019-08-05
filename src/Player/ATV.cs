@@ -49,6 +49,15 @@ public class ATV : FSMNode2D<ATVState> {
         this.initialOffsetFromWheelsToBear = this.Bear.GetGlobalPosition() - this.GetGlobalCenterOfTwoWheels();
         }
 
+    public Vector2 GetDeFactoGlobalPosition(){
+        //TODO: Find a better way to do this besides this hack
+        return this.Sprite.GetGlobalPosition();
+    }
+
+    public float GetDeFactorGlobalRotation(){
+        return this.GetNormalizedBackToFront().Angle();
+    }
+
     public Vector2 GetGlobalCenterOfTwoWheels(){
         return (this.FrontWheel.GetGlobalPosition() + this.BackWheel.GetGlobalPosition()) / 2f;}
 
@@ -103,7 +112,6 @@ public class ATV : FSMNode2D<ATVState> {
        return this.OngoingIsInAirs.ToArray().All(x => x == true);}
 
     public void RotateTwoWheels(float phi){
-        GD.Print(phi);
         var front = this.FrontWheel.GetGlobalPosition();
         var back = this.BackWheel.GetGlobalPosition();
         var center = this.GetGlobalCenterOfTwoWheels();
@@ -139,7 +147,7 @@ public class ATV : FSMNode2D<ATVState> {
             this.FrontWheel.ResetActiveState(WheelState.IDLING);
             this.BackWheel.ResetActiveState(WheelState.IDLING);}
 
-    public void ThrowBearOffATV(float throwSpeed = 100){
+    public void ThrowBearOffATV(float throwSpeed = 300){
         this.SetActiveState(ATVState.WITHOUT_BEAR, 100);
         if(this.FrontWheel.velocity.x >= 0f){
             this.Bear.velocity += (new Vector2(throwSpeed,0)).Rotated(1.25f * (float)Math.PI);
@@ -171,13 +179,20 @@ public class ATV : FSMNode2D<ATVState> {
             this.BackWheel.ResetActiveState(WheelState.IDLING);}}
 
     public override void UpdateState(float delta){
-        if(this.FrontWheel.ActiveState == WheelState.ACCELERATING || Input.IsActionPressed("ui_right")){
+        this.UpdateDirection(delta);}
+    
+    private void UpdateDirection(float delta){
+        if((this.FrontWheel.ActiveState == WheelState.ACCELERATING || Input.IsActionPressed("ui_right"))
+                && !this.IsInAir()
+                && this.ActiveState == ATVState.WITH_BEAR
+                && this.Player.ActiveState == PlayerState.NORMAL){
             this.Direction = ATVDirection.FORWARD;
         }
-        else if(this.FrontWheel.ActiveState == WheelState.DECELERATING || Input.IsActionPressed("ui_left")){
-            this.Direction = ATVDirection.BACKWARD;
-        }
-    }
+        else if((this.FrontWheel.ActiveState == WheelState.DECELERATING || Input.IsActionPressed("ui_left")) 
+                && !this.IsInAir()
+                && this.ActiveState == ATVState.WITH_BEAR
+                && this.Player.ActiveState == PlayerState.NORMAL){
+            this.Direction = ATVDirection.BACKWARD;}}
 
     public override void ReactStateless(float delta){
         this.holdWheelsTogether(delta);
@@ -251,10 +266,10 @@ public class ATV : FSMNode2D<ATVState> {
         this.Sprite.SetGlobalRotation((fwcenter - bwcenter).Angle());
         
         var spriteScale = this.Sprite.GetScale();
-        if(this.Direction == ATVDirection.FORWARD && !this.IsInAir()){
+        if(this.Direction == ATVDirection.FORWARD){
             this.Sprite.SetScale(new Vector2(Math.Abs(spriteScale[0]),
                                              spriteScale[1]));
-        } else if(this.Direction == ATVDirection.BACKWARD && !this.IsInAir()){
+        } else if(this.Direction == ATVDirection.BACKWARD){
             this.Sprite.SetScale(new Vector2(-Math.Abs(spriteScale[0]),
                                              spriteScale[1]));
         }}

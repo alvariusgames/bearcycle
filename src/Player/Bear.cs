@@ -97,9 +97,14 @@ public class Bear : FSMKinematicBody2D<BearState>{
         }
     }
 
-    private void commonHitFunctionality(){
+    public void TriggerHitSequence(float throwSpeed = 300){
         this.SetActiveState(BearState.TRIGGER_HIT_SEQUENCE, 100);
-        this.ATV.ThrowBearOffATV();}
+        this.ATV.ThrowBearOffATV(throwSpeed);
+    }
+
+    private void commonHitFunctionality(){
+        this.TriggerHitSequence();
+    }
 
     public override void ReactStateless(float delta){
         drawBear(delta);

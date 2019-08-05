@@ -16,6 +16,7 @@ public class Player : FSMNode2D<PlayerState>{
     private List<IFood> foodEaten = new List<IFood>();
     public IFood lastFoodEaten;
     private SafetyCheckPoint LastSafetyCheckPoint;
+    private WholeBodyKinBody WholeBodyKinBody;
 
     public override void _Ready(){
        this.ResetActiveState(this.InitialState);
@@ -24,7 +25,9 @@ public class Player : FSMNode2D<PlayerState>{
             if(child is ATV){
                 this.ATV = (ATV)child;}
             else if(child is AttackWindow){
-                this.AttackWindow = (AttackWindow)child;}}}
+                this.AttackWindow = (AttackWindow)child;}
+            else if(child is WholeBodyKinBody){ //&& ((Node2D)child).Name.ToLower().Contains("wholebody")){
+                this.WholeBodyKinBody = (WholeBodyKinBody)child;}}}
 
     private void setInitialSafetyCheckPoint(){
        this.LastSafetyCheckPoint = new SafetyCheckPoint();
@@ -107,6 +110,7 @@ public class Player : FSMNode2D<PlayerState>{
     public void GetHitBy(Node node){
         if(node is NPC){
             var npc = (NPC)node;
+            this.ATV.Bear.TriggerHitSequence();
             //TODO: evaluate if this is needed or not
     }}
 
