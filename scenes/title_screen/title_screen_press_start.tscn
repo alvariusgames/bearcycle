@@ -1,0 +1,346 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://scenes/title_screen/TitleScreenPressStart.cs" type="Script" id=1]
+[ext_resource path="res://media/UI/title_screen/bg_two_1080.png" type="Texture" id=2]
+[ext_resource path="res://media/UI/title_screen/bg_one_1080.png" type="Texture" id=3]
+[ext_resource path="res://media/UI/title_screen/logo_transp_1080.png" type="Texture" id=4]
+[ext_resource path="res://media/fonts/en_US.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://src/UI/HoverControlBoxContainer.cs" type="Script" id=7]
+[ext_resource path="res://media/UI/title_screen/button_unhovered.png" type="Texture" id=8]
+[ext_resource path="res://media/UI/title_screen/button_hovered.png" type="Texture" id=9]
+[ext_resource path="res://src/UI/HoverableTouchScreenButton.cs" type="Script" id=10]
+
+[sub_resource type="DynamicFont" id=1]
+size = 64
+outline_size = 4
+outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 42
+outline_size = 3
+outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 28
+outline_color = Color( 1, 1, 1, 0.501961 )
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 42
+outline_size = 8
+outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 128
+outline_size = 24
+outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 32
+font_data = ExtResource( 5 )
+
+[node name="main" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="BgTwo" type="Sprite" parent="."]
+position = Vector2( 960, 540 )
+z_index = -3
+texture = ExtResource( 2 )
+
+[node name="BgOne" type="Sprite" parent="."]
+position = Vector2( 960, 540 )
+z_index = -3
+texture = ExtResource( 3 )
+
+[node name="Logo" type="Sprite" parent="."]
+position = Vector2( 960, 540 )
+texture = ExtResource( 4 )
+
+[node name="PressStart" type="Label" parent="."]
+margin_left = 802.041
+margin_top = 943.692
+margin_right = 1125.04
+margin_bottom = 1077.69
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "Press Start"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CompanyName" type="Label" parent="."]
+margin_left = 1369.83
+margin_top = 1014.35
+margin_right = 1969.83
+margin_bottom = 1094.35
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+text = "Luddite Games, 2019"
+align = 1
+
+[node name="Version" type="Label" parent="."]
+margin_left = 20.9161
+margin_top = 1024.83
+margin_right = 238.916
+margin_bottom = 1082.83
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
+text = "v0.1.0-alpha"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MainMenuButtons" type="VBoxContainer" parent="."]
+visible = false
+anchor_right = 0.46
+margin_left = 228.962
+margin_top = 139.461
+margin_right = 579.962
+margin_bottom = 951.461
+script = ExtResource( 7 )
+
+[node name="Play" type="Label" parent="MainMenuButtons"]
+margin_right = 350.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 0, 200 )
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "Play"
+align = 1
+valign = 1
+
+[node name="Play2" type="TouchScreenButton" parent="MainMenuButtons/Play"]
+position = Vector2( -42.9737, 30.6828 )
+z_index = -1
+normal = ExtResource( 8 )
+pressed = ExtResource( 9 )
+script = ExtResource( 10 )
+
+[node name="Shop" type="Label" parent="MainMenuButtons"]
+margin_top = 204.0
+margin_right = 350.0
+margin_bottom = 404.0
+rect_min_size = Vector2( 0, 200 )
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "Shop"
+align = 1
+valign = 1
+
+[node name="Shop2" type="TouchScreenButton" parent="MainMenuButtons/Shop"]
+position = Vector2( -32.9525, 28.7748 )
+z_index = -1
+normal = ExtResource( 8 )
+pressed = ExtResource( 9 )
+script = ExtResource( 10 )
+
+[node name="Settings" type="Label" parent="MainMenuButtons"]
+margin_top = 408.0
+margin_right = 350.0
+margin_bottom = 608.0
+rect_min_size = Vector2( 0, 200 )
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "Settings"
+align = 1
+valign = 1
+
+[node name="Settings2" type="TouchScreenButton" parent="MainMenuButtons/Settings"]
+position = Vector2( -37.9631, 28.5369 )
+z_index = -1
+normal = ExtResource( 8 )
+pressed = ExtResource( 9 )
+script = ExtResource( 10 )
+
+[node name="Exit" type="Label" parent="MainMenuButtons"]
+margin_top = 612.0
+margin_right = 350.0
+margin_bottom = 812.0
+rect_min_size = Vector2( 0, 200 )
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "Exit"
+align = 1
+valign = 1
+
+[node name="Exit2" type="TouchScreenButton" parent="MainMenuButtons/Exit"]
+position = Vector2( -31.2823, 28.2991 )
+z_index = -1
+normal = ExtResource( 8 )
+pressed = ExtResource( 9 )
+script = ExtResource( 10 )
+
+[node name="SettingsButtons" type="VBoxContainer" parent="."]
+visible = false
+anchor_right = 0.46
+margin_left = 228.962
+margin_top = 139.461
+margin_right = 579.962
+margin_bottom = 951.461
+script = ExtResource( 7 )
+
+[node name="ManageGameData" type="Label" parent="SettingsButtons"]
+margin_right = 351.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 0, 200 )
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "Manage Game
+Data"
+align = 1
+valign = 1
+
+[node name="ManageGameData" type="TouchScreenButton" parent="SettingsButtons/ManageGameData"]
+position = Vector2( -40.0913, 23.671 )
+z_index = -1
+normal = ExtResource( 8 )
+pressed = ExtResource( 9 )
+script = ExtResource( 10 )
+
+[node name="ChangeLanguage" type="Label" parent="SettingsButtons"]
+margin_top = 204.0
+margin_right = 351.0
+margin_bottom = 404.0
+rect_min_size = Vector2( 0, 200 )
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "Change language"
+align = 1
+valign = 1
+
+[node name="ChangeLanguage" type="TouchScreenButton" parent="SettingsButtons/ChangeLanguage"]
+position = Vector2( -40.0913, 23.671 )
+z_index = -1
+normal = ExtResource( 8 )
+pressed = ExtResource( 9 )
+script = ExtResource( 10 )
+
+[node name="BackToMainMenu" type="Label" parent="SettingsButtons"]
+margin_top = 408.0
+margin_right = 351.0
+margin_bottom = 608.0
+rect_min_size = Vector2( 0, 200 )
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "<"
+align = 1
+valign = 1
+
+[node name="BackToMainMenu" type="TouchScreenButton" parent="SettingsButtons/BackToMainMenu"]
+position = Vector2( -33.2823, 29.2993 )
+z_index = -1
+normal = ExtResource( 8 )
+pressed = ExtResource( 9 )
+script = ExtResource( 10 )
+
+[node name="ManageGameDataButtons" type="VBoxContainer" parent="."]
+visible = false
+anchor_right = 0.46
+margin_left = 228.962
+margin_top = 139.461
+margin_right = 625.962
+margin_bottom = 951.461
+script = ExtResource( 7 )
+
+[node name="ActiveGameSlot" type="Label" parent="ManageGameDataButtons"]
+margin_right = 397.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 0, 200 )
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "Game slot"
+align = 1
+valign = 1
+
+[node name="ChangeGameSlot" type="Label" parent="ManageGameDataButtons"]
+margin_top = 204.0
+margin_right = 397.0
+margin_bottom = 404.0
+rect_min_size = Vector2( 0, 200 )
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "Change game slot"
+align = 1
+valign = 1
+
+[node name="ChangeGameSlot" type="TouchScreenButton" parent="ManageGameDataButtons/ChangeGameSlot"]
+position = Vector2( -40.0913, 23.671 )
+z_index = -1
+normal = ExtResource( 8 )
+pressed = ExtResource( 9 )
+script = ExtResource( 10 )
+
+[node name="ClearGameData" type="Label" parent="ManageGameDataButtons"]
+margin_top = 408.0
+margin_right = 397.0
+margin_bottom = 608.0
+rect_min_size = Vector2( 0, 200 )
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "Clear All Game Data"
+align = 1
+valign = 1
+
+[node name="ClearGameData" type="TouchScreenButton" parent="ManageGameDataButtons/ClearGameData"]
+position = Vector2( -40.0913, 23.671 )
+z_index = -1
+normal = ExtResource( 8 )
+pressed = ExtResource( 9 )
+script = ExtResource( 10 )
+
+[node name="BackToMainMenu" type="Label" parent="ManageGameDataButtons"]
+margin_top = 612.0
+margin_right = 397.0
+margin_bottom = 812.0
+rect_min_size = Vector2( 0, 200 )
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "<"
+align = 1
+valign = 1
+
+[node name="BackToMainMenu" type="TouchScreenButton" parent="ManageGameDataButtons/BackToMainMenu"]
+position = Vector2( -33.2823, 29.2993 )
+z_index = -1
+normal = ExtResource( 8 )
+pressed = ExtResource( 9 )
+script = ExtResource( 10 )
+
+[node name="ChangeLanguageButtons" type="VBoxContainer" parent="."]
+visible = false
+anchor_right = 0.46
+margin_left = 228.962
+margin_top = 139.461
+margin_right = 579.962
+margin_bottom = 1094.46
+script = ExtResource( 7 )
+
+[node name="SupportedLanguages" type="OptionButton" parent="ChangeLanguageButtons"]
+margin_right = 350.0
+margin_bottom = 51.0
+custom_fonts/font = SubResource( 6 )
+align = 1
+
+[node name="BackToMainMenu" type="Label" parent="ChangeLanguageButtons"]
+margin_top = 55.0
+margin_right = 350.0
+margin_bottom = 955.0
+rect_min_size = Vector2( 0, 900 )
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "<"
+align = 1
+valign = 1
+
+[node name="BackToMainMenu" type="TouchScreenButton" parent="ChangeLanguageButtons/BackToMainMenu"]
+position = Vector2( -33.2823, 380.778 )
+z_index = -1
+normal = ExtResource( 8 )
+pressed = ExtResource( 9 )
+script = ExtResource( 10 )

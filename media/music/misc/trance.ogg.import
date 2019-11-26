@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/trance.ogg-965ba82ba823ba3b5bbfb5a5a1f6250f.oggstr"
+
+[deps]
+
+source_file="res://media/music/misc/trance.ogg"
+dest_files=[ "res://.import/trance.ogg-965ba82ba823ba3b5bbfb5a5a1f6250f.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

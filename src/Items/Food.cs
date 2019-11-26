@@ -3,16 +3,32 @@ using System;
 using System.Text.RegularExpressions;
 
 public interface IFood{
-    Sprite Sprite {get; set;}
+    Sprite FoodDisplaySprite {get; set;}
     float Calories {get; set;}
     String GetDisplayableName();
     bool isConsumed{get;set;}
 
 }
 
+public class NonNodeFood : IFood{
+    public Sprite FoodDisplaySprite{ get; set;}
+    public float Calories{ get; set;}
+    private String Name;
+    public String GetDisplayableName(){
+        return this.Name;
+    }
+    private bool _isConsumed = false;
+    public bool isConsumed{ get{return this._isConsumed;} set{this._isConsumed = value;}}
+    public NonNodeFood(Sprite FoodDisplaySprite, float Calories, String Name){
+        this.FoodDisplaySprite = FoodDisplaySprite;
+        this.Calories = Calories;
+        this.Name = Name;
+    }
+}
+
 public class Food : KinematicBody2D, IConsumeable, IFood{
-    private const float FALLBACK_CALORIES = 500f;
-    public Sprite Sprite{get;set;}
+    public const float FALLBACK_CALORIES = 500f;
+    public Sprite FoodDisplaySprite{get;set;}
     public float Calories{get;set;}
     public bool isConsumed{get;set;} = false;
     private CollisionShape2D CollisionShape2D;
@@ -28,9 +44,9 @@ public class Food : KinematicBody2D, IConsumeable, IFood{
     public override void _Ready(){
         foreach(var child in this.GetChildren()){
             if(child is Sprite){
-                this.Sprite = (Sprite)child;
+                this.FoodDisplaySprite = (Sprite)child;
                 try{
-                    this.Calories = (float)Convert.ToDouble(this.Sprite.Name);
+                    this.Calories = (float)Convert.ToDouble(this.FoodDisplaySprite.Name);
                 } catch(Exception e){
                     this.Calories = FALLBACK_CALORIES;
                 }
@@ -39,13 +55,8 @@ public class Food : KinematicBody2D, IConsumeable, IFood{
                 this.CollisionShape2D = (CollisionShape2D)child;}}}
 
     public void consume(Node2D collider){
-        Player player = null;
-        if(collider is Bear){
-            player = ((Bear)collider).ATV.Player;}
-        if(collider is Wheel){
-            player = ((Wheel)collider).ATV.Player;}
-        if(player != null){
+        if(collider is WholeBodyKinBody){
+            var player = ((WholeBodyKinBody)collider).Player;
             player.EatFood(this);
             this.CollisionShape2D.Disabled = true;
-            this.Sprite.Visible = false;
-            this.isConsumed = true;}}}
+            this.FoodDisplaySprite.Visible = false;}}}

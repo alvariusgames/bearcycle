@@ -1,0 +1,163 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://src/Player/Player.cs" type="Script" id=1]
+[ext_resource path="res://src/Player/AttackWindow.cs" type="Script" id=2]
+[ext_resource path="res://src/Player/ATV.cs" type="Script" id=3]
+[ext_resource path="res://src/Player/Wheel.cs" type="Script" id=4]
+[ext_resource path="res://media/sprites/player/wheel/wheel_500_private.png" type="Texture" id=5]
+[ext_resource path="res://media/sprites/player/wheel/wheel_overlay_500.png" type="Texture" id=6]
+[ext_resource path="res://src/Player/Bear.cs" type="Script" id=7]
+[ext_resource path="res://scenes/player/bear_template.tscn" type="PackedScene" id=8]
+[ext_resource path="res://src/Player/CameraManager.cs" type="Script" id=9]
+[ext_resource path="res://media/sprites/misc/camera.png" type="Texture" id=10]
+[ext_resource path="res://media/sprites/player/cutout_templates/black_bear/1_bottom_body.png" type="Texture" id=11]
+[ext_resource path="res://src/Player/RotationManager.cs" type="Script" id=12]
+[ext_resource path="res://media/sprites/player/atv/ATV_1000_private.png" type="Texture" id=13]
+[ext_resource path="res://src/Player/WholeBodyKinBody.cs" type="Script" id=14]
+[ext_resource path="res://src/Items/Holdables/ClawAttack.cs" type="Script" id=15]
+[ext_resource path="res://src/Player/EvokeMyParentNow.cs" type="Script" id=16]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 12.1689
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 12.6206
+height = 13.4768
+
+[node name="Player" type="Node2D"]
+position = Vector2( 1.49481, 0.830505 )
+script = ExtResource( 1 )
+
+[node name="AttackWindow" type="KinematicBody2D" parent="."]
+position = Vector2( 9.18616, -18.3723 )
+collision_layer = 8
+collision_mask = 2080
+script = ExtResource( 2 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AttackWindow"]
+position = Vector2( -2.73413, -4.17928 )
+polygon = PoolVector2Array( -8.87393, -24.748, 62.4531, -80.9451, 106.222, -99.3172, 163.5, -93.9136, 204.027, -76.0819, 220.237, -33.9341, 214.293, 23.8841, 168.903, 55.7651, 108.924, 64.9512, 10.0385, 39.0141, -18.06, 7.67339 )
+
+[node name="Polygon2D" type="Polygon2D" parent="AttackWindow/CollisionPolygon2D"]
+color = Color( 1, 0, 0, 0.172549 )
+
+[node name="ATV" type="Node2D" parent="."]
+position = Vector2( -0.000217438, 0.00505543 )
+script = ExtResource( 3 )
+
+[node name="FrontWheel" type="KinematicBody2D" parent="ATV"]
+position = Vector2( 61.0303, 38.777 )
+scale = Vector2( 0.9, 0.9 )
+input_pickable = true
+collision_mask = 1540
+script = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="ATV/FrontWheel"]
+position = Vector2( -0.0742188, 0.0878906 )
+scale = Vector2( 0.123128, 0.123128 )
+texture = ExtResource( 5 )
+
+[node name="Collision" type="CollisionShape2D" parent="ATV/FrontWheel"]
+position = Vector2( -0.0953369, 0.0368652 )
+scale = Vector2( 2.61779, 2.61213 )
+shape = SubResource( 1 )
+
+[node name="overlay" type="Sprite" parent="ATV/FrontWheel"]
+scale = Vector2( 0.121, 0.121 )
+texture = ExtResource( 6 )
+
+[node name="BackWheel" type="KinematicBody2D" parent="ATV"]
+position = Vector2( -50.0247, 42.3445 )
+scale = Vector2( 0.9, 0.9 )
+input_pickable = true
+collision_mask = 1540
+script = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="ATV/BackWheel"]
+position = Vector2( -0.0615234, -0.0322266 )
+scale = Vector2( 0.121092, 0.121092 )
+texture = ExtResource( 5 )
+
+[node name="Collision" type="CollisionShape2D" parent="ATV/BackWheel"]
+position = Vector2( -0.0228271, 0.095459 )
+scale = Vector2( 2.61779, 2.61213 )
+shape = SubResource( 1 )
+
+[node name="Overlay" type="Sprite" parent="ATV/BackWheel"]
+scale = Vector2( 0.121, 0.121 )
+texture = ExtResource( 6 )
+
+[node name="Bear" type="KinematicBody2D" parent="ATV"]
+position = Vector2( 0.00598145, -0.00360107 )
+scale = Vector2( 0.9, 0.9 )
+input_pickable = true
+collision_layer = 2
+collision_mask = 1540
+script = ExtResource( 7 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ATV/Bear"]
+position = Vector2( -1.50645, -53.3894 )
+rotation = -18.8496
+scale = Vector2( 2.618, 2.612 )
+shape = SubResource( 2 )
+
+[node name="CutOutBlackBear" parent="ATV/Bear" instance=ExtResource( 8 )]
+position = Vector2( -0.02, 0.00800002 )
+rotation = -0.00872665
+scale = Vector2( 0.073, 0.073 )
+
+[node name="CameraManager" type="Node2D" parent="ATV/Bear"]
+script = ExtResource( 9 )
+
+[node name="NodeCameraFollows" type="Node2D" parent="ATV/Bear/CameraManager"]
+
+[node name="Camera2D" type="Camera2D" parent="ATV/Bear/CameraManager/NodeCameraFollows"]
+visible = false
+position = Vector2( 0.61377, -0.13385 )
+scale = Vector2( 2.22302, 2.22302 )
+current = true
+smoothing_enabled = true
+smoothing_speed = 7.0
+drag_margin_left = 0.3
+drag_margin_top = 0.3
+drag_margin_right = 0.3
+drag_margin_bottom = 0.3
+
+[node name="Sprite" type="Sprite" parent="ATV/Bear/CameraManager/NodeCameraFollows/Camera2D"]
+position = Vector2( -1.80434, -23.0053 )
+texture = ExtResource( 10 )
+
+[node name="Sprite" type="Sprite" parent="ATV/Bear"]
+visible = false
+position = Vector2( 2.8833, -36.3292 )
+rotation = 3.14159
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 11 )
+
+[node name="RotationManager" type="Node2D" parent="ATV"]
+position = Vector2( 0.00012207, 0 )
+script = ExtResource( 12 )
+
+[node name="Sprite" type="Sprite" parent="ATV"]
+position = Vector2( -0.106934, -0.131836 )
+scale = Vector2( 0.168, 0.168 )
+texture = ExtResource( 13 )
+
+[node name="EvokeMyParentNow" type="Node2D" parent="ATV"]
+script = ExtResource( 16 )
+
+[node name="WholeBodyKinBody" type="KinematicBody2D" parent="."]
+collision_layer = 256
+collision_mask = 240
+script = ExtResource( 14 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="WholeBodyKinBody"]
+visible = false
+polygon = PoolVector2Array( -86.1767, 19.1647, -85.096, -45.1378, -57.5377, -88.3665, 13.2492, -114.844, 55.9374, -112.142, 70.5271, -78.64, 115.377, -16.4989, 122.942, 11.0594, 122.401, 40.7791, 107.812, 69.418, 79.7132, 86.7095, 30.5406, 95.3552, -25.6566, 92.1131, -61.3202, 79.6848, -80.7731, 51.5862 )
+
+[node name="Polygon2D" type="Polygon2D" parent="WholeBodyKinBody/CollisionPolygon2D"]
+color = Color( 0.12549, 0, 1, 0.231373 )
+polygon = PoolVector2Array( -88.3381, 14.8419, -86.717, -46.2186, -58.0781, -88.9068, 10.5474, -114.844, 58.0989, -113.763, 87.8176, -85.1245, 119.699, -13.7975, 125.644, 12.1401, 126.724, 42.4001, 112.675, 71.0391, 100.786, 84.0071, 81.3343, 92.6534, 34.8635, 98.5974, -23.4952, 98.057, -62.9413, 84.5481, -86.1767, 47.8037 )
+
+[node name="ClawAttackHoldable" type="Node2D" parent="."]
+script = ExtResource( 15 )

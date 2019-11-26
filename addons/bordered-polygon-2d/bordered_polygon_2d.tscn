@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/bordered-polygon-2d/bordered_polygon_2d.gd" type="Script" id=1]
+
+[node name="BorderedPolygon2D" type="Polygon2D"]
+self_modulate = Color( 1, 1, 1, 0 )
+script = ExtResource( 1 )
+

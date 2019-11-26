@@ -16,7 +16,7 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
     private float SecondsInAirPressingLeft = 0f;
     private const float ROTATION_ACCELL_UNIT = 0.03f;
     private const float MAX_SLOW_ROTATION_MAG = 0.05f;
-    private const float MAX_FAST_ROTATION_MAG = 0.25f;
+    private const float MAX_FAST_ROTATION_MAG = 0.15f;
     private const float SEC_HOLDING_BUTTON_TO_FAST_ROT = 0.8f;
     private const float FRICTION_EFFECT=0.9f;
     public override void _Ready(){
@@ -46,7 +46,7 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
     }
 
     public override void ReactStateless(float delta){
-        this.ATV.RotateTwoWheels(this.phiRotationToApply);
+        this.ATV.RotateTwoWheels(this.phiRotationToApply, delta);
         this.UIButtonInAirBookKeeping(delta);
         if(this.ATV.IsInAir() && 
            Input.IsActionPressed("ui_left") &&
@@ -65,9 +65,21 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
         } else {
                 this.SecondsInAirPressingRight = 0f;}}
 
+    private void playRotateSound(){
+                SoundHandler.PlaySample<MyAudioStreamPlayer2D>(this.ATV.Bear,
+                    new string[] {"res://media/samples/player/flip_1.wav"},
+                    Loop: true,
+                    SkipIfAlreadyPlaying: true);
+    }
+
+    private void stopRotateSound(){
+                SoundHandler.StopSample(this.ATV.Bear,
+                    "res://media/samples/player/flip_1.wav");}
+
     public override void ReactToState(float delta){
         switch(this.ActiveState){
             case RotationManagerState.ROTATE_SLOW_FORWARD:
+                this.stopRotateSound();
                 this.ATV.CancelAllRotationalEnergy();
                 this.ATV.CancelAllBackwardTwoWheelEnergy();
                 if(Math.Abs(this.phiRotationToApply) < MAX_SLOW_ROTATION_MAG){
@@ -76,6 +88,7 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
                     this.phiRotationToApply = 0f;}
                 break;
             case RotationManagerState.ROTATE_FAST_FORWARD:
+                this.playRotateSound();
                 this.ATV.CancelAllRotationalEnergy();
                 this.ATV.CancelAllBackwardTwoWheelEnergy();
                 if(Math.Abs(this.phiRotationToApply) < MAX_FAST_ROTATION_MAG){
@@ -84,6 +97,7 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
                     this.phiRotationToApply = 0f;}
                 break;
             case RotationManagerState.ROTATE_SLOW_BACKWARD:
+                this.stopRotateSound();
                 this.ATV.CancelAllRotationalEnergy();
                 this.ATV.CancelAllForwardTwoWheelEnergy();
                 if(Math.Abs(this.phiRotationToApply) < MAX_SLOW_ROTATION_MAG){
@@ -92,6 +106,7 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
                     this.phiRotationToApply = 0f;}
                 break;
             case RotationManagerState.ROTATE_FAST_BACKWARD:
+                this.playRotateSound();
                 this.ATV.CancelAllRotationalEnergy();
                 this.ATV.CancelAllForwardTwoWheelEnergy();
                 if(Math.Abs(this.phiRotationToApply) < MAX_FAST_ROTATION_MAG){
@@ -100,6 +115,7 @@ public class RotationManager : FSMNode2D<RotationManagerState>{
                     this.phiRotationToApply = 0f;}
                 break;
             case RotationManagerState.NOT_ROTATING:
+                this.stopRotateSound();
                 this.phiRotationToApply = 0f;
                 break;}}
 

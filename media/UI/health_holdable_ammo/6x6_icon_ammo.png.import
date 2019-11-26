@@ -1,0 +1,13 @@
+[remap]
+
+importer="image"
+type="Image"
+path="res://.import/6x6_icon_ammo.png-dd782e86a79c76daa1fee98117e488df.image"
+
+[deps]
+
+source_file="res://media/UI/health_holdable_ammo/6x6_icon_ammo.png"
+dest_files=[ "res://.import/6x6_icon_ammo.png-dd782e86a79c76daa1fee98117e488df.image" ]
+
+[params]
+

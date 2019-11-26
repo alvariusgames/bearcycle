@@ -11,6 +11,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <BaseIntermediateOutputPath>.mono/temp/obj</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)/$(Configuration)</IntermediateOutputPath>
+    <ApiConfiguration Condition=" '$(Configuration)' != 'Release' ">Debug</ApiConfiguration>
+    <ApiConfiguration Condition=" '$(Configuration)' == 'Release' ">Release</ApiConfiguration>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,36 +41,92 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GodotSharp">
-      <HintPath>$(ProjectDir)/.mono/assemblies/GodotSharp.dll</HintPath>
       <Private>False</Private>
+      <HintPath>$(ProjectDir)/.mono/assemblies/$(ApiConfiguration)/GodotSharp.dll</HintPath>
     </Reference>
     <Reference Include="GodotSharpEditor" Condition=" '$(Configuration)' == 'Tools' ">
-      <HintPath>$(ProjectDir)/.mono/assemblies/GodotSharpEditor.dll</HintPath>
       <Private>False</Private>
+      <HintPath>$(ProjectDir)/.mono/assemblies/$(ApiConfiguration)/GodotSharpEditor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="LiteDb">
+      <HintPath>$(ProjectDir)/LiteDB.4.1.4/lib/net40/LiteDB.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(ProjectDir)/Newtonsoft.Json.12.0.2/lib/net40/Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="scenes\levels\level1.cs" />
     <Compile Include="scenes\main.cs" />
+    <Compile Include="scenes\misc\exit_black.cs" />
+    <Compile Include="scenes\title_screen\buttons\Play.cs" />
+    <Compile Include="scenes\title_screen\CompanyLogo.cs" />
+    <Compile Include="scenes\title_screen\TitleScreenPressStart.cs" />
+    <Compile Include="src\DbHandler\DbHandler.cs" />
+    <Compile Include="src\DbHandler\Globals.cs" />
+    <Compile Include="src\DbHandler\LevelStatsRecord.cs" />
+    <Compile Include="src\DbHandler\Slot.cs" />
+    <Compile Include="src\DbHandler\Strings.cs" />
+    <Compile Include="src\DisplayHandlers\InteractiveLoader.cs" />
+    <Compile Include="src\DisplayHandlers\LevelFrame.cs" />
     <Compile Include="src\DisplayHandlers\PlayerStatsDisplayHandler.cs" />
+    <Compile Include="src\DisplayHandlers\SceneTransitioner.cs" />
+    <Compile Include="src\DisplayHandlers\TransitionEffectRunner.cs" />
+    <Compile Include="src\FSMComponents\ManualEvocableFSMNode2D.cs" />
+    <Compile Include="src\Items\Collectables\SpaceRock.cs" />
     <Compile Include="src\Items\Food.cs" />
+    <Compile Include="src\Items\Holdables\ClawAttack.cs" />
+    <Compile Include="src\Items\Holdables\IHoldable.cs" />
+    <Compile Include="src\Items\Holdables\RocketBooster.cs" />
+    <Compile Include="src\Items\Holdables\Spring.cs" />
     <Compile Include="src\Items\IConsumeable.cs" />
+    <Compile Include="src\Items\IInteractable.cs" />
+    <Compile Include="src\Items\InfiniteFoodRegion.cs" />
+    <Compile Include="src\Items\MakeMyParentHover.cs" />
+    <Compile Include="src\Items\MakeMyParentRotate.cs" />
+    <Compile Include="src\Items\Misc\EndLevel.cs" />
     <Compile Include="src\Items\SafetyCheckPoint.cs" />
     <Compile Include="src\Items\SpeedBoost.cs" />
+    <Compile Include="src\Level\CollisionPolygonParentOfBorderedPolygon.cs" />
+    <Compile Include="src\Level\ILevel.cs" />
+    <Compile Include="src\Level\Level.cs" />
+    <Compile Include="src\Level\LevelNode2D.cs" />
+    <Compile Include="src\Level\Platforms.cs" />
+    <Compile Include="src\Level\ZoneCollider.cs" />
+    <Compile Include="src\NPC\DefaultPathFollow2D.cs" />
+    <Compile Include="src\NPC\FlyingEnemy.cs" />
+    <Compile Include="src\NPC\INPC.cs" />
+    <Compile Include="src\NPC\LeapingEnemy.cs" />
     <Compile Include="src\NPC\NPC.cs" />
-    <Compile Include="src\Platforms\PlatformCollision.cs" />
-    <Compile Include="src\Platforms\Platforms.cs" />
     <Compile Include="src\Player\AttackWindow.cs" />
     <Compile Include="src\Player\ATV.cs" />
     <Compile Include="src\Player\Bear.cs" />
     <Compile Include="src\Player\CameraManager.cs" />
+    <Compile Include="src\Player\EvokeMyParentNow.cs" />
     <Compile Include="src\Player\Player.cs" />
     <Compile Include="src\Player\RotationManager.cs" />
     <Compile Include="src\Player\Wheel.cs" />
     <Compile Include="src\FSMComponents\IFSMObject.cs" />
     <Compile Include="src\FSMComponents\FSMNode2D.cs" />
     <Compile Include="src\FSMComponents\FSMKinematicBody2D.cs" />
+    <Compile Include="src\Player\WholeBodyKinBody.cs" />
+    <Compile Include="src\SoundHandlers\IAudioStreamPlayer.cs" />
+    <Compile Include="src\SoundHandlers\MyAudioStreamPlayer.cs" />
+    <Compile Include="src\SoundHandlers\MyAudioStreamPlayer2D.cs" />
+    <Compile Include="src\SoundHandlers\SoundHandler.cs" />
+    <Compile Include="src\UI\HoverableTouchScreenButton.cs" />
+    <Compile Include="src\UI\HoverControlBoxContainer.cs" />
+    <Compile Include="src\UI\LevelFrameBannerBase.cs" />
+    <Compile Include="src\UI\LevelPortal.cs" />
+    <Compile Include="src\UI\LevelPortalChain.cs" />
+    <Compile Include="src\UI\LevelSelect.cs" />
+    <Compile Include="src\UI\LevelSelectBanner.cs" />
+    <Compile Include="src\UI\LevelSelectPlayer.cs" />
+    <Compile Include="src\UI\PauseMenu.cs" />
+    <Compile Include="src\Utils\PlatformSpecificChildren.cs" />
+    <Compile Include="strings\ui\hackyworkaround.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

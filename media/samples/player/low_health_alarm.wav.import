@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/low_health_alarm.wav-a8bd651e86097b2cf5387eb2d32a2be3.sample"
+
+[deps]
+
+source_file="res://media/samples/player/low_health_alarm.wav"
+dest_files=[ "res://.import/low_health_alarm.wav-a8bd651e86097b2cf5387eb2d32a2be3.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

@@ -41,7 +41,7 @@ public abstract class FSMKinematicBody2D<StateEnum> : KinematicBody2D, IFSMObjec
     public void ForceClearAllTimers(){
         this.timersSet = new List<TimerAttrs>();}
 
-    private void handleTimers(float delta){
+    protected void handleTimers(float delta){
         for(var i=0; i<this.timersSet.Count(); i++){
             var timerAttr = this.timersSet.ElementAt(i);
             timerAttr.secondsCount = timerAttr.secondsCount + delta;

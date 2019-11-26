@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/end_level_classic.wav-0585766bd28f34ee8c9fc46c74f4e756.sample"
+
+[deps]
+
+source_file="res://media/music/short/end_level_classic.wav"
+dest_files=[ "res://.import/end_level_classic.wav-0585766bd28f34ee8c9fc46c74f4e756.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

@@ -42,7 +42,7 @@ public abstract class FSMNode2D<StateEnum> : Node2D, IFSMObject<StateEnum> {    
     public void ForceClearAllTimers(){
         this.timersSet = new List<TimerAttrs>();}
 
-    private void handleTimers(float delta){
+    protected void handleTimers(float delta){
         for(var i=0; i<this.timersSet.Count(); i++){
             var timerAttr = this.timersSet[i];
             timerAttr.secondsCount += delta;

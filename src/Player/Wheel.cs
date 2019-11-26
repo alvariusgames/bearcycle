@@ -38,11 +38,19 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     private const float SPEED_BOOST_SLOWDOWN_EFFECT = 0.995f;
     private const float BOUNCE_UP_EFFECT_VELOCITY = MAX_SPEED / 4; 
 
+    private Vector2 futureGlobalPosition = new Vector2(0,0);
+    public Vector2 FutureGlobalPosition { get {
+        return this.futureGlobalPosition;
+        var gPos = this.GlobalPosition;
+        return new Vector2(gPos.x + this.velocity.x,
+                          gPos.y + this.velocity.y);
+    }}
+
     public override void _Ready(){
         this.ResetActiveState(this.InitialState);
         for(int i = 0; i<this.GetChildCount(); i++){
             var child = this.GetChild(i);
-            if(child is Sprite){
+            if(child is Sprite && child.Name.ToLower().Contains("sprite")){
                 this.sprite = (Sprite)child;
             }
             if(child is CollisionShape2D){
@@ -57,22 +65,65 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
         this.reactToInput(delta);
     }
 
+    const string ENGINE_GO_NORMAL_SAMPLE = "res://media/samples/atv/engine_go_normal1.wav";
+    const string ENGINE_REV_SAMPLE = "res://media/samples/atv/engine_rev1.wav";
+    const string WHEEL_THUD1_SAMPLE = "res://media/samples/atv/wheel_thud1.wav";
+
+    public void playThudSound(){
+        var rnd = new Random();
+        var pitchScale = 0.75f + (float)(rnd.NextDouble() * 0.5f);
+        SoundHandler.PlaySample<MyAudioStreamPlayer2D>(this, 
+            new string[] {WHEEL_THUD1_SAMPLE},
+            PitchScale: pitchScale,
+            VolumeMultiplier: 0.5f,
+            SkipIfAlreadyPlaying: true);}
+
+    private void stopAllEngineSound(){
+        if(this.Name.ToLower().Equals("frontwheel")){
+           SoundHandler.StopSample(this, ENGINE_GO_NORMAL_SAMPLE);
+           SoundHandler.StopSample(this, ENGINE_REV_SAMPLE);}}
+
+    public void PlayNormalEngineSound(){
+        if(this.Name.ToLower().Equals("frontwheel")){
+            var pitchScale = 1f + Math.Abs(forwardAccell / (MAX_FORWARD_ACCEL * 2.5f));
+            var volumeMultipler = 0.5f + Math.Abs(forwardAccell / (MAX_FORWARD_ACCEL * 2));
+            SoundHandler.PlaySample<MyAudioStreamPlayer2D>(this, 
+                    new string[] {ENGINE_GO_NORMAL_SAMPLE},
+                    PitchScale: pitchScale,
+                    VolumeMultiplier: volumeMultipler,
+                    Loop: true,
+                    SkipIfAlreadyPlaying: true);}}
+
+    public void PlayIdleEngineSound(){
+        if(this.Name.ToLower().Equals("frontwheel")){
+            SoundHandler.PlaySample<MyAudioStreamPlayer2D>(this, 
+                    new string[] {ENGINE_GO_NORMAL_SAMPLE},
+                    VolumeMultiplier: 0.5f,
+                    PitchScale: 1f,
+                    Loop: true,
+                    SkipIfAlreadyPlaying: true);}}
+
+    public void PlayEngineRevSound(){
+        if(this.Name.ToLower().Equals("frontwheel")){
+            SoundHandler.PlaySample<MyAudioStreamPlayer2D>(this, 
+                    new string[] {ENGINE_REV_SAMPLE},
+                    VolumeMultiplier: 0.65f);}}
+
     public override void ReactToState(float delta){
         switch(this.ActiveState){
             case WheelState.ACCELERATING:
                 if(this.forwardAccell <= MAX_FORWARD_ACCEL){  
-                    this.forwardAccell += FORWARD_ACCEL_UNIT;
+                    this.forwardAccell += FORWARD_ACCEL_UNIT * delta * main.DELTA_NORMALIZER;
                 } else {
                     //we're in 'speed boost mode', slow us down a bit
                     this.forwardAccell *= SPEED_BOOST_SLOWDOWN_EFFECT;}
  
                 //this.forwardAccell *= 0.95f; 
                 reactToSlideCollision(delta);
-
                 break;
             case WheelState.DECELERATING:
                 if(this.forwardAccell >= MAX_BACKWARD_ACCEL){
-                    this.forwardAccell -= FORWARD_ACCEL_UNIT;
+                    this.forwardAccell -= FORWARD_ACCEL_UNIT * delta * main.DELTA_NORMALIZER;
                 } else {
                     //we're in 'speed boost mode', slow us down a bit
                     this.forwardAccell *= SPEED_BOOST_SLOWDOWN_EFFECT;}
@@ -95,7 +146,17 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
         this.applyGravity(delta);
         MoveAndSlide(linearVelocity: this.velocity);
         this.updateSprite(delta);
+        this.applySound(delta);
     }
+
+    private void applySound(float delta){
+        float AccellThreshForGoAudio = 5f;
+        if(Input.IsActionPressed("ui_right") || 
+           Input.IsActionPressed("ui_left") ||
+           Math.Abs(this.forwardAccell) > AccellThreshForGoAudio){
+               this.PlayNormalEngineSound();
+        } else {
+            this.PlayIdleEngineSound();}}
 
     private void reactToInput(float delta){
         if(!this.ATV.IsInAirNormalized()){
@@ -126,6 +187,8 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
         for(int i = 0; i < this.GetSlideCount(); i++){
            var collision = this.GetSlideCollision(i);
            if(collision.Collider is Platforms){
+                if(this.ATV.IsInAirNormalized()){
+                    this.playThudSound();}
                 this.platformCollisions++;
                 //Save relevant collision info to this
                 this.currentTravel = collision.Travel;
@@ -137,15 +200,7 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                         this.velocity.y += forwardAngle.y*forwardAccell;
                         }
                     //Apply the friction effect
-                    this.velocity *= frictionEffect;}
-            if(collision.Collider is IConsumeable){
-                ((IConsumeable)collision.Collider).consume(this);}
-            if(collision.Collider is NPC){
-                var npc = (NPC)collision.Collider;
-                npc.GetHitBy(this);
-                this.ATV.Player.GetHitBy(npc);
-                this.ATV.ApplyPhonyRunOverEffect(this);}
-            }}
+                    this.velocity *= frictionEffect;}}}
 
         public void PhonyBounceUp(float magnitude){
             this.velocity = new Vector2(this.currentNormal.x * magnitude * BOUNCE_UP_EFFECT_VELOCITY,
@@ -198,4 +253,5 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
             this.sprite.Rotate(this.forwardAccell / arbitraryConstant);   
         }
     }
+
 }

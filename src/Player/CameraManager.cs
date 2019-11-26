@@ -1,7 +1,8 @@
 using Godot;
 using System;
 
-public enum CameraManagerState {MOVING_NODE_CAMERA_FOLLOWS};
+public enum CameraManagerState {MOVING_NODE_CAMERA_FOLLOWS, MOVE_TO_ARBITRARY_NODE,
+                                STAY_STATIONARY};
 
 public class CameraManager : FSMNode2D<CameraManagerState>{
     public override CameraManagerState InitialState {
@@ -27,8 +28,41 @@ public class CameraManager : FSMNode2D<CameraManagerState>{
         }        
     }
 
+    private readonly Vector2 MOBILE_ZOOM = new Vector2(0.85f, 0.85f);
+    private readonly Vector2 DESKTOP_ZOOM = new Vector2(1f, 1f);
+    private void SetPlatformSpecificVars(){
+        if(main.PlatformType == PlatformType.MOBILE){
+            this.SetCameraZoom(MOBILE_ZOOM);}
+        if(main.PlatformType == PlatformType.DESKTOP){
+            this.SetCameraZoom(DESKTOP_ZOOM);
+        }
+    }
+
+    public void SetCameraZoom(Vector2 zoom){
+        if(this.Camera2D != null){
+            this.Camera2D.Zoom = zoom;}
+    }
+
+    private bool runOnlyOnStartup = true;
     public override void ReactStateless(float delta){
+        if(runOnlyOnStartup){
+            this.SetPlatformSpecificVars();
+            this.runOnlyOnStartup = false;}
         this.SetGlobalRotation(0);
+    }
+
+    private Node2D MoveCameraToNode;
+    private float moveVelocity;
+    public void MoveCameraToArbitraryNode(Node2D node, float numSecondsToTransition=1f){
+        this.MoveCameraToNode = node;
+        this.moveVelocity = node.GlobalPosition.DistanceTo(this.NodeCameraFollows.GlobalPosition) / numSecondsToTransition;
+        var prevGlobalPosition = this.NodeCameraFollows.GlobalPosition;
+        this.NodeCameraFollows.GetParent().RemoveChild(this.NodeCameraFollows);
+        this.MoveCameraToNode.AddChild(this.NodeCameraFollows);
+        this.NodeCameraFollows.GlobalPosition = prevGlobalPosition;
+
+        this.ResetActiveState(CameraManagerState.MOVE_TO_ARBITRARY_NODE);
+        this.ResetActiveStateAfter(CameraManagerState.STAY_STATIONARY, numSecondsToTransition);
     }
 
     private const float HORIZONTAL_MULTIPLIER_EFFECT = 1.20f;
@@ -52,6 +86,13 @@ public class CameraManager : FSMNode2D<CameraManagerState>{
                 }
                 this.NodeCameraFollows.SetPosition(new Vector2(xPosToApply,
                                                                yPosToApply));
+                break;
+            case CameraManagerState.MOVE_TO_ARBITRARY_NODE:
+                var directionVec = (this.MoveCameraToNode.GlobalPosition - this.NodeCameraFollows.GlobalPosition).Normalized();
+                var step = directionVec * this.moveVelocity * delta;
+                this.NodeCameraFollows.GlobalPosition += step;
+                break;
+            case CameraManagerState.STAY_STATIONARY:
                 break;
             default:
                 throw new Exception("Invalid CameraManagerState");}}

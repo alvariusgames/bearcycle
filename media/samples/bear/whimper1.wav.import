@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/whimper1.wav-61ba4e993f38e1567a8f51253d75dd3b.sample"
+
+[deps]
+
+source_file="res://media/samples/bear/whimper1.wav"
+dest_files=[ "res://.import/whimper1.wav-61ba4e993f38e1567a8f51253d75dd3b.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0

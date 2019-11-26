@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/title_screen/CompanyLogo.cs" type="Script" id=1]
+[ext_resource path="res://media/UI/title_screen/luddite_games_logo_1080.png" type="Texture" id=2]
+
+[node name="main" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="TitleScreen" type="Sprite" parent="."]
+position = Vector2( 960, 540 )
+texture = ExtResource( 2 )
+

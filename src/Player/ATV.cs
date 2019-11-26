@@ -7,7 +7,7 @@ public enum ATVState {WITH_BEAR, WITHOUT_BEAR}
 
 public enum ATVDirection{FORWARD, BACKWARD}
 
-public class ATV : FSMNode2D<ATVState> {
+public class ATV : ManualEvocableFSMNode2D<ATVState> {
     // Member variables here, example:
     // private int a = 2;
     // private string b = "textvar";
@@ -20,10 +20,12 @@ public class ATV : FSMNode2D<ATVState> {
     public Bear Bear;
     public Player Player;
     public float BodyLength;
+    public Vector2 CurrentNormal;
 	public Sprite Sprite;
     private int LastInAirsLength = 15;
     private Queue<Boolean> OngoingIsInAirs = new Queue<Boolean>();
     private int LastVelocitiesOfTwoWheelsLength = 5;
+    private float numSecOfInAir = 0f;
     private Queue<Vector2> OngoingVelocitiesOfTwoWheels = new Queue<Vector2>();
     private Vector2 initialOffsetFromWheelsToBear;
 
@@ -109,9 +111,18 @@ public class ATV : FSMNode2D<ATVState> {
     }
 
     public Boolean IsInAirNormalized(){
-       return this.OngoingIsInAirs.ToArray().All(x => x == true);}
+        var num60FPSNormalizedFramesInAir = (int)(this.numSecOfInAir * main.DELTA_NORMALIZER);
+        if(num60FPSNormalizedFramesInAir > this.LastInAirsLength || num60FPSNormalizedFramesInAir == 0f){
+            num60FPSNormalizedFramesInAir = this.LastInAirsLength;}
+        var numInAirsTheshold = num60FPSNormalizedFramesInAir;
+        return this.numSecOfInAir >= (1 / main.DELTA_NORMALIZER) * (float)this.LastInAirsLength;}
+        //return this.OngoingIsInAirs.All(x => x == true);}
+        //var output = this.OngoingIsInAirs.ToArray().Count(x => x == true) >= numInAirsTheshold;
+        //GD.Print(numInAirsTheshold);
+        //return output;}
 
-    public void RotateTwoWheels(float phi){
+    public void RotateTwoWheels(float phi, float delta){
+        phi *= delta * main.DELTA_NORMALIZER;
         var front = this.FrontWheel.GetGlobalPosition();
         var back = this.BackWheel.GetGlobalPosition();
         var center = this.GetGlobalCenterOfTwoWheels();
@@ -131,14 +142,10 @@ public class ATV : FSMNode2D<ATVState> {
     public void ReattachBear(){
         this.Bear.SetActiveState(BearState.ON_ATV, 100);
         this.moveBearToCenter(-1);
-        if(this.Bear.MoveAndCollide(new Vector2(0,0)) != null){
+        if(this.IsBearSmushedUnderATV()){
             //if ATV appears to be flipped over, flip it over
-            var swizzle = this.FrontWheel.GetGlobalPosition();
-            this.FrontWheel.SetGlobalPosition(this.BackWheel.GetGlobalPosition());
-            this.BackWheel.SetGlobalPosition(swizzle);
-            this.drawATV(-1);
-            this.moveBearToCenter(-1);}
-        if(this.Bear.MoveAndCollide(new Vector2(0,0)) != null){
+            this.FlipUpsideDown();}
+        if(this.IsBearSmushedUnderATV()){
             //ATV attempted to be flipped, but failed
             GD.Print("Failed to flip!");
             this.Player.GoToMostRecentSafetyCheckPoint();
@@ -147,7 +154,22 @@ public class ATV : FSMNode2D<ATVState> {
             this.FrontWheel.ResetActiveState(WheelState.IDLING);
             this.BackWheel.ResetActiveState(WheelState.IDLING);}
 
-    public void ThrowBearOffATV(float throwSpeed = 300){
+    public bool IsBearSmushedUnderATV(){
+        var collision = this.Bear.MoveAndCollide(new Vector2(0,0));
+        return (collision != null) && (collision.Collider is Platforms);
+    }
+
+    public void FlipUpsideDown(){
+            var swizzle = this.FrontWheel.GetGlobalPosition();
+            this.FrontWheel.SetGlobalPosition(this.BackWheel.GetGlobalPosition());
+            this.BackWheel.SetGlobalPosition(swizzle);
+            this.drawATV(-1);
+            this.moveBearToCenter(-1);
+    }
+
+    public void ThrowBearOffATV(float throwSpeed = 500
+    
+    ){
         this.SetActiveState(ATVState.WITHOUT_BEAR, 100);
         if(this.FrontWheel.velocity.x >= 0f){
             this.Bear.velocity += (new Vector2(throwSpeed,0)).Rotated(1.25f * (float)Math.PI);
@@ -183,12 +205,14 @@ public class ATV : FSMNode2D<ATVState> {
     
     private void UpdateDirection(float delta){
         if((this.FrontWheel.ActiveState == WheelState.ACCELERATING || Input.IsActionPressed("ui_right"))
+                && this.Player.AttackWindow.ActiveState == AttackWindowState.NOT_ATTACKING
                 && !this.IsInAir()
                 && this.ActiveState == ATVState.WITH_BEAR
                 && this.Player.ActiveState == PlayerState.NORMAL){
             this.Direction = ATVDirection.FORWARD;
         }
         else if((this.FrontWheel.ActiveState == WheelState.DECELERATING || Input.IsActionPressed("ui_left")) 
+                && this.Player.AttackWindow.ActiveState == AttackWindowState.NOT_ATTACKING
                 && !this.IsInAir()
                 && this.ActiveState == ATVState.WITH_BEAR
                 && this.Player.ActiveState == PlayerState.NORMAL){
@@ -210,6 +234,10 @@ public class ATV : FSMNode2D<ATVState> {
         this.OngoingIsInAirs.Dequeue();
         var inAir = this.IsInAir();
         this.OngoingIsInAirs.Enqueue(inAir);
+        if(inAir){
+            this.numSecOfInAir += delta; }
+        else {
+            this.numSecOfInAir = 0f;}
     }
 
     public override void ReactToState(float delta){
@@ -242,6 +270,7 @@ public class ATV : FSMNode2D<ATVState> {
         var bcenter = this.BackWheel.GetGlobalPosition();
         var center = (bcenter + fcenter) / 2f;
         var angleUpCenter = (fcenter - bcenter).Rotated(3f * (float)Math.PI / 2f).Normalized();
+        this.CurrentNormal = angleUpCenter;
         //var bearCenter = center + angleUpCenter * distAbove;
         
         //this.Bear.SetGlobalPosition(bearCenter / 90);
@@ -273,6 +302,14 @@ public class ATV : FSMNode2D<ATVState> {
             this.Sprite.SetScale(new Vector2(-Math.Abs(spriteScale[0]),
                                              spriteScale[1]));
         }}
+
+    public override void _Process(float delta){}
+
+    public  void _ManualProcess(float delta) {
+        this.UpdateState(delta);
+        this.ReactStateless(delta);
+        this.handleTimers(delta);
+        this.ReactToState(delta);}
 
     public void ApplyPhonyRunOverEffect(Wheel wheel){
         ////Simulates an ATV squishing something below it

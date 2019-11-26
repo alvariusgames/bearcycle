@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/bears_on_atvs_theme_1.ogg-0d5eeec90c8eda4d1ec0e5384a41f066.oggstr"
+
+[deps]
+
+source_file="res://media/music/bears_on_atvs_theme_1.ogg"
+dest_files=[ "res://.import/bears_on_atvs_theme_1.ogg-0d5eeec90c8eda4d1ec0e5384a41f066.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

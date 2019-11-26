@@ -2,7 +2,7 @@
 
 2D sidescroller about a rogue bear that learns to drive an ATV.
 
-![Gameplay](https://user-images.githubusercontent.com/18691334/62185283-a4f9d680-b316-11e9-8ef4-8b12c0a5fc50.gif)
+![Gameplay](https://user-images.githubusercontent.com/18691334/54767981-4421fb00-4bcc-11e9-867a-dbb5ee87af64.gif)
 
 ## About
 
@@ -21,4 +21,5 @@ Everything on this https://github.com/ludditegames/bears_on_atvs.git repository 
 1) You may not use the trademarks "Bears on ATVs" or "Luddite Games".
 2) You may not use any asset included in the released, distributable software that is not publicly accessible in this https://github.com/ludditegames/bears_on_atvs.git repository.
 
-In layman's terms: don't impersonate me, and don't use music/artwork/anything you can't find publicly on https://github.com/ludditegames/bears_on_atvs.git. 
+In layman's terms: don't impersonate me, and don't use music/artwork/anything you can't find publicly on https://github.com/ludditegames/bears_on_atvs.git.
+ 

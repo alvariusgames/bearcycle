@@ -9,8 +9,8 @@ public class AttackWindow : FSMKinematicBody2D<AttackWindowState>
     public CollisionPolygon2D CollisionPolygon2D;
     public Polygon2D Polygon2D;
     public Player Player;
-    private int startingCollisionMask;
-    private int startingCollisionLayer;
+    private uint startingCollisionMask;
+    private uint startingCollisionLayer;
 
     private void makeCollideable(bool collidability){
         if(collidability){
@@ -54,8 +54,13 @@ public class AttackWindow : FSMKinematicBody2D<AttackWindowState>
                 this.Polygon2D.Visible = true;
                 var collision = this.MoveAndCollide(new Vector2(0,0));
                 if(collision != null){
-                    if(collision.Collider is NPC){
-                        ((NPC)collision.Collider).GetHitBy(this);}}
+                    if(collision.Collider is INPC){
+                        ((INPC)collision.Collider).GetHitBy(this);}
+                    if(collision.Collider is IInteractable){
+                        if(collision.Collider is IHoldable){
+                            this.Player.PickupHoldable((IHoldable)collision.Collider);}}
+                    if(collision.Collider is IFood){
+                        this.Player.EatFood((IFood)collision.Collider);}}
                 break;
             default:
                 throw new Exception("Invalid Attack Window state");

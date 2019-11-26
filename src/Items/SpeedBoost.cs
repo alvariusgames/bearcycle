@@ -2,13 +2,13 @@ using Godot;
 using System;
 
 public enum SpeedBoostState { READY_TO_BE_HIT, NOT_READY_TO_BE_HIT, TRIGGER_HIT_OF_BOOST}
-public class SpeedBoost : FSMKinematicBody2D<SpeedBoostState>
+public class SpeedBoost : FSMKinematicBody2D<SpeedBoostState>, IInteractable
 {
     // Member variables here, example:
     // private int a = 2;
     // private string b = "textvar";
-
     public override SpeedBoostState InitialState { get { return SpeedBoostState.READY_TO_BE_HIT;}}
+    public int InteractPriority { get { return 500;}}
     public Sprite Sprite;
     public Vector2 Direction;
     public float Magnitude;
@@ -16,7 +16,7 @@ public class SpeedBoost : FSMKinematicBody2D<SpeedBoostState>
     public CollisionShape2D CollisionShape2D;
     public Boolean IsForward = false;
     public Boolean IsBackward = false;
-    const float RESET_TIME_SECONDS = 2f;
+    const float RESET_TIME_SECONDS = 0.2f;
 
     public AnimationPlayer AnimationPlayer;
 

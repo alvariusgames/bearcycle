@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/roar1.wav-7a10fdea3c1cf21719acc1979c3ac1f8.sample"
+
+[deps]
+
+source_file="res://media/samples/bear/roar1.wav"
+dest_files=[ "res://.import/roar1.wav-7a10fdea3c1cf21719acc1979c3ac1f8.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0
