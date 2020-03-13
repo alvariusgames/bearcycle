@@ -68,12 +68,16 @@ public class HoverControlBoxContainer : VBoxContainer {
             this.HoverableItemIndex = 0;
         } else {
             if(Input.IsActionJustPressed("ui_down")){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                        new string[]{"res://media/samples/ui/click_1.wav"});
                 if(this.HoveredItem is OptionButton && ((OptionButton)this.HoveredItem).GetPopup().IsVisible()){
                     var button = (OptionButton)this.HoveredItem;
                     this.IncrementOptionButtonDown(button);
                 } else {
                     this.IncrementMenuDown();}}
             if(Input.IsActionJustPressed("ui_up")){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                        new string[]{"res://media/samples/ui/click_1.wav"});
                 if(this.HoveredItem is OptionButton && ((OptionButton)this.HoveredItem).GetPopup().IsVisible()){
                     var button = (OptionButton)this.HoveredItem;
                     this.IncrementOptionButtonUp(button);}     
@@ -84,15 +88,20 @@ public class HoverControlBoxContainer : VBoxContainer {
                     ((HoverableTouchScreenButton)this.HoveredItem).MimicTouch();
                 } if(this.HoveredItem is OptionButton){
                     var button = (OptionButton)this.HoveredItem;
-                    if(button.GetPopup().IsVisible()){
+                     if(!this.isOptionButtonPopupOpened(button)){
                         this.closeOptionButtonWorkaround(button);}}}
             if(Input.IsActionJustReleased("ui_accept")){
                 if(this.HoveredItem is HoverableTouchScreenButton){
                     ((HoverableTouchScreenButton)this.HoveredItem).MimicTouchRelease();}}}}
 
+    private Boolean isOptionButtonPopupOpened(OptionButton button){
+        return (button.GetPopup().Visible == true) && //Butto `Pressed` status gets updated
+                (button.Pressed); //1 frame after, so it's value here is reveresed
+    }
+
   private void closeOptionButtonWorkaround(OptionButton button){
       //TODO: find better solution
-        button.GetPopup().SetVisible(false);
+        button.GetPopup().Visible = false;
         this.IncrementMenuDown();
         this.updateHovered();
         this.IncrementMenuUp();

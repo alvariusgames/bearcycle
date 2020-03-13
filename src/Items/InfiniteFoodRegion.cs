@@ -15,18 +15,15 @@ public class InfiniteFoodRegion : KinematicBody2D, IInteractable
 
     private Sprite FoodIconSprite;
     private string FoodDisplayName;
-
-    private float lootableCalories = Food.FALLBACK_CALORIES;
+    [Export]
+    public int lootableCalories {get; set;} = Food.FALLBACK_CALORIES;
     private float lootedCalories = 0f;
+    private const int NUM_BITES = 3;
 
     // Called when the node enters the scene tree for the first time.
 
     public String GetDisplayableName(){
-        var name = this.Name;
-        string pattern = @"\d+$"; //find numbers at end of string
-        string replacement = "";
-        Regex rgx = new Regex(pattern);
-        return rgx.Replace(name, replacement);
+        return this.RemoveNumbersAndTranslateNodeName();
     }
 
 
@@ -38,9 +35,7 @@ public class InfiniteFoodRegion : KinematicBody2D, IInteractable
                     Bundles.Add(child2);}}
             if(child is Sprite){
                 if(child.Name.ToLower().Contains("foodicon")){
-                    this.FoodIconSprite = (Sprite)child;}
-                else {
-                    this.lootableCalories = (float)Convert.ToDouble(child.Name);}}}
+                    this.FoodIconSprite = (Sprite)child;}}}
         this.scrambleBundles();}
 
     private void scrambleBundles(){
@@ -56,7 +51,7 @@ public class InfiniteFoodRegion : KinematicBody2D, IInteractable
                     sprite.SetGlobalPosition(randSpritePos);}}}}
 
     public void InteractWith(Player Player){
-        var caloriesInThisBite = this.lootableCalories / 3f;
+        var caloriesInThisBite = this.lootableCalories / NUM_BITES;
         var food = new NonNodeFood((Sprite)this.FoodIconSprite.Duplicate(),
                                     caloriesInThisBite, this.FoodDisplayName);
         this.lootedCalories += caloriesInThisBite;

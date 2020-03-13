@@ -58,7 +58,13 @@ public abstract class FSMNode2D<StateEnum> : Node2D, IFSMObject<StateEnum> {    
     public abstract void ReactStateless(float delta);
     public abstract void ReactToState(float delta);
 
+    private Boolean runOnce = true;
     public override void _Process(float delta) {
+        if(this.runOnce){
+            this.runOnce = false;
+            if(this.ActiveState.Equals(this.InitialState)){
+                //TODO: fix this hacky piece of garbage
+                this.ResetActiveState(this.InitialState);}}
         this.UpdateState(delta);
         this.ReactStateless(delta);
         this.handleTimers(delta);

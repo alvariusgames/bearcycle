@@ -27,47 +27,53 @@ public static class SoundHandler {
             } catch(Exception e){
                activeAudioSamplePlayers.Remove(audioSamplePlayer);}}}
 
-    private static float SampleVolume = 10f;
-    private const float MAX_SAMPLE_VOLUME = 10f;
-    public static float GetSampleVolume(float mulitiplier = 1f){
-        var vol = SampleVolume * mulitiplier;
-        if(vol > MAX_SAMPLE_VOLUME){
-            return MAX_SAMPLE_VOLUME;
-        } else {
-            return vol;}}
-    public static void SetSampleVolume(float SampleVolume){
-        SoundHandler.SampleVolume = SampleVolume;
-    }
+    private static float SampleVolumeLinearUnits = DEFAULT_SAMPLE_VOLUME_LINEAR;
+    public const float DEFAULT_SAMPLE_VOLUME_LINEAR = 0.7f;
+    public static float GetSampleVolumeLinearUnits(float mulitiplier = 1f){
+        return SoundHandler.SampleVolumeLinearUnits * mulitiplier;}
 
+    public static float GetSampleVolumeDbUnits(float mulitiplier = 1f){
+        return GD.Linear2Db(SoundHandler.GetSampleVolumeLinearUnits(mulitiplier));}
 
-    private static float StreamVolume = 10f;
-    private const float MAX_STREAM_VOLUME = 10f;
-    public static float GetStreamVolume(float multiplier = 1f){
-        var vol = StreamVolume * multiplier;
-        if(vol > MAX_STREAM_VOLUME){
-            return MAX_STREAM_VOLUME;
-        } else {
-            return vol;}} 
-    public static void SetStreamVolume(float StreamVolume){
-        SoundHandler.StreamVolume = StreamVolume;
+    public static void SetSampleVolumeLinearUnits(float sampleVolumeLinearUnits){
+        SoundHandler.SampleVolumeLinearUnits = sampleVolumeLinearUnits;}
+
+    private static float StreamVolumeLinearUnits = DEFAULT_STREAM_VOLUME_LINEAR;
+    public const float DEFAULT_STREAM_VOLUME_LINEAR = 0.7f;
+    public static float GetStreamVolumeLinearUnits(float multiplier = 1f){
+        return SoundHandler.StreamVolumeLinearUnits * multiplier;}
+    public static float GetStreamVolumeDbUnits(float mulitiplier = 1f){
+        return GD.Linear2Db(SoundHandler.GetStreamVolumeLinearUnits(mulitiplier));}
+    public static void SetStreamVolumeLinearUnits(float streamVolumeLinearUnits,
+                                                  Boolean updateExistingStreams = false){
+        SoundHandler.StreamVolumeLinearUnits = streamVolumeLinearUnits;
+        var streamVolumeDbUnits = SoundHandler.GetStreamVolumeDbUnits();
+        if(updateExistingStreams){
+            foreach(var audioStreamPlayer in activeAudioStreamPlayers){
+                try{
+                    audioStreamPlayer.VolumeDb = streamVolumeDbUnits;}
+                catch{}
+            }
+        }
     }
-    public static void TempFadeAllVolume(float multiplier = 0.99f){
+    public static void TempSetAllStreamAndSample(float linearUnits){
         foreach(var audioStreamPlayer in activeAudioStreamPlayers){
             try{
-                audioStreamPlayer.VolumeDb *= multiplier;}
+                audioStreamPlayer.VolumeDb = GD.Linear2Db(SoundHandler.GetStreamVolumeLinearUnits() * linearUnits);}
             catch{}}
 
         foreach(var audioSamplePlayer in activeAudioSamplePlayers){
-            try{audioSamplePlayer.VolumeDb *= multiplier;}
+            try{
+                audioSamplePlayer.VolumeDb = GD.Linear2Db(SoundHandler.GetSampleVolumeLinearUnits() * linearUnits);}
             catch{}}}
 
-    public static void EndTempFadeAllVolume(){
+    public static void EndTempSetAllStreamAndSample(){
         foreach(var audioStreamPlayer in activeAudioStreamPlayers){
-            try{audioStreamPlayer.VolumeDb = GetStreamVolume();}
+            try{audioStreamPlayer.VolumeDb = GetStreamVolumeDbUnits();}
             catch{}}
 
         foreach(var audioSamplePlayer in activeAudioSamplePlayers){
-            try{audioSamplePlayer.VolumeDb = GetSampleVolume();}
+            try{audioSamplePlayer.VolumeDb = GetSampleVolumeDbUnits();}
             catch{}}}
 
 
@@ -93,7 +99,6 @@ public static class SoundHandler {
                 if(child is IAudioStreamPlayer){
                     var player = child as IAudioStreamPlayer;
                     if(player.Stream == audioStream){
-                        GD.Print("Already playing, skipping...");
                         return;}}}}
 
         audioStream.Loop = Loop;
@@ -102,7 +107,7 @@ public static class SoundHandler {
         audioStreamPlayer.Stream = audioStream;
         audioStreamPlayer.PauseMode = Node.PauseModeEnum.Process;
         caller.AddChild(audioStreamPlayer.SelfNode);
-        audioStreamPlayer.VolumeDb = GetStreamVolume(VolumeMultiplier);
+        audioStreamPlayer.VolumeDb = GetStreamVolumeDbUnits(VolumeMultiplier);
         audioStreamPlayer.Play();
         activeAudioStreamPlayers.Add(audioStreamPlayer);}
 
@@ -130,22 +135,48 @@ public static class SoundHandler {
             catch{}}
         GarbageCollect();}
 
+    public static void PauseAllSample(){
+        foreach(var player in activeAudioSamplePlayers){
+            try{
+                player.StreamPaused = true;}
+            catch{}}
+        GarbageCollect();}
+
     public static void UnpauseAllStream(){
         foreach(var player in activeAudioStreamPlayers){
             try{
                 player.StreamPaused = false;}
             catch{}}
         GarbageCollect();}
+    public static void UnpauseAllSample(){
+        foreach(var player in activeAudioSamplePlayers){
+            try{
+                player.StreamPaused = false;}
+            catch{}}
+        GarbageCollect();}
 
- 
-
+    public static void PlaySample<StreamPlayerType>(Node caller,
+                                                    String StreamPath,
+                                                    float VolumeMultiplier = 1f,
+                                                    Boolean Loop = false,
+                                                    Boolean SkipIfAlreadyPlaying = false,
+                                                    float PitchScale = 1.0f,
+                                                    Boolean PauseAllOtherSoundWhilePlaying = false) where StreamPlayerType : IAudioStreamPlayer, new(){
+        SoundHandler.PlaySample<StreamPlayerType>(caller,
+                                                  new String[]{StreamPath},
+                                                  VolumeMultiplier,
+                                                  Loop,
+                                                  SkipIfAlreadyPlaying,
+                                                  PitchScale,
+                                                  PauseAllOtherSoundWhilePlaying);}
 
     public static void PlaySample<StreamPlayerType>(Node caller, 
                                                     String[] StreamPaths, 
                                                     float VolumeMultiplier = 1f,
                                                     Boolean Loop = false,
                                                     Boolean SkipIfAlreadyPlaying = false,
-                                                    float PitchScale = 1.0f) where StreamPlayerType : IAudioStreamPlayer, new() {
+                                                    float PitchScale = 1.0f,
+                                                    Boolean PauseAllOtherSoundWhilePlaying = false) where StreamPlayerType : IAudioStreamPlayer, new() {
         GarbageCollect();
         var rnd = new Random();
         var index = rnd.Next(StreamPaths.Length);
@@ -163,7 +194,7 @@ public static class SoundHandler {
                 if(child is IAudioStreamPlayer){
                     var player = child as IAudioStreamPlayer;
                     player.PitchScale = PitchScale;
-                    player.VolumeDb = GetSampleVolume(VolumeMultiplier);
+                    player.VolumeDb = GetSampleVolumeDbUnits(VolumeMultiplier);
                     if(player.Stream == audioStream){
                         return;}}}}
 
@@ -177,9 +208,14 @@ public static class SoundHandler {
         audioStreamPlayer.PauseMode = Node.PauseModeEnum.Process;
         audioStreamPlayer.PitchScale = PitchScale;
         caller.AddChild(audioStreamPlayer.SelfNode);
-        audioStreamPlayer.VolumeDb = GetSampleVolume(VolumeMultiplier);
+        audioStreamPlayer.VolumeDb = GetSampleVolumeDbUnits(VolumeMultiplier);
+        if(PauseAllOtherSoundWhilePlaying){
+            SoundHandler.PauseAllStream();
+            audioStreamPlayer.SelfNode.AddChild(
+                new AudioPlayerWatcher<StreamPlayerType>(AudioPlayerWatcherActivity.UNPAUSE_ALL_WHEN_PLAYER_FINISHED));}
         audioStreamPlayer.Play();
-        activeAudioSamplePlayers.Add(audioStreamPlayer);}
+        activeAudioSamplePlayers.Add(audioStreamPlayer);
+        }
 
     public static void StopSample(Node caller, String StreamPath){
         if(audioStreams.ContainsKey(StreamPath)){
@@ -194,6 +230,15 @@ public static class SoundHandler {
         foreach(var player in activeAudioSamplePlayers){
             player.Stop();}
         GarbageCollect();}
+
+    public static float HumanSoundUnitsToStreamPlayerUnits(int humanSoundUnits){
+        var linear = humanSoundUnits / 100f;
+        return GD.Linear2Db(linear);}
+
+    public static int StreamPlayerUnitsToHumanSoundUnits(float streamPlayerUnits){
+        var db = streamPlayerUnits;
+        return (int)(GD.Db2Linear(db) * 100);}
+
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)

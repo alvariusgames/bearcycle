@@ -33,7 +33,7 @@ public class HoverableTouchScreenButton : TouchScreenButton{
             return this.wasPreviouslyPressed && !this.isCurrentlyPressed; }
     }
 
-    public void MimicTouch(){
+    public virtual void MimicTouch(){
         this.SetGraphicToPressed();
     }
 

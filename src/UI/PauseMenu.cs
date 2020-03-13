@@ -2,6 +2,7 @@ using Godot;
 using System;
 
 public class PauseMenu : Node2D{
+    private Node caller;
     private Boolean isPaused = false;
     private Boolean IsFreshlyPaused = false;
     private Boolean waitForUserInputToStartHovering = true;
@@ -11,6 +12,12 @@ public class PauseMenu : Node2D{
     private HoverableTouchScreenButton ResumeButton;
     private const int RES_I = 0;
     private const int RES_J = 1;
+    private HSlider SamplesSlider;
+    private const int SAMP_I = 1;
+    private const int SAMP_J = 0;
+    private HSlider StreamSlider;
+    private const int STREAM_I = 2;
+    private const int STREAM_J = 0;
 
     public override void _Ready(){
         if(this.GetChild(0) is PlatformSpecificChildren){
@@ -24,6 +31,14 @@ public class PauseMenu : Node2D{
                     if(subChild is HoverableTouchScreenButton && subChild.Name.ToLower().Contains("resume")){
                         this.ResumeButton = (HoverableTouchScreenButton)subChild;
                         this.interactablesGridRefs[RES_I,RES_J] = this.ResumeButton;}
+                    if(subChild is HSlider && subChild.Name.ToLower().Contains("sample")){
+                        this.SamplesSlider = (HSlider)subChild;
+                        this.SamplesSlider.Value = SoundHandler.GetSampleVolumeLinearUnits();
+                        this.interactablesGridRefs[SAMP_I, SAMP_J] = this.SamplesSlider;}
+                    if(subChild is HSlider && subChild.Name.ToLower().Contains("stream")){
+                        this.StreamSlider = (HSlider)subChild;
+                        this.StreamSlider.Value = SoundHandler.GetStreamVolumeLinearUnits();
+                        this.interactablesGridRefs[STREAM_I, STREAM_J] = this.StreamSlider;}
                 }
             }
         }
@@ -37,7 +52,8 @@ public class PauseMenu : Node2D{
         this.isPaused = false;
         this.GetTree().Paused = false;}
 
-    public void OpenPauseMenu(){
+    public void OpenPauseMenu(Node caller){
+        this.caller = caller;
         this.Pause();
         this.Visible = true;
         this.IsFreshlyPaused = true;
@@ -49,6 +65,8 @@ public class PauseMenu : Node2D{
         SoundHandler.PlayStream<MyAudioStreamPlayer>(this,
             new string[]{"res://media/music/short/pause_music1.ogg"},
             Loop: true);
+        SoundHandler.PlaySample<MyAudioStreamPlayer>(this.caller,
+            new string[]{"res://media/samples/ui/click_1.wav"});
     }
 
     public void ClosePauseMenuBackToGame(){
@@ -57,6 +75,11 @@ public class PauseMenu : Node2D{
         SoundHandler.StopStream(this, "res://media/music/short/pause_music1.ogg");
         SoundHandler.UnpauseAllStream();
         SoundHandler.StopAllSample();
+        // Save any sound changes to the database
+        var globals = DbHandler.Globals;
+        globals.SampleVolumeLinearUnits = SoundHandler.GetSampleVolumeLinearUnits();
+        globals.StreamVolumeLinearUnits = SoundHandler.GetStreamVolumeLinearUnits();
+        DbHandler.Globals = globals;
     }
 
     private const int INITIAL_I = 0;
@@ -65,6 +88,8 @@ public class PauseMenu : Node2D{
     private int j = INTITIAL_J;
 
     private void navigate(int plusI, int plusJ){
+        SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+            new string[]{"res://media/samples/ui/click_1.wav"});
         var potI = i + plusI;
         if(potI >= I_LENGTH){
             potI = I_LENGTH - 1;}
@@ -145,19 +170,25 @@ public class PauseMenu : Node2D{
                 //hacky workaround to not immediately unpause after pause
                 this.IsFreshlyPaused = false;
             } else {
-                this.ClosePauseMenuBackToGame();}}
+                this.ClosePauseMenuBackToGame();
+                SoundHandler.PlaySample<MyAudioStreamPlayer>(this.caller,
+                    new string[]{"res://media/samples/ui/click_1.wav"});}}
     }
 
     private void updateGraphicsForSelectionInPauseMenu(float delta){
         if(!this.waitForUserInputToStartHovering){
             var selectedItem = this.interactablesGridRefs[i,j];
-            foreach(var hovTouchButonToCheck in new HoverableTouchScreenButton[]{this.HomeButton, this.ResumeButton})
-            if(selectedItem == hovTouchButonToCheck){
-                hovTouchButonToCheck.SetGraphicToPressed();}
-            else {
-                hovTouchButonToCheck.SetGraphicToUnpressed();}
-        }
-    }
+            foreach(var hovTouchButonToCheck in new HoverableTouchScreenButton[]{this.HomeButton, this.ResumeButton}){
+                if(selectedItem == hovTouchButonToCheck){
+                    hovTouchButonToCheck.SetGraphicToPressed();}
+                else {
+                    hovTouchButonToCheck.SetGraphicToUnpressed();}}
+            foreach(var hsliderToCheck in new HSlider[]{this.SamplesSlider, this.StreamSlider}){
+                if(selectedItem == hsliderToCheck){
+                    hsliderToCheck.GrabFocus();}
+                else {
+                    hsliderToCheck.ReleaseFocus();}}
+    }}
 
     private void checkInputForSelectingPauseMenuItem(float delta){
             var selectedItem = this.interactablesGridRefs[i,j];
@@ -168,15 +199,16 @@ public class PauseMenu : Node2D{
                 this.ClosePauseMenuBackToGame();
                 SoundHandler.StopAllStream();
                 SoundHandler.StopAllSample();
+                SoundHandler.PlaySample<MyAudioStreamPlayer>(this.caller,
+                    new string[]{"res://media/samples/ui/decline_1.wav"});
                 SceneTransitioner.Transition(FromScene: this.GetTree().GetRoot().GetChild(0), 
                                     ToSceneStr: "res://scenes/level_select/level_select.tscn",
                                     effect: SceneTransitionEffect.FADE_BLACK,
                                     numSeconds: 2f,
-                                    FadeOutAudio: true);
-            }
+                                    FadeOutAudio: true);}
             else if((selectedItem == this.ResumeButton) && isSelected){
                 this.ClosePauseMenuBackToGame();
-            }
+                SoundHandler.PlaySample<MyAudioStreamPlayer>(this.caller,
+                    new string[]{"res://media/samples/ui/accept_1.wav"});}
         }
-
 }

@@ -1,0 +1,31 @@
+keys,en,fr,ja,hi,zh,ko,de
+UI_PRESS_START,Press Start,Press Start,「開始」を押す,स्टार्ट दबाएँ,按下“开始”,보도 시작,Drücken Sie auf Start
+UI_PLAY,Play,Lire,再生,चालू करें,开始,자동 재생 속도 (in ms),Spielen
+UI_SHOP,Shop,Boutique,ショップ,दुकान,当前位置,상점,Shop
+UI_SETTINGS,Settings,Settings,設定を保存しました。,सेटिंग,设置,설정,Settings
+UI_CONTROLS,Controls,Contrôles,コントロール,नियंत्रण,控件按钮,통제 수단,Steuerungen
+UI_CHANGE_LANG,Change Language,Changer la langue,言語を変更,भाषा बदलें,更改语言,언어 변경,Sprache ändern
+UI_SLOT_NAME,Slot,Créneau,Slot,स्लॉट,插槽,슬롯,Steckplatz
+UI_CALORIES,Calories,Calories,カロリー,कैलोरी,卡路里,칼로리,Kalorien
+UI_EXIT,Exit,Quitter,終了,बाहर,退出,종료,Ausgang
+UI_CHNG_ATTACK,Change “Attack” button,"Changer le bouton ""Attaque""",「攻撃」ボタンを変更,"""हमला"" बटन बदलें",更改“攻击”按钮,"""공격""버튼 변경","Ändern Sie die Schaltfläche ""Angriff"""
+UI_CHNG_FORAGE,Change “Forage” button,"Changer le bouton ""Forage""",「飼料」ボタンを変更,"""फोरेज"" बटन बदलें",更改“草料”按钮,“Forage”버튼 변경,"Ändern Sie die Schaltfläche ""Futter"""
+UI_CHNG_ITEM,Change “Use Item” button,Modifier le bouton «Utiliser l'élément»,「アイテムを使用」ボタンを変更,"""आइटम का उपयोग करें"" बटन बदलें",更改“使用项目”按钮,"""항목 사용""버튼 변경","Ändern Sie die Schaltfläche ""Gegenstand verwenden"""
+UI_PRESS_KEY_IN,Press button for,Appuyez sur le bouton,ボタン押下,के लिए बटन दबाएं,按下按钮,버튼을 눌러,Taste drücken
+UI_ATTACK_NAME,Attack,Attack,アタック,अटैक,攻击,공격,Angriff
+UI_FORAGE_NAME,Forage,Fourrage,秣,चारा,牧草,여물,Futterpflanzen
+UI_ITEM_NAME,Use Item,Utilisez article,アイテムを使う,उपयोग वस्तु,使用对象,사용 항목,Item verwenden
+UI_RESET_CONTROLS,Reset to defaults,Réinitialiser les réglages par défaut,既定値にリセット,डिफाल्टें लेई परतियै सैट्ट करो,重置为默认,기본값 복원,Standard wiederherstellen
+UI_LOADING_LOCALE,Loading Language,Chargement de la langue,言語の読み込み,भाषा लोड हो रही है,载入语言,언어로드,Sprache wird geladen
+UI_RESTART_GAME,Please restart the game,Redémarrez le,ゲームを再起動してください,कृपया खेल को पुनः आरंभ करें,请重新启动游戏,게임을 다시 시작하십시오,Bitte starte das Spiel neu.
+UI_IF_SEE_ERRORS,If you see errors,Si vous voyez des erreurs,エラーが表示される場合,यदि आप त्रुटियों को देखते हैं,如果看到错误,오류가 보이면,Wenn Sie Fehler sehen
+ZONE,Zone,Zone,ゾーン,क्षेत्र,区域,존,Bereich
+TUTORIAL,Tutorial,Tutoriel,チュートリアル,शिक्षण पाठ,教程,튜토리얼,Tutorial
+FOREST,Forest,Forêts,森,वन,森林,포레스트,Wald
+SUBURBIA,Suburbia,Banlieue,郊外,Suburbia,郊區,교외,Stadtrand
+GOVERNMENT,Government,Gouvernement,公務員,सरकार,政府事务,정부,Staatsanleihen
+MOON,Moon,Lune,月,चन्द्रमा,"<ph id=""mtc_1"" equiv-text=""base64:Jmx0O3N0cm9uZyZndDs=""/>1010大道的月亮<ph id=""mtc_2"" equiv-text=""base64:Jmx0Oy9zdHJvbmcmZ3Q7""/>
+<ph id=""mtc_3"" equiv-text=""base64:Jmx0O3NwYW4mZ3Q7""/>纽约，NY 10018美国。<ph id=""mtc_4"" equiv-text=""base64:Jmx0Oy9zcGFuJmd0Ow==""/>",달,Mond
+SPACE_SHIP,Space Ship,Vaisseau spatial,宇宙船,जगह,空格,공백,Raumschiff
+FINAL,Final,Final,最終,अंतिम,期末,마지막,Final
+BONUS,Bonus,Prime,ボーナス,पारितोषिक,分红,보너스,Bonus

@@ -18,13 +18,15 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
     private Vector2 bodyCenter;
     private Vector2 BackToFrontVector;
     public Bear Bear;
+    public FallThroughManager FallThroughManager;
+    public RotationManager RotationManager;
     public Player Player;
     public float BodyLength;
     public Vector2 CurrentNormal;
 	public Sprite Sprite;
     private int LastInAirsLength = 15;
     private Queue<Boolean> OngoingIsInAirs = new Queue<Boolean>();
-    private int LastVelocitiesOfTwoWheelsLength = 5;
+    private int LastVelocitiesOfTwoWheelsLength = 15;
     private float numSecOfInAir = 0f;
     private Queue<Vector2> OngoingVelocitiesOfTwoWheels = new Queue<Vector2>();
     private Vector2 initialOffsetFromWheelsToBear;
@@ -39,7 +41,11 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
             else if(child.Name.Equals("Bear")){
                 this.Bear = (Bear)child;}
             else if(child is Sprite){
-                this.Sprite = (Sprite)child;}}
+                this.Sprite = (Sprite)child;}
+            else if(child is FallThroughManager){
+                this.FallThroughManager = (FallThroughManager)child;}
+            else if(child is RotationManager){
+                this.RotationManager = (RotationManager)child;}}
         this.Player = (Player)this.GetParent();
         this.BodyLength = this.FrontWheel.Position.DistanceTo(
             this.BackWheel.Position);
@@ -208,14 +214,14 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
                 && this.Player.AttackWindow.ActiveState == AttackWindowState.NOT_ATTACKING
                 && !this.IsInAir()
                 && this.ActiveState == ATVState.WITH_BEAR
-                && this.Player.ActiveState == PlayerState.NORMAL){
+                && this.Player.ActiveState == PlayerState.ALIVE){
             this.Direction = ATVDirection.FORWARD;
         }
         else if((this.FrontWheel.ActiveState == WheelState.DECELERATING || Input.IsActionPressed("ui_left")) 
                 && this.Player.AttackWindow.ActiveState == AttackWindowState.NOT_ATTACKING
                 && !this.IsInAir()
                 && this.ActiveState == ATVState.WITH_BEAR
-                && this.Player.ActiveState == PlayerState.NORMAL){
+                && this.Player.ActiveState == PlayerState.ALIVE){
             this.Direction = ATVDirection.BACKWARD;}}
 
     public override void ReactStateless(float delta){
@@ -302,6 +308,16 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
             this.Sprite.SetScale(new Vector2(-Math.Abs(spriteScale[0]),
                                              spriteScale[1]));
         }}
+
+    public void tempStopAllMovement(Boolean exceptGravity = false){
+        this.FrontWheel.tempStopAllMovement(exceptGravity);
+        this.BackWheel.tempStopAllMovement(exceptGravity);
+    }
+
+    public void resumeMovement(){
+        this.FrontWheel.resumeMovement();
+        this.BackWheel.resumeMovement();
+    }
 
     public override void _Process(float delta){}
 

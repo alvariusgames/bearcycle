@@ -1,23 +1,24 @@
 using Godot;
 using System;
+using System.Text.RegularExpressions;
 
-public class NPC : KinematicBody2D, INPC{
-
-   public Sprite Sprite;
-   public CollisionShape2D CollisionShape2D;
-   public bool isHit;
-
-    public void GetHitBy(object node){
-        //GD.Print("NPC hit " + node.Name);
-        this.CollisionShape2D.Disabled = true;
-        this.Sprite.Visible = false;
-        this.isHit = true;
+public abstract class NPC<T> : FSMKinematicBody2D<T>, INPC{
+    public abstract void GetHitBy(object node);
+    public void DisplayExplosion(){
+        var explosion = (Particles2D)(GD.Load("res://scenes/misc/effects/explosion1.tscn") as PackedScene).Instance();
+        explosion.Emitting = true;
+        explosion.OneShot = true;
+        explosion.Position = this.Position;
+        this.AddChild(explosion);
     }
-    public override void _Ready(){
-        foreach(var child in this.GetChildren()){
-            if(child is Sprite){
-                this.Sprite = (Sprite)child;
-            }
-            if(child is CollisionShape2D){
-                this.CollisionShape2D = (CollisionShape2D)child;
-            }}}}
+    public String GetDisplayableName(){
+        return this.RemoveNumbersAndTranslateNodeName();
+    }
+
+    public void PlayGetEatenSound(){
+        SoundHandler.PlaySample<MyAudioStreamPlayer2D>(this,
+        new string[]{"res://media/samples/npc/meaty_enemy/geteaten1.wav",
+                     "res://media/samples/npc/meaty_enemy/geteaten2.wav"});
+    }
+
+}

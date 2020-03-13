@@ -2,36 +2,29 @@ using Godot;
 using System;
 using System.Text.RegularExpressions;
 
-public enum FlyingEnemyState { FLYING_DEFAULT }
+public enum FlyingEnemyState { FLYING_DEFAULT, HOVERING_STILL }
 
-public class FlyingEnemy : FSMKinematicBody2D<FlyingEnemyState>, INPC, IFood
+public class FlyingEnemy : NPC<FlyingEnemyState>, INPC, IFood
 {
     public override FlyingEnemyState InitialState { get { return FlyingEnemyState.FLYING_DEFAULT;}}
 
-    public float Calories { get; set; }
-    public String GetDisplayableName(){
-        var name = this.GetName();
-        string pattern = @"\d+$"; //find numbers at end of string
-        string replacement = "";
-        Regex rgx = new Regex(pattern);
-        return rgx.Replace(name, replacement);
-    }
+    [Export]
+    public int Calories { get; set; } = Food.FALLBACK_CALORIES;
 
     public bool isConsumed { get; set; }
-
-    private String cutOutScenePath = "res://scenes/npc/bird1/bird1_cutout.tscn";
-
-    public Sprite FoodDisplaySprite { get { 
-        var copyOfCutOut = ((PackedScene)GD.Load(this.cutOutScenePath)).Instance();
+    public Sprite foodDisplaySprite;
+    public void setUpFoodDisplaySprite() { 
+        var cutOutScenePath = this.CutOut.Filename;      
+        var copyOfCutOut = ((PackedScene)GD.Load(cutOutScenePath)).Instance();
         foreach(Node child in copyOfCutOut.GetChildren()){
             if(child.Name.ToLower().Contains("root") && child is Sprite){
                 var copyOfRootSprite = (Sprite)child;
-                //copyOfRootSprite.SetScale(new Vector2(0.00075f, 0.00075f));
-                return copyOfRootSprite;
+                this.foodDisplaySprite = copyOfRootSprite;
             }
         }
-        return null;
-    } set {}}
+    }
+
+    public Sprite FoodDisplaySprite { get { return this.foodDisplaySprite;} set{}}
 
     private int flySpeed = 350;
     public PathFollow2D PathFollow2D;
@@ -58,13 +51,10 @@ public class FlyingEnemy : FSMKinematicBody2D<FlyingEnemyState>, INPC, IFood
                         this.CutOutAnimationPlayer = (AnimationPlayer)child2;}
                     else if(((Node2D)child2).Name.Contains("root") && 
                              (child2 is Sprite)){
-                        this.RootSprite = (Sprite)child2;
-                        try{
-                            this.Calories = 700; //TODO: make me dynamic
-                        } catch(Exception e){
-                            this.Calories = Food.FALLBACK_CALORIES;}}}}}
+                        this.RootSprite = (Sprite)child2;}}}}
         this.CutOutAnimationPlayer.Play("flap1");
-        this.initialCutOutScale = this.CutOut.GetScale();}
+        this.initialCutOutScale = this.CutOut.GetScale();
+        this.setUpFoodDisplaySprite();}
 
     public override void ReactToState(float delta){
         switch(this.ActiveState){
@@ -80,14 +70,19 @@ public class FlyingEnemy : FSMKinematicBody2D<FlyingEnemyState>, INPC, IFood
                     this.CutOut.SetRotation(0f);
                 }
                 break;
+            case FlyingEnemyState.HOVERING_STILL:
+                break;
         }
     }
 
-    public void GetHitBy(object node){
+    public override void GetHitBy(object node){
         if(node is AttackWindow){
             GD.Print("Hit an attack window");
             this.CollisionShape2D.Disabled = true;
-            this.CutOut.Visible = false;}}
+            this.CutOut.Visible = false;
+            this.ResetActiveState(FlyingEnemyState.HOVERING_STILL);
+            base.DisplayExplosion();
+            base.PlayGetEatenSound();}}
     public override void ReactStateless(float delta){
 
     }

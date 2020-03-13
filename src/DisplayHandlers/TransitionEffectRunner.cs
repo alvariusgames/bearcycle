@@ -37,7 +37,7 @@ public class TransitionEffectRunner : FSMNode2D<SceneTransitionEffect>
                 FromScene.PauseMode = Node.PauseModeEnum.Inherit;
 
                 if(FadeOutAudio){
-                    SoundHandler.EndTempFadeAllVolume();}
+                    SoundHandler.EndTempSetAllStreamAndSample();}
 
                 tree.Paused = false;
                 break;
@@ -46,7 +46,7 @@ public class TransitionEffectRunner : FSMNode2D<SceneTransitionEffect>
                 effectiveTransparency -= (delta / NumSeconds);
                 this.FromViewportContainer.SetModulate(new Color(1,1,1, effectiveTransparency));
                 if(FadeOutAudio){
-                    SoundHandler.TempFadeAllVolume();}
+                    SoundHandler.TempSetAllStreamAndSample(1 - (this.elapsedSeconds / NumSeconds));}
                 break;
             case SceneTransitionEffect.FADE_BLACK:
                 var halfTime = NumSeconds / 2f;
@@ -70,7 +70,7 @@ public class TransitionEffectRunner : FSMNode2D<SceneTransitionEffect>
                                                                     toEffectiveColor.b + step,
                                                                     toEffectiveColor.a));}
                 if(FadeOutAudio){
-                    SoundHandler.TempFadeAllVolume();}
+                    SoundHandler.TempSetAllStreamAndSample(1 - (this.elapsedSeconds / NumSeconds));}
                 return;
             default:
                 return;

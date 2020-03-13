@@ -1,0 +1,16 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+
+[deps]
+
+files=[ "res://text/foods.en.translation", "res://text/foods.fr.translation", "res://text/foods.ja.translation", "res://text/foods.hi.translation", "res://text/foods.zh.translation", "res://text/foods.ko.translation", "res://text/foods.de.translation" ]
+
+source_file="res://text/foods.csv"
+dest_files=[ "res://text/foods.en.translation", "res://text/foods.fr.translation", "res://text/foods.ja.translation", "res://text/foods.hi.translation", "res://text/foods.zh.translation", "res://text/foods.ko.translation", "res://text/foods.de.translation" ]
+
+[params]
+
+compress=true
+delimiter=0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=49 format=2]
 
 [ext_resource path="res://media/UI/level_select/level_select_whole_image.png" type="Texture" id=1]
 [ext_resource path="res://media/UI/level_select/icons/app_forest2.png" type="Texture" id=2]
@@ -23,6 +23,17 @@
 [ext_resource path="res://media/UI/level_select/home_button_click.png" type="Texture" id=21]
 [ext_resource path="res://media/UI/level_select/banner_button_click.png" type="Texture" id=22]
 [ext_resource path="res://src/UI/HoverableTouchScreenButton.cs" type="Script" id=23]
+[ext_resource path="res://media/UI/level_select/icons/tutorial.png" type="Texture" id=24]
+[ext_resource path="res://media/UI/level_select/icons/portal_circle/portal_circle1_blue.png" type="Texture" id=25]
+[ext_resource path="res://media/UI/level_select/icons/portal_circle/portal_circle1_black.png" type="Texture" id=26]
+[ext_resource path="res://src/Level/VisiblePath2D.cs" type="Script" id=27]
+[ext_resource path="res://src/UI/LevelSelectView.cs" type="Script" id=28]
+[ext_resource path="res://media/UI/level_select/icons/moon1.png" type="Texture" id=29]
+[ext_resource path="res://media/UI/level_select/icons/moon2.png" type="Texture" id=30]
+[ext_resource path="res://src/UI/ToggleSpaceViewCollider.cs" type="Script" id=31]
+[ext_resource path="res://media/UI/misc/arrow1_forward.png" type="Texture" id=32]
+[ext_resource path="res://src/Items/MakeMyParentHover.cs" type="Script" id=33]
+[ext_resource path="res://media/UI/misc/arrow1_backward.png" type="Texture" id=34]
 
 [sub_resource type="DynamicFont" id=1]
 size = 42
@@ -31,9 +42,12 @@ outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
 font_data = ExtResource( 17 )
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 75.273, 75.1874 )
+extents = Vector2( 21.5372, 14.2858 )
 
-[sub_resource type="SpriteFrames" id=3]
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 20.1014, 17.1558 )
+
+[sub_resource type="SpriteFrames" id=4]
 animations = [ {
 "frames": [ ExtResource( 3 ), ExtResource( 2 ) ],
 "loop": true,
@@ -41,7 +55,38 @@ animations = [ {
 "speed": 2.0
 } ]
 
-[sub_resource type="SpriteFrames" id=4]
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 21.3965, 17.5102 )
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 25.3685, 19.2476 )
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 50.0078, 33.2788 )
+
+[sub_resource type="SpriteFrames" id=8]
+animations = [ {
+"frames": [ ExtResource( 29 ), ExtResource( 30 ) ],
+"loop": true,
+"name": "default",
+"speed": 2.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=9]
+extents = Vector2( 35.9742, 25.1845 )
+
+[sub_resource type="RectangleShape2D" id=10]
+extents = Vector2( 30.594, 25.444 )
+
+[sub_resource type="RectangleShape2D" id=11]
+extents = Vector2( 50.6166, 34.3531 )
+
+[sub_resource type="Curve2D" id=12]
+_data = {
+"points": PoolVector2Array( -66.2312, 22.9959, 66.2312, -22.9959, -4.21936, 47.5068, -20.7062, -21.0297, 20.7062, 21.0297, 73.5573, 63.3398, -30.0765, 2.18808, 30.0765, -2.18808, 143.155, 75.7039, 15.6663, -62.2376, -15.6663, 62.2376, 260.099, 159.315, 24.5797, 14.4957, -24.5797, -14.4957, 181.876, 219.367, -20.3725, 25.481, 20.3725, -25.481, 163.993, 139.613, -42.4857, -18.9126, 42.4857, 18.9126, 257.245, 139.141, 17.4214, 32.371, -17.4214, -32.371, 535.339, 126.368, -15.0518, 17.8726, 15.0518, -17.8726, 437.153, 26.8553, -112.675, 28.9759, 112.675, -28.9759, 609.642, 36.1432, -36.3532, 229.479, 36.3532, -229.479, 370.575, -541.129, 0, 0, 0, 0, 774.115, -949.163, -78.665, -61.8088, 78.665, 61.8088, 1034.73, -963.483, 98.329, 10.6145, -98.329, -10.6145, 950.247, -744.391, 3.7766, 239.635, -3.7766, -239.635, 821.41, -1044.75, 96.8071, -52.4858, -96.8071, 52.4858, 506.301, -1098.97, 6.15558, 121.081, -6.15558, -121.081, -55.009, -1056.46, 34.1378, -17.4447, -34.1378, 17.4447, -381.279, -1198.48, 30.2336, -14.9483, -30.2336, 14.9483, -365.34, -1126.04, 44.015, -0.271826, -44.015, 0.271826, -508.233, -1127.33, -278.874, -168.145, 278.874, 168.145, -529.616, -973.649, 264.638, -68.4729, -264.638, 68.4729, -1016.32, -866.046, -320.336, -90.699, 320.336, 90.699, -823.272, -615.269, 63.1902, -201.506, -63.1902, 201.506, -497.883, -102.571, 387.383, -14.022, -387.383, 14.022, -1221.06, 437.075, 92.3475, 113.77, -92.3475, -113.77, -1947.26, 227.25, -93.8089, 59.6297, 93.8089, -59.6297, -1749.55, -26.5603, 65.0701, -6.13869, -65.0701, 6.13869, -1755.39, -201.882, -8.29357, -66.9599, 8.29357, 66.9599, -1883.96, -51.8845, -94.5955, 57.1863, 94.5955, -57.1863, -1747.6, -26.5603, 65.6866, -7.1058, -65.6866, 7.1058, -1752.32, -203.893, -9.24266, -66.8993, 9.24266, 66.8993, -1892.02, -52.0353, -93.5863, 58.4915, 93.5863, -58.4915, -1748.22, -27.5457, 65.1262, -7.31489, -65.1262, 7.31489, -1754.38, -203.893, -6.79421, -67.295, 6.79421, 67.295, -1892.02, -52.0353, -92.2411, 59.8878, 92.2411, -59.8878, -1746.17, -27.5457, 19.3531, 15.0337, -19.3531, -15.0337, -1714.72, -192.898, -40.5464, 39.3715, 40.5464, -39.3715, -1765.52, -273.027, -43.804, 83.9089, 43.804, -83.9089, -1461.57, -330.87, -21.4511, -48.3112, 21.4511, 48.3112, -1367.74, -408.816, 152.729, 16.9793, -152.729, -16.9793, -1624.66, -239.525, -7.87595, -68.5671, 7.87595, 68.5671, -1890.26, -53.7933, -95.4705, 61.1313, 95.4705, -61.1313, -1744.12, -29.5962, 64.9048, -3.01883, -64.9048, 3.01883, -1752.32, -203.893, -9.26583, -72.7367, 9.26583, 72.7367, -1888.5, -55.5515, -94.3384, 57.3578, 94.3384, -57.3578, -1742.07, -31.6467, 71.6972, -5.28295, -71.6972, 5.28295, -1750.27, -205.943, -6.02279, -74.5899, 6.02279, 74.5899, -1886.74, -55.5515, -94.9733, 56.861, 94.9733, -56.861, -1739.68, -29.4431, -813.964, -72.3523, 813.964, 72.3523, 12.6464, -907.904, 0, 0, 0, 0, 999.235, -337.548, -43.431, -44.7898, 43.431, 44.7898, 1071.83, -218.385, 0, 0, 0, 0, 1189.15, -177.183, 0, 0, 0, 0, 1223.37, -177.183 )
+}
+
+[sub_resource type="SpriteFrames" id=13]
 animations = [ {
 "frames": [ ExtResource( 4 ), ExtResource( 5 ) ],
 "loop": true,
@@ -49,11 +94,14 @@ animations = [ {
 "speed": 2.0
 } ]
 
-[sub_resource type="RectangleShape2D" id=5]
+[sub_resource type="RectangleShape2D" id=14]
 extents = Vector2( 41.8279, 35.7544 )
 
 [node name="LevelSelect" type="Node2D"]
 script = ExtResource( 10 )
+__meta__ = {
+"_edit_vertical_guides_": [  ]
+}
 
 [node name="PlatformSpecificChildren" type="Node2D" parent="."]
 script = ExtResource( 18 )
@@ -92,7 +140,7 @@ position = Vector2( 49.6383, 0 )
 [node name="Icon" type="AnimatedSprite" parent="PlatformSpecificChildren/DESKTOP/Banner/SpaceRock"]
 position = Vector2( 439.959, 4.47371 )
 frames = ExtResource( 15 )
-frame = 5
+frame = 9
 playing = true
 
 [node name="MakeMyParentRotateBackward" type="Node2D" parent="PlatformSpecificChildren/DESKTOP/Banner/SpaceRock/Icon"]
@@ -152,7 +200,7 @@ position = Vector2( 49.6383, 0 )
 [node name="Icon" type="AnimatedSprite" parent="PlatformSpecificChildren/MOBILE/Banner/SpaceRock2"]
 position = Vector2( 439.959, 4.47371 )
 frames = ExtResource( 15 )
-frame = 5
+frame = 9
 playing = true
 
 [node name="MakeMyParentRotateBackward" type="Node2D" parent="PlatformSpecificChildren/MOBILE/Banner/SpaceRock2/Icon"]
@@ -179,47 +227,536 @@ normal = ExtResource( 19 )
 pressed = ExtResource( 21 )
 script = ExtResource( 23 )
 
-[node name="Bg" type="Sprite" parent="."]
-z_index = -10
-texture = ExtResource( 1 )
+[node name="LevelSelectView" type="Node2D" parent="."]
+script = ExtResource( 28 )
 
-[node name="PortalChain" type="Node2D" parent="."]
+[node name="PortalChain" type="Node2D" parent="LevelSelectView"]
 position = Vector2( -78.5413, 5.13342 )
 script = ExtResource( 7 )
 
-[node name="level1" type="KinematicBody2D" parent="PortalChain"]
-position = Vector2( 716.917, 621.691 )
+[node name="level0" type="KinematicBody2D" parent="LevelSelectView/PortalChain"]
+position = Vector2( 467.981, 519.138 )
+rotation = -0.10472
 z_index = 5
 collision_layer = 2048
 collision_mask = 2048
 script = ExtResource( 8 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PortalChain/level1"]
-position = Vector2( -0.698334, 21.6484 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelSelectView/PortalChain/level0"]
+position = Vector2( 26.1683, 91.455 )
 shape = SubResource( 2 )
 
-[node name="TouchScreenButton" type="TouchScreenButton" parent="PortalChain/level1"]
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level0"]
+position = Vector2( -54.1121, 7.48228 )
+scale = Vector2( 1.5, 1.5 )
+normal = ExtResource( 6 )
+pressed = ExtResource( 6 )
+
+[node name="TutorialSprite" type="Sprite" parent="LevelSelectView/PortalChain/level0"]
+position = Vector2( 1.77942, 56.1179 )
+rotation = -0.351325
+texture = ExtResource( 24 )
+
+[node name="Off" type="Sprite" parent="LevelSelectView/PortalChain/level0"]
+position = Vector2( 47.7389, 128.484 )
+rotation = -0.351325
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 26 )
+
+[node name="On" type="Sprite" parent="LevelSelectView/PortalChain/level0"]
+visible = false
+position = Vector2( 47.7389, 128.484 )
+rotation = -0.351325
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 25 )
+
+[node name="ForwardArrows" type="Node2D" parent="LevelSelectView/PortalChain/level0"]
+visible = false
+rotation = -7.45058e-09
+
+[node name="ForwardArrow" type="Sprite" parent="LevelSelectView/PortalChain/level0/ForwardArrows"]
+position = Vector2( 74.839, 144.537 )
+rotation = 0.224628
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 32 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level0/ForwardArrows/ForwardArrow"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level0/ForwardArrows/ForwardArrow"]
+position = Vector2( -97.402, -83.1917 )
+scale = Vector2( 2.52471, 2.35717 )
+normal = ExtResource( 6 )
+
+[node name="level1" type="KinematicBody2D" parent="LevelSelectView/PortalChain"]
+position = Vector2( 712.522, 582.578 )
+rotation = -0.078523
+z_index = 5
+collision_layer = 2048
+collision_mask = 2048
+script = ExtResource( 8 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelSelectView/PortalChain/level1"]
+position = Vector2( -36.4439, 36.6527 )
+shape = SubResource( 3 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level1"]
 position = Vector2( -74.332, -55.3337 )
 scale = Vector2( 1.5, 1.5 )
 normal = ExtResource( 6 )
 pressed = ExtResource( 6 )
 
-[node name="ForestSprite" type="AnimatedSprite" parent="PortalChain/level1"]
-frames = SubResource( 3 )
+[node name="ForestSprite" type="AnimatedSprite" parent="LevelSelectView/PortalChain/level1"]
+position = Vector2( -8.30176, 24.1506 )
+frames = SubResource( 4 )
 playing = true
 
-[node name="LevelSelectPlayer" type="KinematicBody2D" parent="."]
-position = Vector2( 588.398, 675.44 )
+[node name="Off" type="Sprite" parent="LevelSelectView/PortalChain/level1"]
+position = Vector2( -52.7139, 83.9697 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 26 )
+
+[node name="On" type="Sprite" parent="LevelSelectView/PortalChain/level1"]
+visible = false
+position = Vector2( -52.7139, 83.9697 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 25 )
+
+[node name="ForwardArrow" type="Sprite" parent="LevelSelectView/PortalChain/level1"]
+visible = false
+position = Vector2( -33.1619, 98.1038 )
+rotation = 0.191986
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 32 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level1/ForwardArrow"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level1/ForwardArrow"]
+position = Vector2( -78.1786, -47.4862 )
+scale = Vector2( 2.77703, 1.90721 )
+normal = ExtResource( 6 )
+
+[node name="BackwardArrow" type="Sprite" parent="LevelSelectView/PortalChain/level1"]
+visible = false
+position = Vector2( -76.7427, 100.84 )
+rotation = 0.191986
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 34 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level1/BackwardArrow"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level1/BackwardArrow"]
+position = Vector2( -175.997, -62.2039 )
+scale = Vector2( 2.56527, 1.69367 )
+normal = ExtResource( 6 )
+
+[node name="level2" type="KinematicBody2D" parent="LevelSelectView/PortalChain"]
+position = Vector2( 880.697, 662.48 )
+z_index = 5
+collision_layer = 2048
+collision_mask = 2048
+script = ExtResource( 8 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelSelectView/PortalChain/level2"]
+position = Vector2( -1.7612, 41.3715 )
+shape = SubResource( 5 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level2"]
+position = Vector2( -74.332, -55.3337 )
+scale = Vector2( 1.5, 1.5 )
+normal = ExtResource( 6 )
+pressed = ExtResource( 6 )
+
+[node name="SuburbSprite" type="Sprite" parent="LevelSelectView/PortalChain/level2"]
+position = Vector2( -11.2284, -7.15619 )
+texture = ExtResource( 24 )
+
+[node name="Off" type="Sprite" parent="LevelSelectView/PortalChain/level2"]
+position = Vector2( 1.35034, 79.076 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 26 )
+
+[node name="On" type="Sprite" parent="LevelSelectView/PortalChain/level2"]
+visible = false
+position = Vector2( 1.35034, 79.076 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 25 )
+
+[node name="ForwardArrow" type="Sprite" parent="LevelSelectView/PortalChain/level2"]
+visible = false
+position = Vector2( 24.9053, 91.6968 )
+rotation = -0.261799
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 32 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level2/ForwardArrow"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level2/ForwardArrow"]
+position = Vector2( -77.887, -51.425 )
+scale = Vector2( 2.92515, 2.53072 )
+normal = ExtResource( 6 )
+
+[node name="BackwardArrow" type="Sprite" parent="LevelSelectView/PortalChain/level2"]
+visible = false
+position = Vector2( -21.51, 91 )
+rotation = 0.261799
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 34 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level2/BackwardArrow"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level2/BackwardArrow"]
+position = Vector2( -188.618, -53.2068 )
+scale = Vector2( 2.73366, 2.31577 )
+normal = ExtResource( 6 )
+
+[node name="level3" type="KinematicBody2D" parent="LevelSelectView/PortalChain"]
+position = Vector2( 1063.89, 556.603 )
+rotation = -0.0430658
+z_index = 5
+collision_layer = 2048
+collision_mask = 2048
+script = ExtResource( 8 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelSelectView/PortalChain/level3"]
+position = Vector2( 16.0029, 39.9283 )
+shape = SubResource( 6 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level3"]
+position = Vector2( -74.332, -55.3337 )
+scale = Vector2( 1.5, 1.5 )
+normal = ExtResource( 6 )
+pressed = ExtResource( 6 )
+
+[node name="GovernmentSprite" type="Sprite" parent="LevelSelectView/PortalChain/level3"]
+position = Vector2( -11.2284, -7.15619 )
+texture = ExtResource( 24 )
+
+[node name="Off" type="Sprite" parent="LevelSelectView/PortalChain/level3"]
+position = Vector2( 1.35016, 79.076 )
+rotation = -7.45058e-09
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 26 )
+
+[node name="On" type="Sprite" parent="LevelSelectView/PortalChain/level3"]
+visible = false
+position = Vector2( 1.35016, 79.076 )
+rotation = -7.45058e-09
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 25 )
+
+[node name="BackwardArrow" type="Sprite" parent="LevelSelectView/PortalChain/level3"]
+visible = false
+position = Vector2( -10.5278, 97.4597 )
+rotation = -0.261799
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 34 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level3/BackwardArrow"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level3/BackwardArrow"]
+position = Vector2( -180.285, -59.6816 )
+scale = Vector2( 2.43139, 2.02355 )
+normal = ExtResource( 6 )
+
+[node name="ForwardArrows" type="Node2D" parent="LevelSelectView/PortalChain/level3"]
+visible = false
+
+[node name="ToLevel4" type="Sprite" parent="LevelSelectView/PortalChain/level3/ForwardArrows"]
+position = Vector2( 104.651, -174.538 )
+rotation = 1.01712
+scale = Vector2( 1.5, 1.5 )
+texture = ExtResource( 34 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level3/ForwardArrows/ToLevel4"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level3/ForwardArrows/ToLevel4"]
+position = Vector2( -103.03, -75.05 )
+scale = Vector2( 2, 1.5 )
+normal = ExtResource( 6 )
+
+[node name="level4" type="KinematicBody2D" parent="LevelSelectView/PortalChain"]
+position = Vector2( 565.357, -539.221 )
+rotation = -0.0826425
+z_index = 5
+collision_layer = 2048
+collision_mask = 2048
+script = ExtResource( 8 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelSelectView/PortalChain/level4"]
+position = Vector2( 70.3867, 118.86 )
+shape = SubResource( 7 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level4"]
+position = Vector2( -80.3194, -147.539 )
+scale = Vector2( 3, 2.8 )
+normal = ExtResource( 6 )
+pressed = ExtResource( 6 )
+
+[node name="MoonSprite" type="AnimatedSprite" parent="LevelSelectView/PortalChain/level4"]
+position = Vector2( 65.2527, -65.6858 )
+scale = Vector2( 0.85, 0.85 )
+frames = SubResource( 8 )
+frame = 1
+playing = true
+
+[node name="Off" type="Sprite" parent="LevelSelectView/PortalChain/level4"]
+position = Vector2( 69.0404, 122.206 )
+rotation = 1.75308e-08
+scale = Vector2( 0.85, 0.85 )
+texture = ExtResource( 26 )
+
+[node name="On" type="Sprite" parent="LevelSelectView/PortalChain/level4"]
+visible = false
+position = Vector2( 69.0404, 122.206 )
+rotation = 1.75308e-08
+scale = Vector2( 0.85, 0.85 )
+texture = ExtResource( 25 )
+
+[node name="ForwardArrow" type="Sprite" parent="LevelSelectView/PortalChain/level4"]
+visible = false
+position = Vector2( 17.5921, 155.885 )
+rotation = 0.261799
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 34 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level4/ForwardArrow"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level4/ForwardArrow"]
+position = Vector2( -239.433, -51.188 )
+scale = Vector2( 3.23497, 2.62435 )
+normal = ExtResource( 6 )
+
+[node name="BackwardArrow" type="Sprite" parent="LevelSelectView/PortalChain/level4"]
+visible = false
+position = Vector2( 121.338, 157.805 )
+rotation = -0.261799
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 32 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level4/BackwardArrow"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level4/BackwardArrow"]
+position = Vector2( -70.4507, -65.544 )
+scale = Vector2( 3.22026, 3.04297 )
+normal = ExtResource( 6 )
+
+[node name="level5" type="KinematicBody2D" parent="LevelSelectView/PortalChain"]
+position = Vector2( -180.178, 677.95 )
+rotation = -0.891679
+z_index = 5
+collision_layer = 2048
+collision_mask = 2048
+script = ExtResource( 8 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelSelectView/PortalChain/level5"]
+position = Vector2( 4.07016, 79.2612 )
+shape = SubResource( 9 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level5"]
+position = Vector2( -300, -400 )
+scale = Vector2( 5, 5 )
+normal = ExtResource( 6 )
+pressed = ExtResource( 6 )
+
+[node name="SpaceshipSprite" type="Sprite" parent="LevelSelectView/PortalChain/level5"]
+position = Vector2( -11.2284, -7.15619 )
+texture = ExtResource( 24 )
+
+[node name="Off" type="Sprite" parent="LevelSelectView/PortalChain/level5"]
+position = Vector2( 1.35022, 79.0761 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 26 )
+
+[node name="On" type="Sprite" parent="LevelSelectView/PortalChain/level5"]
+visible = false
+position = Vector2( 1.35022, 79.0761 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 25 )
+
+[node name="ForwardArrow" type="Sprite" parent="LevelSelectView/PortalChain/level5"]
+position = Vector2( -37.1804, 109.954 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 34 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level5/ForwardArrow"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level5/ForwardArrow"]
+position = Vector2( -315.232, -39.215 )
+scale = Vector2( 3.71185, 2.77815 )
+normal = ExtResource( 6 )
+
+[node name="BackwardArrow" type="Sprite" parent="LevelSelectView/PortalChain/level5"]
+position = Vector2( 39.2696, 131.9 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 32 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level5/BackwardArrow"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level5/BackwardArrow"]
+position = Vector2( -48.3943, -80.4609 )
+scale = Vector2( 3.4874, 2.98616 )
+normal = ExtResource( 6 )
+
+[node name="level6" type="KinematicBody2D" parent="LevelSelectView/PortalChain"]
+position = Vector2( -945.236, 122.46 )
+rotation = -0.891679
+z_index = 5
+collision_layer = 2048
+collision_mask = 2048
+script = ExtResource( 8 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelSelectView/PortalChain/level6"]
+position = Vector2( 3.02658, 14.2521 )
+shape = SubResource( 10 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level6"]
+position = Vector2( -250, -350 )
+scale = Vector2( 5, 5 )
+normal = ExtResource( 6 )
+pressed = ExtResource( 6 )
+
+[node name="FinalSprite" type="Sprite" parent="LevelSelectView/PortalChain/level6"]
+position = Vector2( -11.2284, -7.15619 )
+texture = ExtResource( 24 )
+
+[node name="Off" type="Sprite" parent="LevelSelectView/PortalChain/level6"]
+position = Vector2( 1.3504, 79.0761 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 26 )
+
+[node name="On" type="Sprite" parent="LevelSelectView/PortalChain/level6"]
+visible = false
+position = Vector2( 1.3504, 79.0761 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 25 )
+
+[node name="ForwardArrows" type="Node2D" parent="LevelSelectView/PortalChain/level6"]
+visible = false
+
+[node name="ToLevel7" type="Sprite" parent="LevelSelectView/PortalChain/level6/ForwardArrows"]
+position = Vector2( 117.974, 232.186 )
+rotation = 0.891679
+scale = Vector2( 1.5, 1.5 )
+texture = ExtResource( 32 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level6/ForwardArrows/ToLevel7"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level6/ForwardArrows/ToLevel7"]
+position = Vector2( -73.8955, -83.2163 )
+scale = Vector2( 2.1904, 1.62693 )
+normal = ExtResource( 6 )
+
+[node name="BackwardArrow" type="Sprite" parent="LevelSelectView/PortalChain/level6"]
+visible = false
+position = Vector2( -42.4393, 113.611 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 34 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level6/BackwardArrow"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level6/BackwardArrow"]
+position = Vector2( -218.185, -46.2935 )
+scale = Vector2( 2.73828, 2.20994 )
+normal = ExtResource( 6 )
+
+[node name="level7" type="KinematicBody2D" parent="LevelSelectView/PortalChain"]
+position = Vector2( 1727.63, 330.749 )
+z_index = 5
+collision_layer = 2048
+collision_mask = 2048
+script = ExtResource( 8 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelSelectView/PortalChain/level7"]
+position = Vector2( 0.69815, 57.9619 )
+shape = SubResource( 11 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level7"]
+position = Vector2( -74.332, -55.3337 )
+scale = Vector2( 1.5, 1.5 )
+normal = ExtResource( 6 )
+pressed = ExtResource( 6 )
+
+[node name="IceSprite" type="Sprite" parent="LevelSelectView/PortalChain/level7"]
+position = Vector2( -11.2284, -7.15619 )
+texture = ExtResource( 24 )
+
+[node name="Off" type="Sprite" parent="LevelSelectView/PortalChain/level7"]
+position = Vector2( 1.35034, 79.0761 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 26 )
+
+[node name="On" type="Sprite" parent="LevelSelectView/PortalChain/level7"]
+visible = false
+position = Vector2( 1.35034, 79.0761 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 25 )
+
+[node name="BackwardArrows" type="Node2D" parent="LevelSelectView/PortalChain/level7"]
+visible = false
+
+[node name="ToLevel6" type="Sprite" parent="LevelSelectView/PortalChain/level7/BackwardArrows"]
+position = Vector2( -231.068, 44.5353 )
+rotation = 0.878674
+scale = Vector2( 1.5, 1.54 )
+texture = ExtResource( 34 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="LevelSelectView/PortalChain/level7/BackwardArrows/ToLevel6"]
+script = ExtResource( 33 )
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="LevelSelectView/PortalChain/level7/BackwardArrows/ToLevel6"]
+position = Vector2( -104.903, -73.7062 )
+scale = Vector2( 2, 1.5 )
+normal = ExtResource( 6 )
+
+[node name="LevelSelectPlayerPath2D" type="Path2D" parent="LevelSelectView"]
+self_modulate = Color( 1, 1, 1, 1 )
+position = Vector2( 448.572, 593.87 )
+curve = SubResource( 12 )
+script = ExtResource( 27 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="LevelSelectView/LevelSelectPlayerPath2D"]
+position = Vector2( -4.21936, 47.5068 )
+rotation = -0.330126
+loop = false
+
+[node name="LevelSelectPlayer" type="KinematicBody2D" parent="LevelSelectView/LevelSelectPlayerPath2D/PathFollow2D"]
+position = Vector2( 0, -30 )
 z_index = 10
 collision_layer = 2048
 collision_mask = 0
 script = ExtResource( 9 )
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="LevelSelectPlayer"]
+[node name="AnimatedSprite" type="AnimatedSprite" parent="LevelSelectView/LevelSelectPlayerPath2D/PathFollow2D/LevelSelectPlayer"]
 scale = Vector2( 0.75, 0.75 )
-frames = SubResource( 4 )
+frames = SubResource( 13 )
 frame = 1
 playing = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelSelectPlayer"]
-shape = SubResource( 5 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LevelSelectView/LevelSelectPlayerPath2D/PathFollow2D/LevelSelectPlayer"]
+shape = SubResource( 14 )
+
+[node name="Bg" type="Sprite" parent="LevelSelectView"]
+position = Vector2( -227.049, -128.525 )
+z_index = -10
+texture = ExtResource( 1 )
+
+[node name="ToggleSpaceViewCollider" type="KinematicBody2D" parent="LevelSelectView"]
+collision_layer = 2048
+collision_mask = 2048
+script = ExtResource( 31 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="LevelSelectView/ToggleSpaceViewCollider"]
+polygon = PoolVector2Array( 1436.12, 123.07, 1203.46, -118.162, 785.219, -83.0003, 848.678, 452.809 )

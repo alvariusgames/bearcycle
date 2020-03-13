@@ -1,0 +1,2033 @@
+[gd_scene load_steps=47 format=2]
+
+[ext_resource path="res://scenes/levels/level1.cs" type="Script" id=1]
+[ext_resource path="res://media/levels/level1_forest/cloud1.png" type="Texture" id=2]
+[ext_resource path="res://media/levels/level1_forest/sky1.png" type="Texture" id=3]
+[ext_resource path="res://media/tilesets/sonic_like_ground/platform.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/Level/Platforms.cs" type="Script" id=5]
+[ext_resource path="res://src/Level/CollisionPolygonParentOfBorderedPolygon.cs" type="Script" id=6]
+[ext_resource path="res://scenes/player/player.tscn" type="PackedScene" id=7]
+[ext_resource path="res://media/tilesets/app_forest_1/tiles/tile_middle.png" type="Texture" id=8]
+[ext_resource path="res://media/tilesets/app_forest_1/border_tiles.tres" type="TileSet" id=9]
+[ext_resource path="res://media/tilesets/app_forest_1/four_sided_brown_sides.tres" type="TileSet" id=12]
+[ext_resource path="res://scenes/items/stage/OneUp.tscn" type="PackedScene" id=13]
+[ext_resource path="res://src/Level/ZoneCollider.cs" type="Script" id=14]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_2.png" type="Texture" id=15]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_3.png" type="Texture" id=16]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_bush.png" type="Texture" id=17]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_full_1.png" type="Texture" id=18]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_single_1.png" type="Texture" id=19]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_single_2.png" type="Texture" id=20]
+[ext_resource path="res://media/levels/level1_forest/trees/tree1.png" type="Texture" id=21]
+[ext_resource path="res://media/levels/level1_forest/trees/tree2.png" type="Texture" id=22]
+[ext_resource path="res://scenes/levels_utils/forest/ForestLoop.tscn" type="PackedScene" id=23]
+[ext_resource path="res://scenes/items/food/forest/BerryBush.tscn" type="PackedScene" id=24]
+[ext_resource path="res://scenes/items/SpaceRock.tscn" type="PackedScene" id=25]
+[ext_resource path="res://scenes/items/stage/SpeedBoost1.tscn" type="PackedScene" id=26]
+[ext_resource path="res://scenes/items/stage/EndLevel.tscn" type="PackedScene" id=27]
+[ext_resource path="res://src/Items/SafetyCheckPoint.cs" type="Script" id=29]
+[ext_resource path="res://scenes/items/food/forest/Smore.tscn" type="PackedScene" id=30]
+[ext_resource path="res://scenes/items/stage/StageSpring.tscn" type="PackedScene" id=31]
+[ext_resource path="res://src/NPC/FlyingEnemy.cs" type="Script" id=40]
+[ext_resource path="res://scenes/npc/bird1/bird1_cutout.tscn" type="PackedScene" id=41]
+[ext_resource path="res://scenes/npc/deer1/deer1_cutout.tscn" type="PackedScene" id=43]
+[ext_resource path="res://src/NPC/LeapingEnemy.cs" type="Script" id=52]
+[ext_resource path="res://media/levels/level1_forest/misc/tent.png" type="Texture" id=53]
+[ext_resource path="res://media/levels/level1_forest/misc/out_fire.png" type="Texture" id=54]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 92.7649, 63.1558 )
+
+[sub_resource type="RectangleShape2D" id=12]
+extents = Vector2( 82.4023, 278.323 )
+
+[sub_resource type="Curve2D" id=2]
+_data = {
+"points": PoolVector2Array( -179.292, 76.1596, 0, 0, 3392.64, 749.625, -163.744, -181.747, 163.744, 181.747, 3755.16, 832.703, -165.397, -5.91453, 165.397, 5.91453, 4031.99, 487.734, 0, 0, 0, 0, 4084.02, 699.267, -631.894, 319.723, 631.894, -319.723, 4516, 702.341, 266.856, 239.163, -266.856, -239.163, 4286.92, 369.815, 844.853, -374.016, -844.853, 374.016, 3565, 245.669, 0, 0, 0, 0, 3392.64, 749.625 )
+}
+
+[sub_resource type="CapsuleShape2D" id=3]
+radius = 39.6995
+height = 38.772
+
+[sub_resource type="Curve2D" id=11]
+_data = {
+"points": PoolVector2Array( -47.7008, 159.003, 47.7008, -159.003, 960.154, 325.892, -7.95013, 182.853, 7.95013, -182.853, 1687.16, 353.854, -37.1006, -188.153, 37.1006, 188.153, 2807.68, 420.192, 111.302, 190.803, -111.302, -190.803, 2064.04, 380.646, -7.95013, -235.854, 7.95013, 235.854, 2322.44, 421.754, 170.308, 17.618, -170.308, -17.618, 1588.49, 229.32, 89.6023, -239.172, -89.6023, 239.172, 1262.56, 467.163, -106.002, 148.402, 106.002, -148.402, 960.154, 325.892 )
+}
+
+[sub_resource type="Curve2D" id=4]
+_data = {
+"points": PoolVector2Array( -631.739, -206.77, 631.739, 206.77, 4096.78, 196.173, 77.694, 307.778, -77.694, -307.778, 3665.37, 305.498, 400.561, -21.8961, -400.561, 21.8961, 3031.03, 436.617, -217.359, -216.747, 217.359, 216.747, 3034.51, 237.674, -276.93, -10.0702, 276.93, 10.0702, 3366.66, 638.68, -250.372, -156.981, 250.372, 156.981, 4096.78, 196.173 )
+}
+
+[sub_resource type="Curve2D" id=5]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 4.17574, 73.5272, -116.913, 128.604, 116.913, -128.604, 278.039, 4.50867, -237.166, -53.4458, 237.166, 53.4458, 701.13, -153.333, -168.688, -115.242, 168.688, 115.242, 978.273, 67.5154, -73.4879, 262.218, 73.4879, -262.218, 1522.56, -131.621 )
+}
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 72.767, 66.7323 )
+
+[sub_resource type="Curve2D" id=7]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 92.4173, 76.973, 0, 0, 0, 0, 633.247, 113.523, 0, 0, 0, 0, 1093.11, 116.028 )
+}
+
+[sub_resource type="Curve2D" id=8]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 11.2109, -5.75513, 0, 0, 0, 0, 1599.27, -3.36353 )
+}
+
+[sub_resource type="Curve2D" id=9]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -343.055, -143.508, -571.852, 25.1057, 571.852, -25.1057, 663.961, 54.5479, 0, 0, 0, 0, 1461.52, -34.1265 )
+}
+
+[sub_resource type="Curve2D" id=10]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -382.637, -130.521, -129.544, 11.1038, 129.544, -11.1038, -107.523, -58.8281, -120.291, 22.2075, 120.291, -22.2075, 129.125, -237.574, 0, 0, 0, 0, 647.738, -353.381 )
+}
+
+[node name="level1" type="Node2D"]
+position = Vector2( -115, -1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+offset = Vector2( 0, 400 )
+transform = Transform2D( 1, 0, 0, 1, 0, 400 )
+scroll_ignore_camera_zoom = true
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2( 0.15, 0 )
+motion_offset = Vector2( 0, -540 )
+
+[node name="Sprite2" type="Sprite" parent="ParallaxBackground/ParallaxLayer2"]
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 120000, 1500 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2( 0.125, 0 )
+motion_offset = Vector2( 0, -540 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 120000, 1500 )
+
+[node name="Player" parent="." instance=ExtResource( 7 )]
+position = Vector2( 2881.03, 915.266 )
+
+[node name="Platforms" type="Node2D" parent="."]
+
+[node name="ForestLoop" parent="Platforms" instance=ExtResource( 23 )]
+
+[node name="ForestLoop2" parent="Platforms" instance=ExtResource( 23 )]
+position = Vector2( 52162, 8663.42 )
+
+[node name="ForestLoop3" parent="Platforms" instance=ExtResource( 23 )]
+position = Vector2( 54360.5, 8739.53 )
+
+[node name="PlatformZoneOne" type="StaticBody2D" parent="Platforms"]
+position = Vector2( -115, 0 )
+scale = Vector2( 2, 2 )
+z_index = -2
+collision_layer = 4
+collision_mask = 35
+script = ExtResource( 5 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Platforms/PlatformZoneOne"]
+position = Vector2( -1531.44, -130.196 )
+scale = Vector2( 0.5, 0.5 )
+script = ExtResource( 6 )
+
+[node name="BorderedPolygon" parent="Platforms/PlatformZoneOne/CollisionPolygon2D" instance=ExtResource( 4 )]
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 5669.89, 1220.77, 5850.09, 1183.67, 6003.79, 1263.17, 6274.1, 1244.62, 6549.7, 1186.32, 6712.09, 1182.7, 6883.48, 1181.95, 7119.46, 1093.57, 7350.01, 1120.07, 7577.91, 1069.72, 7829.48, 973.689, 7993.25, 869.832, 8065.15, 753.992, 8192.98, 650.135, 8268.87, 630.163, 8372.73, 702.064, 8424.66, 817.904, 8476.59, 1089.53, 8528.52, 1217.35, 8676.31, 1273.28, 8852.07, 1273.28, 8939.95, 1257.3, 9027.96, 1198.18, 9108.13, 1164.77, 9255.51, 1177.41, 9371.95, 1074.65, 9471.21, 1057.57, 9539.12, 1145.45, 9595.04, 1213.36, 9662.95, 1285.26, 9742.84, 1313.22, 9886.64, 1317.21, 10072.1, 1316.35, 12432.9, 1300.88, 12560.1, 1319.28, 13033.6, 1290.01, 13184.3, 1218.26, 13351.7, 1091.5, 13566.5, 1030.82, 13720.1, 1141.59, 13876.2, 1325.37, 14120.4, 1330.4, 14258.9, 1264.95, 14385.6, 1148.2, 14440.4, 1048.88, 14495.2, 935.86, 14553.4, 894.763, 14625.4, 887.913, 14731.5, 939.285, 14827.4, 1042.03, 14909.6, 1189.29, 15036.3, 1384.51, 15262.2, 1611.06, 15415.1, 1705.41, 15626.6, 1757.47, 15805.6, 1760.72, 15922.7, 1715.17, 16039.8, 1624.07, 16114.6, 1500.44, 16156.9, 1367.04, 16179.7, 1230.4, 16235, 1093.75, 16348.9, 1041.69, 16469.3, 1087.24, 16592.4, 1165.66, 16786.3, 1216.01, 17040.5, 1231.11, 17184, 1208.46, 17365.3, 1195.87, 17493.7, 1238.67, 17682.1, 1197.22, 17836.2, 1214.35, 17956.1, 1279.42, 18219.8, 1354.76, 18380.7, 1327.36, 18562.2, 1279.42, 18723.2, 1258.87, 19089.8, 1279.74, 19612.2, 1413.57, 20013.6, 1465.37, 20291.4, 1441.38, 20451.8, 1430.84, 20554.1, 1452.42, 20662, 1510.7, 20744, 1631.57, 20731.1, 1774.73, 20678.4, 1913.75, 20601.1, 2005.91, 20476.1, 2078.27, 20394.5, 2101.53, 20307.2, 2170.7, 20284.3, 2278.38, 20205.4, 2373.6, 20069.9, 2412.68, 19937.9, 2365.92, 19777.6, 2355.9, 19645.2, 2428.85, 19550, 2547.44, 19515.4, 2683.25, 19575, 2814.67, 19678.6, 2918.22, 19833.2, 2949.52, 19990.9, 2919.89, 20126.8, 2837.91, 20191.9, 2709.31, 20302.2, 2650.85, 20440.8, 2665.88, 20512.3, 2739.8, 20597.6, 2931.74, 20661.9, 3064.71, 20769.4, 3167.76, 20880.6, 3252.98, 20920.3, 3348.34, 20892, 3419.79, 20819.4, 3497.6, 20812.9, 3603.37, 20875.1, 3706.84, 20966.4, 3753.47, 21218.6, 3771.85, 21654.5, 3758.48, 22038.1, 3735.57, 22401.1, 3594.71, 22680.3, 3351.54, 22896.6, 3329.48, 23182.7, 3599.74, 23407, 3717.78, 23886.6, 3719.52, 24055.2, 3695, 24183.9, 3623.35, 24285.7, 3492.24, 24354.2, 3303.88, 24343.5, 3104.02, 24325.4, 2947.26, 24354, 2856.82, 24566.4, 2752.69, 24700.7, 2715.83, 24879.6, 2735.82, 25005.6, 2700.8, 25590.2, 2630.83, 25858, 2633.69, 26038.2, 2710.54, 26242.2, 2662.84, 26443.3, 2579.5, 26745.1, 2449.48, 26963.2, 2282.69, 27034.3, 2221.43, 27103.7, 2209.38, 27161.1, 2226.55, 27200.8, 2300.75, 27283, 2340.5, 27366.6, 2356.03, 27438.4, 2415.49, 27481.7, 2518.05, 27608.9, 2637.31, 27760, 2708.86, 27966.7, 2772.46, 28343.7, 2789.76, 28600.9, 2789.76, 29596.5, 2791.8, 31875.2, 2792.06, 31943.6, 2792.07, 31969.5, 5289.97, 27919.9, 5229.54, 25086.7, 5712.02, 22181, 5985.34, 18386.8, 5717.26, 15912.3, 4211.94, 11355.1, 4026.35, 8420.33, 4191.31, 6471.42, 3980.36, 3080.26, 2970.23, 394.892, 2092.64, 258.757, 1974.65, 359.84, -771.395, 469.718, -864.022, 3082.83, -917.556, 3184.49, -802.807, 3177.1, -662.353, 3177.65, 80.158, 3169.7, 186.16, 3098.63, 257.666, 2975.03, 331.525, 2840.93, 434.191, 2755.01, 600.3, 2749.28, 739.2, 2841.36, 914.145, 2985.98, 992.29, 3262.41, 1023.78, 3491.43, 1044.54, 4178.99, 1041.57, 4380.41, 1010.6, 4449.17, 880.458, 4481.09, 800.656, 4557.2, 745.409, 4613.68, 675.429, 4753.64, 609.133, 4830.99, 627.548, 4950.07, 669.291, 5043.38, 738.043, 5200.53, 836.26, 5292.61, 1009.37, 5416.79, 1130.75, 5581.09, 1207.6 )
+uv = PoolVector2Array( 5669.89, 1220.77, 5850.09, 1183.67, 6003.79, 1263.17, 6274.1, 1244.62, 6549.7, 1186.32, 6712.09, 1182.7, 6883.48, 1181.95, 7119.46, 1093.57, 7350.01, 1120.07, 7577.91, 1069.72, 7829.48, 973.689, 7993.25, 869.832, 8065.15, 753.992, 8192.98, 650.135, 8268.87, 630.163, 8336.78, 646.141, 8372.73, 702.064, 8424.66, 817.904, 8476.59, 1089.53, 8528.52, 1217.35, 8676.31, 1273.28, 8852.07, 1273.28, 8939.95, 1257.3, 9027.96, 1198.18, 9066.38, 1179.8, 9108.13, 1164.77, 9154.9, 1169.78, 9207.58, 1177.41, 9255.51, 1177.41, 9315.43, 1137.46, 9419.29, 1069.56, 9471.21, 1057.57, 9539.12, 1145.45, 9595.04, 1213.36, 9662.95, 1285.26, 9742.84, 1313.22, 9886.64, 1317.21, 10072.1, 1316.35, 12560.1, 1319.28, 13033.6, 1290.01, 13184.3, 1218.26, 13351.7, 1091.5, 13566.5, 1030.82, 13720.1, 1141.59, 13876.2, 1325.37, 14120.4, 1330.4, 14258.9, 1264.95, 14385.6, 1148.2, 14440.4, 1048.88, 14495.2, 935.86, 14553.4, 894.763, 14625.4, 887.913, 14666.5, 894.763, 14731.5, 939.285, 14827.4, 1042.03, 14909.6, 1189.29, 15036.3, 1384.51, 15262.2, 1611.06, 15415.1, 1705.41, 15626.6, 1757.47, 15805.6, 1760.72, 15922.7, 1715.17, 16039.8, 1624.07, 16114.6, 1500.44, 16156.9, 1367.04, 16179.7, 1230.4, 16235, 1093.75, 16277.3, 1064.47, 16348.9, 1041.69, 16410.7, 1057.96, 16469.3, 1087.24, 16592.4, 1165.66, 16786.3, 1216.01, 17040.5, 1231.11, 17184, 1208.46, 17365.3, 1195.87, 17493.7, 1238.67, 17682.1, 1197.22, 17836.2, 1214.35, 17956.1, 1279.42, 18219.8, 1354.76, 18380.7, 1327.36, 18562.2, 1279.42, 18723.2, 1258.87, 19089.8, 1279.74, 19612.2, 1413.57, 20013.6, 1465.37, 20291.4, 1441.38, 20451.8, 1430.84, 20554.1, 1452.42, 20662, 1510.7, 20744, 1631.57, 20774.2, 1832.31, 20730.9, 2097.68, 20634.6, 2254.22, 20508.1, 2477, 20519.1, 2662.28, 20571.9, 2867.82, 20742.3, 3099.79, 20933.1, 3264.22, 20941.3, 3354.3, 20902.9, 3434.47, 20809.4, 3531.34, 20839.4, 3651.59, 20966.4, 3753.47, 21218.6, 3771.85, 21654.5, 3758.48, 22038.1, 3735.57, 22401.1, 3594.71, 22514.9, 3475.81, 22633.8, 3382.76, 22764.3, 3353.04, 22871.6, 3368.95, 23017.7, 3429.34, 23182.7, 3599.74, 23407, 3717.78, 23886.6, 3719.52, 24055.2, 3695, 24183.9, 3623.35, 24285.7, 3492.24, 24354.2, 3303.88, 24394.7, 3025.05, 24351.3, 2664.3, 24384.7, 2599.16, 24441.5, 2569.1, 24505, 2575.78, 24586.8, 2629.22, 24741.9, 2724.77, 25005.6, 2700.8, 25590.2, 2630.83, 25638, 2537.56, 25638.2, 1714.17, 25550.7, 1489.82, 25371.5, 1366.79, 25388.8, 1293.4, 25473, 1248.07, 26060.1, 1239.44, 26196, 1433.7, 26247.8, 1718.26, 26639.7, 2987.67, 25931.5, 3849.58, 24780.7, 4692.85, 22458.8, 4514.75, 19506, 4035.62, 18414, 3489.63, 17678.6, 3043.92, 5059.91, 2468.06, 1999.91, 2243.33, 2314.82, 296.857, 2508.61, 165.433, 2602.72, 146.123, 2904.19, 161.196, 3086.57, 174.763, 3110.69, 210.939, 3098.63, 257.666, 2975.03, 331.525, 2840.93, 434.191, 2755.01, 600.3, 2749.28, 739.2, 2841.36, 914.145, 2985.98, 992.29, 3262.41, 1023.78, 3491.43, 1044.54, 4178.99, 1041.57, 4333.65, 1050.17, 4428.16, 1064.49, 4511.21, 1067.35, 4562.65, 1042.25, 4582.7, 962.058, 4569.81, 890.46, 4544.04, 830.317, 4508.24, 771.606, 4539.08, 739.209, 4591.51, 674.62, 4659.87, 620.958, 4710.55, 600.102, 4763.52, 590.819, 4822.88, 611.391, 4906.88, 636.391, 4969.34, 635.419, 4996.9, 658.114, 4977.49, 724.951, 5004.46, 796.446, 5050.6, 854.009, 5116.48, 858.521, 5176.95, 844.984, 5213.08, 822.089, 5313.43, 1003.55, 5416.79, 1130.75, 5581.09, 1207.6 )
+border_size = -64
+border_overlap = -16
+border_textures = ExtResource( 9 )
+border_clockwise_shift = 3
+border_texture_scale = Vector2( 0.5, 0.5 )
+border_texture_offset = Vector2( 80, -1 )
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Platforms/PlatformZoneOne"]
+scale = Vector2( 0.5, 0.5 )
+script = ExtResource( 6 )
+
+[node name="BorderedPolygon" parent="Platforms/PlatformZoneOne/CollisionPolygon2D2" instance=ExtResource( 4 )]
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 18906, 2435.43, 18713.4, 2215.57, 18608.9, 2085.79, 18511.5, 1934.38, 18424.1, 1748.62, 18335.4, 1652.34, 18201, 1623.12, 18084.2, 1696.64, 18035.5, 1860.28, 18014.4, 2024.07, 18028.3, 2286.28, 18113.4, 2456.28, 18264.1, 2658.34, 18500.2, 2821.23, 18736.9, 2924.07, 18992.9, 2969.51, 19227.2, 2955.16, 19322.9, 2897.77, 19321.1, 2830.34, 19186.4, 2720.71 )
+border_size = -64
+border_overlap = -18
+border_color = Color( 0.752941, 0.376471, 0, 1 )
+border_textures = ExtResource( 9 )
+border_clockwise_shift = 3
+border_texture_scale = Vector2( 0.5, 0.5 )
+border_texture_offset = Vector2( 0, 0 )
+
+[node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="Platforms/PlatformZoneOne"]
+position = Vector2( -1531.44, -130.196 )
+scale = Vector2( 0.5, 0.5 )
+script = ExtResource( 6 )
+
+[node name="BorderedPolygon" parent="Platforms/PlatformZoneOne/CollisionPolygon2D4" instance=ExtResource( 4 )]
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 31929.6, 2793.98, 31962.8, 2794.18, 32186.8, 2791.55, 32301.9, 2743.37, 32381.8, 2643.89, 32412, 2533.85, 32410.5, 2420.8, 32381.8, 2306.24, 32364.3, 2197.11, 32388.1, 2112.08, 32444.7, 2067.29, 32551.9, 2038.94, 32651.4, 2062.2, 32714.8, 2137.16, 32843.2, 2508.91, 32923.1, 2651.12, 33063, 2750.05, 33276.6, 2781.45, 33413.8, 2883.81, 33464.4, 3026.02, 33534.6, 3095.73, 33639.5, 3134.32, 33819.7, 3158.89, 33967.2, 3093.37, 34147.4, 3109.75, 34311.2, 3232.61, 34442.2, 3380.05, 34597.9, 3519.29, 34860, 3658.54, 35015.6, 3658.54, 35220.4, 3781.4, 35359.6, 3871.51, 35531.6, 3846.93, 35654.5, 3977.99, 35818.3, 4059.9, 36064, 4018.94, 36334.3, 3920.65, 36768.5, 3576.63, 37284.5, 3036.03, 37776, 2331.61, 37880.6, 2346.44, 37996.4, 2334.46, 38076.3, 2426.33, 38120.2, 2526.2, 38212.1, 2586.12, 38312, 2554.16, 38391.9, 2610.08, 38491.7, 2598.1, 38635.5, 2689.97, 38767.4, 2865.73, 39015.9, 3222.57, 39452, 3587.47, 39566.7, 3616.13, 39681.3, 3749.88, 39849, 3942.52, 39917.3, 3988.07, 40001.9, 4017.35, 40050.7, 4101.94, 40119.1, 4157.25, 40362, 4394.5, 40468.2, 4510.94, 40516.1, 4596.56, 40831, 4832.02, 40941.6, 4885.13, 41074.4, 4947.1, 41167.4, 5057.75, 41273.6, 5234.79, 41805, 5770.16, 41841, 5838.07, 41996.7, 5993.85, 42032.7, 6069.75, 42096.6, 6173.61, 42196.5, 6233.53, 42292.3, 6261.49, 42360.2, 6357.36, 43142.3, 7093.72, 43200.6, 7131.39, 43306.7, 7288.93, 43398.4, 7348.69, 43507.1, 7392.16, 43599.5, 7451.94, 43653.8, 7544.31, 43681, 7691.03, 43719.6, 7780.52, 44175.3, 8230.62, 44219.6, 8253.28, 44333.7, 8307.62, 44551.8, 8484.49, 44775.3, 8664.74, 44991.7, 8758.47, 45143.1, 8772.89, 45323.3, 8747.66, 45692.4, 8671.3, 45931.8, 8574.81, 46081.4, 8495.72, 46310.6, 8372.2, 46495, 8239.17, 46680.6, 8049.2, 46889.1, 7837.79, 47206.1, 7426.77, 47355.9, 7315.12, 47469.7, 7273.24, 47617.3, 7282.82, 47752.3, 7241.71, 47837.9, 7157.74, 47952, 7141.87, 48012.6, 7209.21, 48080.2, 7376.72, 48221.7, 7533.68, 48429.5, 7670.21, 48671.7, 7742.84, 49189.8, 7838.45, 49792.7, 7806.14, 50213.6, 7734.57, 50609.9, 7553.89, 50925.9, 7420.46, 50996.5, 7440.13, 51040.8, 7516.05, 51043.5, 7961.26, 50965.3, 8088.82, 50794.4, 8130.86, 50648.6, 8242.16, 50606.2, 8374.66, 50637.3, 8475.71, 50724.7, 8576.42, 50875.8, 8621.47, 51016.2, 8581.71, 51172.6, 8475.71, 51307.8, 8274.31, 51580.7, 7797.3, 51665.5, 7744.3, 51768.1, 7767.68, 51937.9, 7939.88, 52351.4, 8323.63, 52549.4, 8447.98, 52750.8, 8491.82, 53004.9, 8434.96, 53209, 8309.57, 53374.9, 8189.34, 53470.4, 8050.96, 53622, 7947.34, 53743.6, 7882.66, 53879.4, 7867.23, 54032.2, 7910.51, 54157.8, 7869.38, 54266.5, 7802.21, 54399.5, 7772.25, 54557, 7770.05, 54641.3, 7804.63, 54732.2, 7806.93, 54800.8, 7853.83, 54840.1, 7905.71, 54898.4, 7948.18, 54990.6, 7963.11, 55096.9, 7964.45, 55198.9, 7952.3, 55310.2, 7867.14, 55403.9, 7775.25, 55523.6, 7681.53, 55580.9, 7602.87, 55599.2, 7499.86, 55650.8, 7435.15, 55734.7, 7389.9, 55795.2, 7323.33, 55873.7, 7134.55, 55972.5, 6986.7, 56028.3, 6970.38, 56137.1, 6970, 56239.1, 7022.5, 56377.9, 7006.13, 56456.8, 6969.88, 56514.2, 6884.92, 56652.7, 6836.75, 56753.1, 6821.5, 56863.5, 6776.54, 56973.3, 6737.32, 57114.6, 6717.24, 57225.4, 6642.35, 57287.8, 6568.05, 57372.1, 6495.57, 57480.7, 6442.68, 57581.1, 6341.81, 57659.8, 6185.91, 57903.9, 6025.11, 58152.6, 5944.56, 58378.7, 5950.75, 58650.1, 6013.55, 58836.5, 6115.52, 58984, 6209.65, 59140.3, 6371.3, 59331.1, 6633.66, 59427.2, 6738.61, 59513, 6841.57, 59701.8, 7169.45, 59768.7, 7219.67, 59821.7, 7322.88, 59905.4, 7400.98, 60170.6, 7803.63, 60332.2, 8039.79, 60351.7, 8109.52, 60362.9, 8204.37, 60418.7, 8265.74, 60505.1, 8329.9, 60985.3, 8905.44, 61023.8, 9001.64, 61070.5, 9078.68, 61309.4, 9356.79, 61449.2, 9460.41, 61550.2, 9573.42, 61804.7, 9743.05, 62031.2, 9836.62, 62189.2, 9900.86, 62398.1, 9937.1, 62629.5, 9974.8, 62846.3, 10002.1, 63181.9, 10007.7, 63550.3, 10012.2, 64847.5, 10032.3, 66710.8, 10021.3, 66828.5, 9987.21, 66919.4, 9928.13, 66994.4, 9857.7, 67073.9, 9750.91, 67136.4, 9714.15, 67217.2, 9722.97, 67290.6, 9819.06, 67369.4, 9887.55, 67475.4, 9952.17, 67603.3, 9987.06, 67924.4, 9998.69, 70447.1, 10003.4, 71313, 9994.47, 71458.2, 9972.83, 71544.8, 9929.56, 71603.5, 9839.93, 71643.7, 9759.56, 71625.8, 9665.78, 71587.2, 9604.43, 71598.6, 9563.54, 71646.3, 9554.45, 71671.6, 9525.88, 71668.6, 9406.79, 71633.8, 8396.39, 71682.9, 8319.44, 72782.6, 8303.74, 72843.9, 8365.02, 73019.8, 13930, 72860.6, 14018.4, 63209.4, 13545.5, 58429.1, 15473.7, 48027.3, 18464.8, 40223.8, 17931.5, 37371.8, 10058.2, 35874.8, 7308.78, 33971.4, 5381.09, 32059.3, 5296.99, 31970.2, 5293.96, 31930, 2908.57 )
+border_size = -64
+border_overlap = -16
+border_textures = ExtResource( 9 )
+border_clockwise_shift = 3
+border_texture_scale = Vector2( 0.5, 0.5 )
+border_texture_offset = Vector2( 80, -1 )
+
+[node name="PlatformZoneTwo" type="StaticBody2D" parent="Platforms"]
+collision_layer = 512
+collision_mask = 0
+script = ExtResource( 5 )
+
+[node name="CollisionPolygdon2D" type="CollisionPolygon2D" parent="Platforms/PlatformZoneTwo"]
+script = ExtResource( 6 )
+
+[node name="BorderedPolygon2D" parent="Platforms/PlatformZoneTwo/CollisionPolygdon2D" instance=ExtResource( 4 )]
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 20321.8, 2431.17, 21073.6, 2282.41, 21093.2, 2368.4, 20340.3, 2511.14 )
+border_size = -64
+border_overlap = -16
+border_textures = ExtResource( 12 )
+border_clockwise_shift = 3
+border_texture_scale = Vector2( 0.5, 0.5 )
+border_texture_offset = Vector2( 0, 0 )
+smooth_level = 0.0
+
+[node name="Colliders" type="Node2D" parent="Platforms"]
+
+[node name="Group1" type="Node2D" parent="Platforms/Colliders"]
+
+[node name="ZoneCollider" type="KinematicBody2D" parent="Platforms/Colliders/Group1"]
+position = Vector2( -12.2617, 2.74097 )
+collision_layer = 0
+collision_mask = 256
+script = ExtResource( 14 )
+priority = 200
+ZoneTwo = false
+
+[node name="200" type="CollisionPolygon2D" parent="Platforms/Colliders/Group1/ZoneCollider"]
+position = Vector2( 34.7266, 164.212 )
+polygon = PoolVector2Array( 20220.4, 2165.81, 20235.1, 2265.65, 20270.3, 2374.29, 20329, 2444.76, 20542.7, 2472.09, 20707, 2425.36, 21049.1, 2369.59, 21129.4, 2319.73, 21161.1, 2257.85, 21177, 2176.93, 21178.6, 2086.49, 21153.2, 2002.4, 21197.6, 1983.36, 21213.5, 2064.28, 21230.9, 2169, 21207.1, 2249.92, 21189.7, 2327.66, 21097.4, 2405.76, 20704, 2467.56, 20538.1, 2508.26, 20358.4, 2532.85, 20202.8, 2482.93, 20138.2, 2374.29, 20135.2, 2130.58, 20217.5, 2098.28 )
+
+[node name="ZoneCollider2" type="KinematicBody2D" parent="Platforms/Colliders/Group1"]
+position = Vector2( 48.6777, -61.7769 )
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 14 )
+
+[node name="100" type="CollisionPolygon2D" parent="Platforms/Colliders/Group1/ZoneCollider2"]
+position = Vector2( 26.7149, 121.176 )
+polygon = PoolVector2Array( 20055.9, 2152.98, 20000.1, 2335.03, 20014.8, 2511.2, 20064.7, 2640.4, 20229.1, 2705, 20565.8, 2719.32, 20796.8, 2661.04, 21032.1, 2596.29, 21206.9, 2505.63, 21263.9, 2372.92, 21291.6, 2262.15, 21284.1, 2146.35, 21261.4, 2055.72, 21162.1, 1986.19, 21059, 1978.26, 20896.7, 1996.3, 20624.3, 2062.35, 20273.6, 2140.1, 20080, 2143.27, 19986.1, 2101.09, 20218.1, 2075.04, 20679.8, 1975.08, 20982.9, 1911.62, 21167.5, 1871.5, 21235.9, 1930.75, 21344.7, 2040.64, 21390.9, 2199.79, 21346.5, 2423.71, 21279.9, 2506.99, 21181.8, 2593.96, 21056, 2651.33, 20848.7, 2719.8, 20526.7, 2773.47, 20352.8, 2771.62, 20020.4, 2786.69, 19965.9, 2641.28, 19913.6, 2461.79, 19906.8, 2305.02, 19976.6, 2144.17 )
+
+[node name="Garnishes" type="Node2D" parent="Platforms"]
+
+[node name="Flowers" type="Node2D" parent="Platforms/Garnishes"]
+
+[node name="FlowerA" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 905.559, 759.625 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerB" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 5609.42, 994.908 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 16 )
+
+[node name="FlowerA2" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 28370.8, 2508.95 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerA3" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 25108.1, 2506.38 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerA16" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 32621.5, 3765.98 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerB2" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 32806.1, 3755.49 )
+rotation = -0.147873
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 16 )
+
+[node name="FlowerA5" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 40283.5, 7094.91 )
+rotation = 0.30331
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerB6" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 44344.9, 6997.43 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 16 )
+
+[node name="FlowerA7" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 46120.5, 7551.52 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerA15" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 46758.7, 7502.29 )
+rotation = -0.118887
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerA8" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 49594.5, 8210.05 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerA9" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 55034.2, 5671.84 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerA17" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 56304.5, 6528.62 )
+rotation = 0.968073
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerB12" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 60124.3, 8996.42 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 16 )
+
+[node name="FlowerA13" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 64309, 9668.48 )
+rotation = 0.42367
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerB15" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 61335.6, 9745.13 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 16 )
+
+[node name="FlowerA14" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 67080.2, 9723.74 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerA18" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 61245.4, 9743.84 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerA19" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 66870.4, 9725.16 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerB14" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 67161.2, 9721.23 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 16 )
+
+[node name="FlowerC6" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 17601.4, 2887.21 )
+rotation = 0.669748
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC7" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 19146.7, 2758.27 )
+rotation = 0.664802
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC9" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 19146.7, 2758.27 )
+rotation = 0.664802
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC8" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 21986.4, 2401.94 )
+rotation = -0.0817841
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC11" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 23514.3, 2195.58 )
+rotation = -0.359774
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC4" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 13921, 939.47 )
+rotation = -0.0909598
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC5" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 13744.9, 941.083 )
+rotation = 0.0475715
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC10" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 28460, 2514.29 )
+rotation = 0.0475715
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC23" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 28637.2, 2516.56 )
+rotation = 0.0475715
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC46" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 26838.7, 2511.09 )
+rotation = 0.00212388
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC24" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 32710.7, 3771.31 )
+rotation = 0.0475715
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC12" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 35923, 3012.61 )
+rotation = 0.679736
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC27" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 37434, 4384.36 )
+rotation = 0.679736
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC28" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 37579.6, 4496.59 )
+rotation = 0.660792
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC30" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 39014.2, 5956.98 )
+rotation = 0.24228
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC29" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 37704.2, 4573.13 )
+rotation = 0.439159
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC25" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 36061.1, 3124.13 )
+rotation = 0.67951
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC26" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 36205.8, 3241.27 )
+rotation = 0.670595
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC15" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 45993, 7549.69 )
+rotation = 0.0475715
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC31" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 46462.4, 7535.63 )
+rotation = -0.0672816
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC17" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 53100.1, 6732.15 )
+rotation = 0.0475715
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC32" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 50811.7, 7619.57 )
+rotation = 0.0475715
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC33" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 50966.7, 7593.72 )
+rotation = -0.326119
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC34" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 51476.9, 7524.35 )
+rotation = 0.127366
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC18" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 56111.7, 6286.85 )
+rotation = 0.890399
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC35" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 56225.4, 6420.9 )
+rotation = 0.890399
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC36" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 56371.4, 6620.84 )
+rotation = 0.975045
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC39" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 57477.1, 8215.34 )
+rotation = 0.890399
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC38" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 57590.7, 8349.4 )
+rotation = 0.890399
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC20" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 58759.7, 9516.88 )
+rotation = 0.374022
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC45" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 59770.2, 9722.96 )
+rotation = -0.0154665
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC41" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 58194.8, 9121.43 )
+rotation = 0.532779
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC37" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 56925.7, 7404.34 )
+rotation = 0.981828
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC40" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 57022.1, 7547.88 )
+rotation = 0.981828
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC21" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 64194.7, 9598.47 )
+rotation = 0.649881
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC22" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 67499.2, 9718.88 )
+rotation = -0.00149596
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC44" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 68073.5, 9714.23 )
+rotation = -0.00149596
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC42" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 67667.5, 9721.4 )
+rotation = -0.00149596
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC43" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 67847.7, 9718.25 )
+rotation = -0.0404444
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerD" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 3566.86, 905.15 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD5" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 3566.86, 905.15 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD6" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 15558.2, 978.814 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD7" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 18358.5, 3476.4 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD8" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 20658.5, 3438.56 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD9" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 22132.2, 2385.06 )
+rotation = -0.166289
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD14" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 23402.4, 2240.27 )
+rotation = -0.433888
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD2" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 7849.54, 1033.31 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD3" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 7690.16, 1037.11 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD10" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 30570.4, 2873.75 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD18" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 24113.4, 2057.79 )
+rotation = 0.339194
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD12" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 26981.2, 2512.79 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD11" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 34123, 2723.45 )
+rotation = -0.801557
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD13" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 41083.3, 7995.76 )
+rotation = 0.313628
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD15" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 46194.7, 7551.86 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD16" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 49450.3, 8188.3 )
+rotation = 0.168363
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD17" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 55445.2, 5728.79 )
+rotation = 0.24067
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD19" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 57673.4, 8452.58 )
+rotation = 0.882956
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD21" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 66797, 9726.19 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD23" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 67990.6, 9714.09 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerE" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 1701.64, 372.231 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerE7" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 11436.1, 610.655 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerE2" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 8427.57, 330.306 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerE3" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 18089.5, 1622.09 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerE4" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 17838.8, 3467.29 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerE5" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 20959.6, 2288.71 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerE6" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 16896.1, 1181.31 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerF" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 5046.9, 359.691 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 20 )
+
+[node name="FlowerE8" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 33098.3, 3660.34 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerE9" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 29429.2, 1774.9 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerF3" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 34657.8, 2062.22 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 20 )
+
+[node name="FlowerE11" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 42956.1, 8186.14 )
+rotation = -0.424265
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerF6" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 44715.4, 6898.55 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 20 )
+
+[node name="FlowerE13" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 47719.9, 8332.01 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerF9" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 53633, 6502.11 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 20 )
+
+[node name="FlowerF11" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 57208.8, 8004.67 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 20 )
+
+[node name="FlowerE19" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 68430.2, 9282.86 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerE20" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 67509.2, 9723.89 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="Trees" type="Node2D" parent="Platforms/Garnishes"]
+
+[node name="TreeA" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 630.417, 591.364 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA2" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 6762.15, 871.64 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA3" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 3355.24, 757.125 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA4" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 9635.23, 854.118 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA5" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 9518.79, 864.392 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA6" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 14525.5, 752.576 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA7" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 14863.8, 860.467 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA8" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 15275.8, 865.371 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA19" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 27536.3, 2345.16 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA38" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 30472, 2682.22 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA39" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 32205.6, 3416.01 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA42" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 35134.9, 2149.58 )
+z_index = -4
+texture = ExtResource( 21 )
+
+[node name="TreeA18" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 27449.8, 2349.64 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA40" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 26726.2, 2360.8 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA41" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 26972.5, 2343.31 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA49" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 25067.4, 2340.36 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA17" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 28743.9, 2341.52 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA22" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 41020.6, 7823.07 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA21" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 41942.5, 8338.01 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA20" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 44394.7, 6847.12 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA25" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 45855.9, 7377.24 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA24" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 46170.3, 7413.21 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA27" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 48534.4, 7329.72 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA28" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 51177.4, 7344.24 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA23" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 45452.1, 7291.4 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA26" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 38999.4, 5780.98 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA31" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 64803.7, 9557.15 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA30" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 58490.7, 9210.65 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA29" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 61000, 9598.89 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA34" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 65023.7, 9546.9 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA33" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 66026.1, 9582.69 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA45" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 68094.2, 9563.72 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA32" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 67030, 9557.24 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA46" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 67030, 9557.24 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA47" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 66686.8, 9564.25 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA48" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 67378.3, 9571.01 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA37" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 51350.4, 7354.56 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA36" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 53900.9, 6289.66 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA43" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 55163.5, 5525.58 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA44" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 54660, 5659.14 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA35" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 52876.5, 6539.53 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA9" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 15761.3, 821.234 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA10" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 13156.6, 600.084 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA11" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 12362.1, 1296.3 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA12" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 18102.2, 3319.1 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA13" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 18545.9, 3312.76 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA14" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 18691.6, 3306.43 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA15" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 21809.8, 2265.63 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA16" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 10294.7, 650.519 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeB" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 1042.24, 596.095 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB2" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 3237.54, 802.584 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB3" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 705.337, 606.963 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB4" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 7265.84, 870.705 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB5" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 6057.12, 730.408 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB6" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 9581.04, 859.589 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB8" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 13303.3, 663.969 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB9" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 12732.7, 1294.3 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB10" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 14607.4, 783.515 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB11" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 15074.7, 919.362 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB12" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 16351.7, 941.098 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB13" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 16188.7, 908.495 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB19" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 30038.4, 2333.89 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB18" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 28827.5, 2352.36 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB45" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 26821.3, 2355.62 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB54" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 25133.3, 2349.88 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB17" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 30823.9, 2660.53 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB16" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 32313.1, 3417.26 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB46" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 35057.3, 2146.46 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB48" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 36353.2, 3162.33 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB44" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 31795.9, 3240.27 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB47" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 35233.7, 2176.35 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB23" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 41136.9, 7844.2 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB22" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 41860.8, 8322.94 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB21" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 44552.4, 6814.24 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB20" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 45351.7, 7267.87 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB27" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 46639.9, 7373.93 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB26" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 45559.2, 7304.29 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB25" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 47764.3, 6993.82 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB24" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 46796.5, 7337.94 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB31" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 39054.2, 5791.63 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB35" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 63209.6, 9595.32 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB34" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 58200.3, 8968.38 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB33" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 61175.9, 9592.23 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB52" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 59730.8, 9554.2 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB32" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 58888.6, 9403.97 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB39" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 65083.2, 9548.04 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB38" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 66134.5, 9569.48 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB37" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 67965.5, 9553.27 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB36" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 67099.4, 9557.5 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB53" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 65705.6, 9559.85 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB43" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 50638.7, 7427.63 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB42" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 51274.6, 7338.75 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB41" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 54876.1, 5562.67 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB49" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 53520.7, 6405.4 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB40" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 53787.7, 6316.21 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB50" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 55329.9, 5556.79 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB51" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 55632.7, 5654.63 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB14" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 18602.8, 3305.37 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB15" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 22304.2, 2204.81 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB7" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 9892.21, 838.493 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="Misc" type="Node2D" parent="Platforms/Garnishes"]
+
+[node name="OutFire" type="Sprite" parent="Platforms/Garnishes/Misc"]
+position = Vector2( 2578.08, 929.478 )
+texture = ExtResource( 54 )
+
+[node name="Tent" type="Sprite" parent="Platforms/Garnishes/Misc"]
+position = Vector2( 2415.88, 912.591 )
+z_index = -5
+texture = ExtResource( 53 )
+
+[node name="Fillin1" type="Polygon2D" parent="Platforms/Garnishes/Misc"]
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 28692.5, 2578.13, 28719.2, 2577.86, 28735.7, 2562.49, 28780.7, 2561.3, 28793, 2580.87, 28838.5, 2588.75, 28887.7, 5009.08, 28729.7, 5007.67 )
+
+[node name="Foods" type="Node2D" parent="."]
+
+[node name="Bushes" type="Node2D" parent="Foods"]
+z_index = -2
+
+[node name="Blueberries6" parent="Foods/Bushes" instance=ExtResource( 24 )]
+position = Vector2( 4175.72, 774.222 )
+scale = Vector2( 1, 1 )
+z_index = -1
+lootableCalories = 1500
+
+[node name="Blueberries7" parent="Foods/Bushes" instance=ExtResource( 24 )]
+position = Vector2( 10872.2, 983.963 )
+scale = Vector2( 1, 1 )
+z_index = -1
+lootableCalories = 1500
+
+[node name="Blueberries8" parent="Foods/Bushes" instance=ExtResource( 24 )]
+position = Vector2( 19650.4, 3012.82 )
+scale = Vector2( 1, 1 )
+z_index = -1
+lootableCalories = 1500
+
+[node name="Blueberries9" parent="Foods/Bushes" instance=ExtResource( 24 )]
+position = Vector2( 25942.9, 2446.6 )
+scale = Vector2( 1, 1 )
+z_index = -1
+lootableCalories = 1500
+
+[node name="Blueberries10" parent="Foods/Bushes" instance=ExtResource( 24 )]
+position = Vector2( 32952.8, 3643.71 )
+rotation = -0.258616
+scale = Vector2( 1, 1 )
+z_index = -1
+lootableCalories = 1500
+
+[node name="Blueberries11" parent="Foods/Bushes" instance=ExtResource( 24 )]
+position = Vector2( 42871.2, 8154.49 )
+rotation = -0.46907
+scale = Vector2( 1, 1 )
+z_index = -1
+lootableCalories = 1500
+
+[node name="Blueberries12" parent="Foods/Bushes" instance=ExtResource( 24 )]
+position = Vector2( 47319.1, 7252.48 )
+rotation = -0.354448
+scale = Vector2( 1, 1 )
+z_index = -1
+lootableCalories = 1500
+
+[node name="Blueberries13" parent="Foods/Bushes" instance=ExtResource( 24 )]
+position = Vector2( 51769.4, 7609.53 )
+rotation = 0.126807
+scale = Vector2( 1, 1 )
+z_index = -1
+lootableCalories = 1500
+
+[node name="Blueberries14" parent="Foods/Bushes" instance=ExtResource( 24 )]
+position = Vector2( 63986.3, 9375.24 )
+rotation = -0.00551189
+scale = Vector2( 1, 1 )
+z_index = -1
+lootableCalories = 1500
+
+[node name="Smores" type="Node2D" parent="Foods"]
+
+[node name="Smore" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 609.511, -132.502 )
+
+[node name="Smore2" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 3561.1, 785.861 )
+
+[node name="Smore3" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 2180.01, 645.774 )
+
+[node name="Smore4" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 4789.59, 476.562 )
+
+[node name="Smore5" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 5843.49, 374.075 )
+
+[node name="Smore6" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 7948.76, 754.992 )
+
+[node name="Smore7" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 10863.8, 514.724 )
+
+[node name="Smore8" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 13104.7, 279.047 )
+
+[node name="Smore9" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 17794.3, 1197.79 )
+
+[node name="Smore11" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 17646.5, 2839.53 )
+
+[node name="Smore12" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 17534.6, 2723.69 )
+
+[node name="Smore13" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 17458.7, 2591.87 )
+
+[node name="Smore14" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 20678.3, 2312.26 )
+
+[node name="Smore16" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 25338.5, 2127.5 )
+
+[node name="Smore17" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 24791.3, 1592.25 )
+
+[node name="Smore18" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 25066, 1592.25 )
+
+[node name="Smore19" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 25345.5, 1592.25 )
+
+[node name="Smore26" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 29350.1, 1735.13 )
+
+[node name="Smore35" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 28401, 2222.35 )
+
+[node name="Smore36" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 28552.1, 2092.84 )
+
+[node name="Smore37" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 28690.5, 1964.96 )
+
+[node name="Smore31" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 29817, 2295.97 )
+
+[node name="Smore20" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 25639.8, 1587.35 )
+
+[node name="Smore21" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 25953.6, 1587.35 )
+
+[node name="Smore22" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 25953.6, 1587.35 )
+
+[node name="Smore23" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 34826.7, 1777.15 )
+
+[node name="Smore24" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 34982.7, 1618.17 )
+
+[node name="Smore25" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 35142.7, 1494.24 )
+
+[node name="Smore27" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 44735.2, 6577.99 )
+
+[node name="Smore28" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 48234.8, 7083.35 )
+
+[node name="Smore29" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 60109.4, 9427.39 )
+
+[node name="Smore30" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 62304.4, 9521.37 )
+
+[node name="Smore32" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 64435.2, 8896.07 )
+
+[node name="Smore33" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 64185.6, 9109.33 )
+
+[node name="Smore34" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 64309.7, 8997.42 )
+
+[node name="Items" type="Node2D" parent="."]
+
+[node name="SafetyCheckpoints" type="Node2D" parent="Items"]
+
+[node name="SafetyCheckpoint" type="KinematicBody2D" parent="Items/SafetyCheckpoints"]
+position = Vector2( 3108.48, 892.744 )
+collision_layer = 64
+collision_mask = 256
+script = ExtResource( 29 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckpoints/SafetyCheckpoint"]
+shape = SubResource( 1 )
+
+[node name="SafetyCheckpoint2" type="KinematicBody2D" parent="Items/SafetyCheckpoints"]
+position = Vector2( 14322.4, 861.31 )
+collision_layer = 64
+collision_mask = 256
+script = ExtResource( 29 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckpoints/SafetyCheckpoint2"]
+shape = SubResource( 1 )
+
+[node name="SafetyCheckpoint3" type="KinematicBody2D" parent="Items/SafetyCheckpoints"]
+position = Vector2( 20730.3, 3392.35 )
+collision_layer = 64
+collision_mask = 256
+script = ExtResource( 29 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckpoints/SafetyCheckpoint3"]
+shape = SubResource( 1 )
+
+[node name="SafetyCheckpoint4" type="KinematicBody2D" parent="Items/SafetyCheckpoints"]
+position = Vector2( 21669, 2368.45 )
+collision_layer = 64
+collision_mask = 256
+script = ExtResource( 29 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckpoints/SafetyCheckpoint4"]
+shape = SubResource( 1 )
+
+[node name="SafetyCheckpoint5" type="KinematicBody2D" parent="Items/SafetyCheckpoints"]
+position = Vector2( 24811.4, 2384.81 )
+collision_layer = 64
+collision_mask = 256
+script = ExtResource( 29 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckpoints/SafetyCheckpoint5"]
+shape = SubResource( 1 )
+
+[node name="SafetyCheckpoint6" type="KinematicBody2D" parent="Items/SafetyCheckpoints"]
+position = Vector2( 32706.1, 3703.49 )
+collision_layer = 64
+collision_mask = 256
+script = ExtResource( 29 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckpoints/SafetyCheckpoint6"]
+shape = SubResource( 1 )
+
+[node name="SafetyCheckpoint7" type="KinematicBody2D" parent="Items/SafetyCheckpoints"]
+position = Vector2( 44452.8, 6687.87 )
+collision_layer = 64
+collision_mask = 256
+script = ExtResource( 29 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckpoints/SafetyCheckpoint7"]
+shape = SubResource( 12 )
+
+[node name="SafetyCheckpoint8" type="KinematicBody2D" parent="Items/SafetyCheckpoints"]
+position = Vector2( 47206.6, 7275.4 )
+collision_layer = 64
+collision_mask = 256
+script = ExtResource( 29 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckpoints/SafetyCheckpoint8"]
+position = Vector2( -88.6094, 11.3604 )
+shape = SubResource( 1 )
+
+[node name="SafetyCheckpoint9" type="KinematicBody2D" parent="Items/SafetyCheckpoints"]
+position = Vector2( 52057.5, 7497.57 )
+collision_layer = 64
+collision_mask = 256
+script = ExtResource( 29 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckpoints/SafetyCheckpoint9"]
+shape = SubResource( 1 )
+
+[node name="SafetyCheckpoint10" type="KinematicBody2D" parent="Items/SafetyCheckpoints"]
+position = Vector2( 59117.3, 9564.49 )
+collision_layer = 64
+collision_mask = 256
+script = ExtResource( 29 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckpoints/SafetyCheckpoint10"]
+shape = SubResource( 1 )
+
+[node name="SafetyCheckpoint11" type="KinematicBody2D" parent="Items/SafetyCheckpoints"]
+position = Vector2( 55134.7, 5600.47 )
+collision_layer = 64
+collision_mask = 256
+script = ExtResource( 29 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/SafetyCheckpoints/SafetyCheckpoint11"]
+shape = SubResource( 1 )
+
+[node name="Holdables" type="Node2D" parent="Items"]
+
+[node name="Stage" type="Node2D" parent="Items"]
+
+[node name="SpeedBoosts" type="Node2D" parent="Items/Stage"]
+
+[node name="SpeedBoost" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( -91.6347, 714.238 )
+rotation = 0.116174
+
+[node name="SpeedBoost2" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 9422.27, 1027.28 )
+
+[node name="SpeedBoost4" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 12548.1, 1475.08 )
+
+[node name="SpeedBoost3" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 7040.06, 1025.19 )
+
+[node name="SpeedBoost5" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 20468.4, 3429.2 )
+
+[node name="SpeedBoost7" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 18495, 2032.58 )
+rotation = 0.987494
+
+[node name="SpeedBoost8" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 33285.7, 3522.74 )
+rotation = -0.661353
+
+[node name="SpeedBoost9" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 33925.6, 2928.31 )
+rotation = -0.80601
+
+[node name="SpeedBoost10" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 34407.1, 2290.91 )
+rotation = -0.986422
+SpeedToApply = 1000.0
+
+[node name="SpeedBoost12" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 43828.2, 7358.55 )
+rotation = -0.81293
+
+[node name="SpeedBoost15" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 43217.7, 8015.38 )
+rotation = -0.519664
+
+[node name="SpeedBoost16" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 42278.6, 8438.49 )
+rotation = -0.254649
+
+[node name="SpeedBoost14" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 49023.9, 7898.11 )
+rotation = 0.681119
+
+[node name="SpeedBoost17" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 59408.1, 9672.18 )
+rotation = 0.118855
+
+[node name="SpeedBoost18" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 61522.8, 9738.43 )
+rotation = 0.00199408
+SpeedToApply = 1000.0
+
+[node name="SpeedBoost19" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 63028.8, 9736.23 )
+rotation = -0.0184406
+SpeedToApply = 1200.0
+
+[node name="SpeedBoost20" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( 64509.7, 9700.86 )
+rotation = 0.0226158
+SpeedToApply = 1200.0
+
+[node name="Springs" type="Node2D" parent="Items/Stage"]
+
+[node name="StageSpring" parent="Items/Stage/Springs" instance=ExtResource( 31 )]
+position = Vector2( 28185.4, 2474.08 )
+VelocityToApply = 1600
+
+[node name="StageSpring2" parent="Items/Stage/Springs" instance=ExtResource( 31 )]
+position = Vector2( 25340.6, 2469.42 )
+VelocityToApply = 1800
+
+[node name="Misc" type="Node2D" parent="Items"]
+
+[node name="SpaceRock1" parent="Items/Misc" instance=ExtResource( 25 )]
+position = Vector2( 16670.7, 2390.68 )
+RockNum = 1
+
+[node name="OneUp" parent="Items/Misc" instance=ExtResource( 13 )]
+position = Vector2( 62816.7, 9044.27 )
+UUID = 1
+
+[node name="EndLevel" parent="Items" instance=ExtResource( 27 )]
+position = Vector2( 67681.1, 9658.51 )
+
+[node name="NPC" type="Node2D" parent="."]
+
+[node name="Enemies" type="Node2D" parent="NPC"]
+
+[node name="Birds" type="Node2D" parent="NPC/Enemies"]
+
+[node name="BirdPath2D1" type="Path2D" parent="NPC/Enemies/Birds"]
+position = Vector2( 11402.8, 169.91 )
+curve = SubResource( 2 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Birds/BirdPath2D1"]
+position = Vector2( 3392.64, 749.625 )
+rotation = -0.43005
+
+[node name="Bird" type="KinematicBody2D" parent="NPC/Enemies/Birds/BirdPath2D1/PathFollow2D"]
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 40 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Birds/BirdPath2D1/PathFollow2D/Bird"]
+rotation = 1.5708
+shape = SubResource( 3 )
+
+[node name="CutOutBird" parent="NPC/Enemies/Birds/BirdPath2D1/PathFollow2D/Bird" instance=ExtResource( 41 )]
+scale = Vector2( 0.075, 0.075 )
+
+[node name="BirdPath2D4" type="Path2D" parent="NPC/Enemies/Birds"]
+position = Vector2( 18825, 1489.77 )
+curve = SubResource( 2 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Birds/BirdPath2D4"]
+position = Vector2( 3392.64, 749.625 )
+rotation = -0.43005
+
+[node name="Bird" type="KinematicBody2D" parent="NPC/Enemies/Birds/BirdPath2D4/PathFollow2D"]
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 40 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Birds/BirdPath2D4/PathFollow2D/Bird"]
+rotation = 1.5708
+shape = SubResource( 3 )
+
+[node name="CutOutBird" parent="NPC/Enemies/Birds/BirdPath2D4/PathFollow2D/Bird" instance=ExtResource( 41 )]
+scale = Vector2( 0.075, 0.075 )
+
+[node name="BirdPath2D5" type="Path2D" parent="NPC/Enemies/Birds"]
+position = Vector2( 28792.2, 2633.24 )
+curve = SubResource( 2 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Birds/BirdPath2D5"]
+position = Vector2( 3392.64, 749.625 )
+rotation = -0.43005
+
+[node name="Bird" type="KinematicBody2D" parent="NPC/Enemies/Birds/BirdPath2D5/PathFollow2D"]
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 40 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Birds/BirdPath2D5/PathFollow2D/Bird"]
+rotation = 1.5708
+shape = SubResource( 3 )
+
+[node name="CutOutBird" parent="NPC/Enemies/Birds/BirdPath2D5/PathFollow2D/Bird" instance=ExtResource( 41 )]
+scale = Vector2( 0.075, 0.075 )
+
+[node name="BirdPath2D9" type="Path2D" parent="NPC/Enemies/Birds"]
+position = Vector2( 38274.7, 7483.57 )
+curve = SubResource( 2 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Birds/BirdPath2D9"]
+position = Vector2( 3392.64, 749.625 )
+rotation = -0.43005
+
+[node name="Bird" type="KinematicBody2D" parent="NPC/Enemies/Birds/BirdPath2D9/PathFollow2D"]
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 40 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Birds/BirdPath2D9/PathFollow2D/Bird"]
+rotation = 1.5708
+shape = SubResource( 3 )
+
+[node name="CutOutBird" parent="NPC/Enemies/Birds/BirdPath2D9/PathFollow2D/Bird" instance=ExtResource( 41 )]
+scale = Vector2( 0.075, 0.075 )
+
+[node name="BirdPath2D6" type="Path2D" parent="NPC/Enemies/Birds"]
+position = Vector2( 23765.7, 1130.12 )
+curve = SubResource( 11 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Birds/BirdPath2D6"]
+position = Vector2( 960.154, 325.892 )
+rotation = -1.24056
+
+[node name="Bird" type="KinematicBody2D" parent="NPC/Enemies/Birds/BirdPath2D6/PathFollow2D"]
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 40 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Birds/BirdPath2D6/PathFollow2D/Bird"]
+rotation = 1.5708
+shape = SubResource( 3 )
+
+[node name="CutOutBird" parent="NPC/Enemies/Birds/BirdPath2D6/PathFollow2D/Bird" instance=ExtResource( 41 )]
+scale = Vector2( 0.075, 0.075 )
+
+[node name="BirdPath2D7" type="Path2D" parent="NPC/Enemies/Birds"]
+position = Vector2( 42261.2, 6649.33 )
+curve = SubResource( 4 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Birds/BirdPath2D7"]
+position = Vector2( 4096.78, 196.173 )
+rotation = 0.317812
+
+[node name="Bird" type="KinematicBody2D" parent="NPC/Enemies/Birds/BirdPath2D7/PathFollow2D"]
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 40 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Birds/BirdPath2D7/PathFollow2D/Bird"]
+rotation = 1.5708
+shape = SubResource( 3 )
+
+[node name="CutOutBird" parent="NPC/Enemies/Birds/BirdPath2D7/PathFollow2D/Bird" instance=ExtResource( 41 )]
+scale = Vector2( 0.075, 0.075 )
+
+[node name="BirdPath2D8" type="Path2D" parent="NPC/Enemies/Birds"]
+position = Vector2( 55504.8, 8827.87 )
+curve = SubResource( 4 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Birds/BirdPath2D8"]
+position = Vector2( 4096.78, 196.173 )
+rotation = 0.317812
+
+[node name="Bird" type="KinematicBody2D" parent="NPC/Enemies/Birds/BirdPath2D8/PathFollow2D"]
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 40 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Birds/BirdPath2D8/PathFollow2D/Bird"]
+rotation = 1.5708
+shape = SubResource( 3 )
+
+[node name="CutOutBird" parent="NPC/Enemies/Birds/BirdPath2D8/PathFollow2D/Bird" instance=ExtResource( 41 )]
+scale = Vector2( 0.075, 0.075 )
+
+[node name="Deers" type="Node2D" parent="NPC/Enemies"]
+
+[node name="DeerPath2D" type="Path2D" parent="NPC/Enemies/Deers"]
+position = Vector2( 9713.1, 891.44 )
+curve = SubResource( 5 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Deers/DeerPath2D"]
+position = Vector2( 4.17574, 73.5272 )
+rotation = 0.330693
+loop = false
+
+[node name="Deer1" type="KinematicBody2D" parent="NPC/Enemies/Deers/DeerPath2D/PathFollow2D"]
+position = Vector2( -0.199219, -0.289185 )
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 52 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Deers/DeerPath2D/PathFollow2D/Deer1"]
+shape = SubResource( 6 )
+
+[node name="CutOutDeer" parent="NPC/Enemies/Deers/DeerPath2D/PathFollow2D/Deer1" instance=ExtResource( 43 )]
+scale = Vector2( 0.33, 0.33 )
+
+[node name="DeerPath2D2" type="Path2D" parent="NPC/Enemies/Deers"]
+position = Vector2( -96.007, 635.08 )
+curve = SubResource( 7 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Deers/DeerPath2D2"]
+position = Vector2( 92.4173, 76.973 )
+rotation = 0.06748
+loop = false
+
+[node name="Deer" type="KinematicBody2D" parent="NPC/Enemies/Deers/DeerPath2D2/PathFollow2D"]
+position = Vector2( 81.3024, -26.8302 )
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 52 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Deers/DeerPath2D2/PathFollow2D/Deer"]
+shape = SubResource( 6 )
+
+[node name="CutOutDeer" parent="NPC/Enemies/Deers/DeerPath2D2/PathFollow2D/Deer" instance=ExtResource( 43 )]
+scale = Vector2( 0.33, 0.33 )
+
+[node name="DeerPath2D5" type="Path2D" parent="NPC/Enemies/Deers"]
+position = Vector2( 26272.7, 2506.61 )
+curve = SubResource( 8 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Deers/DeerPath2D5"]
+position = Vector2( 11.2109, -5.75513 )
+rotation = 0.00150612
+loop = false
+
+[node name="Deer" type="KinematicBody2D" parent="NPC/Enemies/Deers/DeerPath2D5/PathFollow2D"]
+position = Vector2( 81.3024, -26.8302 )
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 52 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Deers/DeerPath2D5/PathFollow2D/Deer"]
+shape = SubResource( 6 )
+
+[node name="CutOutDeer" parent="NPC/Enemies/Deers/DeerPath2D5/PathFollow2D/Deer" instance=ExtResource( 43 )]
+scale = Vector2( 0.33, 0.33 )
+
+[node name="DeerPath2D8" type="Path2D" parent="NPC/Enemies/Deers"]
+position = Vector2( 64813.7, 9725.15 )
+curve = SubResource( 8 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Deers/DeerPath2D8"]
+position = Vector2( 11.2109, -5.75513 )
+rotation = 0.00150612
+loop = false
+
+[node name="Deer" type="KinematicBody2D" parent="NPC/Enemies/Deers/DeerPath2D8/PathFollow2D"]
+position = Vector2( 81.3024, -26.8302 )
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 52 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Deers/DeerPath2D8/PathFollow2D/Deer"]
+shape = SubResource( 6 )
+
+[node name="CutOutDeer" parent="NPC/Enemies/Deers/DeerPath2D8/PathFollow2D/Deer" instance=ExtResource( 43 )]
+scale = Vector2( 0.33, 0.33 )
+
+[node name="DeerPath2D6" type="Path2D" parent="NPC/Enemies/Deers"]
+position = Vector2( 45534, 7496.84 )
+curve = SubResource( 9 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Deers/DeerPath2D6"]
+position = Vector2( -343.055, -143.508 )
+rotation = 0.463079
+loop = false
+
+[node name="Deer" type="KinematicBody2D" parent="NPC/Enemies/Deers/DeerPath2D6/PathFollow2D"]
+position = Vector2( 81.3024, -26.8302 )
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 52 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Deers/DeerPath2D6/PathFollow2D/Deer"]
+shape = SubResource( 6 )
+
+[node name="CutOutDeer" parent="NPC/Enemies/Deers/DeerPath2D6/PathFollow2D/Deer" instance=ExtResource( 43 )]
+scale = Vector2( 0.33, 0.33 )
+
+[node name="DeerPath2D7" type="Path2D" parent="NPC/Enemies/Deers"]
+position = Vector2( 53276.2, 6793.89 )
+curve = SubResource( 10 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Deers/DeerPath2D7"]
+position = Vector2( -382.637, -130.521 )
+rotation = 0.502639
+loop = false
+
+[node name="Deer" type="KinematicBody2D" parent="NPC/Enemies/Deers/DeerPath2D7/PathFollow2D"]
+position = Vector2( 81.3024, -26.8302 )
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 52 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Deers/DeerPath2D7/PathFollow2D/Deer"]
+shape = SubResource( 6 )
+
+[node name="CutOutDeer" parent="NPC/Enemies/Deers/DeerPath2D7/PathFollow2D/Deer" instance=ExtResource( 43 )]
+scale = Vector2( 0.33, 0.33 )

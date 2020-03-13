@@ -37,14 +37,9 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     ///when speedbosting, what slowdown effect to go back down to normal speed
     private const float SPEED_BOOST_SLOWDOWN_EFFECT = 0.995f;
     private const float BOUNCE_UP_EFFECT_VELOCITY = MAX_SPEED / 4; 
-
-    private Vector2 futureGlobalPosition = new Vector2(0,0);
-    public Vector2 FutureGlobalPosition { get {
-        return this.futureGlobalPosition;
-        var gPos = this.GlobalPosition;
-        return new Vector2(gPos.x + this.velocity.x,
-                          gPos.y + this.velocity.y);
-    }}
+    private Boolean stopAllMovement = false;
+    private Boolean stopAllMovementExceptGravity = false;
+    private Boolean stopAllEngineSounds = false;
 
     public override void _Ready(){
         this.ResetActiveState(this.InitialState);
@@ -54,12 +49,9 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
                 this.sprite = (Sprite)child;
             }
             if(child is CollisionShape2D){
-                this.collisionShape2D = (CollisionShape2D)child;
-            }
-        }
+                this.collisionShape2D = (CollisionShape2D)child;}}
         this.ATV = (ATV)this.GetParent();
-        this.SetActiveState(WheelState.IDLING, 100);
-    }
+        this.SetActiveState(WheelState.IDLING, 100);}
 
     public override void UpdateState(float delta){
         this.reactToInput(delta);
@@ -86,13 +78,17 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     public void PlayNormalEngineSound(){
         if(this.Name.ToLower().Equals("frontwheel")){
             var pitchScale = 1f + Math.Abs(forwardAccell / (MAX_FORWARD_ACCEL * 2.5f));
-            var volumeMultipler = 0.5f + Math.Abs(forwardAccell / (MAX_FORWARD_ACCEL * 2));
+            var volumeMultipler = 0.3f + Math.Abs(forwardAccell / (MAX_FORWARD_ACCEL * 2));
             SoundHandler.PlaySample<MyAudioStreamPlayer2D>(this, 
                     new string[] {ENGINE_GO_NORMAL_SAMPLE},
                     PitchScale: pitchScale,
                     VolumeMultiplier: volumeMultipler,
                     Loop: true,
                     SkipIfAlreadyPlaying: true);}}
+
+    public void StopAllEngineSounds(){
+        this.stopAllEngineSounds = true;
+    }
 
     public void PlayIdleEngineSound(){
         if(this.Name.ToLower().Equals("frontwheel")){
@@ -144,12 +140,18 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
     }
     public override void ReactStateless(float delta){
         this.applyGravity(delta);
+        if(this.stopAllMovement){
+            this.velocity = new Vector2(0,0);}
+        if(this.stopAllMovementExceptGravity){
+            this.velocity = new Vector2(0,this.velocity.y);}
         MoveAndSlide(linearVelocity: this.velocity);
         this.updateSprite(delta);
         this.applySound(delta);
     }
 
     private void applySound(float delta){
+        if(this.stopAllEngineSounds){
+            return;}
         float AccellThreshForGoAudio = 5f;
         if(Input.IsActionPressed("ui_right") || 
            Input.IsActionPressed("ui_left") ||
@@ -172,6 +174,17 @@ public class Wheel : FSMKinematicBody2D<WheelState>{
             }
         }
     }
+
+    public void tempStopAllMovement(Boolean exceptGravity = false){
+        if(exceptGravity){
+            this.stopAllMovementExceptGravity = true;}
+        else{
+            this.stopAllMovement = true;}}
+
+
+    public void resumeMovement(){
+        this.stopAllMovement = false;
+        this.stopAllMovementExceptGravity = false;}
 
     private void applyGravity(float delta){
         if(this.velocity.y < MAX_GRAVITY_SPEED){

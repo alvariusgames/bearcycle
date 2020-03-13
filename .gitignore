@@ -10,4 +10,6 @@ export_presets.cfg
 .directory
 *~
 
+dist/*
+
 mono_crash*

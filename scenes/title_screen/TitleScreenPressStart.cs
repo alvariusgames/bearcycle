@@ -1,9 +1,10 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public enum TitleScreenState { AWAITING_PRESS_START, TRANSITIONING_TO_MAIN_MENU, 
                                IN_MAIN_MENU, TRANSITIONING_TO_SETTINGS, IN_SETTINGS,
-                               IN_CHANGE_LANGUAGE, IN_MANAGE_GAME_DATA}
+                               IN_CHANGE_LANGUAGE, IN_CONTROL_SETTINGS}
 public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
 {
 
@@ -28,14 +29,19 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
     private HoverableTouchScreenButton ChangeLanguageButton;
     private HoverableTouchScreenButton BackToMainMenuButton1;
 
-    private VBoxContainer ManageGameDataVboxContainer;
+    private VBoxContainer ControlVboxContainer;
     private HoverableTouchScreenButton ClearGameDataButton;
     private HoverableTouchScreenButton ChangeGameSlotButton;
     private Label ActiveGameSlot;
     private HoverableTouchScreenButton BackToSettings2;
+    private RemapActionHoverableTouchScreenButton attackRemapButton;
+    private RemapActionHoverableTouchScreenButton forageRemapButton;
+    private RemapActionHoverableTouchScreenButton itemRemapButton;
+    private HoverableTouchScreenButton ResetToDefaults;
 
     private VBoxContainer ChangeLanguageContainer;
-    private OptionButton SupportedLocalesOptionButton;
+    private ScrollableOptionButton SupportedLocalesOptionButton;
+    private Dictionary<string, string> LocaleNameToLocale = new Dictionary<string, string>();
     private HoverableTouchScreenButton BackToSettings1;
 
 
@@ -64,8 +70,7 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
                     this.Logo = (Sprite)child;}}
             if(child is Label){
                 if(child.Name.ToLower().Contains("start")){
-                    this.PressStartLabel = (Label)child;
-                    this.PressStartLabel.Text = (String)Strings.UI["PressStart"];}
+                    this.PressStartLabel = (Label)child;}
                 if(child.Name.ToLower().Contains("version")){
                     this.VersionLabel = (Label)child;
                     this.VersionLabel.Text = main.VERSION;}}
@@ -74,15 +79,12 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
                 foreach(Node child2 in child.GetChildren()){
                     if(child2.Name.ToLower().Contains("play")){
                         var playLabel = (Label)child2;
-                        playLabel.Text = (String)Strings.UI["Play"];
                         this.PlayButton = (HoverableTouchScreenButton)playLabel.GetChild(0);}
                     if(child2.Name.ToLower().Contains("exit")){
                         var exitLabel = (Label)child2;
-                        exitLabel.Text = (String)Strings.UI["Exit"];
                         this.ExitButton = (HoverableTouchScreenButton)exitLabel.GetChild(0);}
                     if(child2.Name.ToLower().Contains("settings")){
                         var settingsLabel = (Label)child2;
-                        settingsLabel.Text = (String)Strings.UI["Settings"];
                         this.SettingsButton = (HoverableTouchScreenButton)settingsLabel.GetChild(0);}
                     }}
             if(child is VBoxContainer && child.Name.ToLower().Contains("settings")){
@@ -90,13 +92,11 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
                 foreach(Node child2 in child.GetChildren()){
                     if(child2.Name.ToLower().Contains("manage")){
                         var manageLabel = (Label)child2;
-                        manageLabel.Text = (String)Strings.UI["ManageGameData"];
                         this.ManageGameDataButton = (HoverableTouchScreenButton)child2.GetChild(0);}
                     if(child2.Name.ToLower().Contains("mainmenu")){
                         this.BackToMainMenuButton1 = (HoverableTouchScreenButton)child2.GetChild(0);}
                     if(child2.Name.ToLower().Contains("language")){
                         var langLabel = (Label)child2;
-                        langLabel.Text = (String)Strings.UI["ChangeLanguage"];
                         this.ChangeLanguageButton = (HoverableTouchScreenButton)child2.GetChild(0);
                     }}}
             if(child is VBoxContainer && child.Name.ToLower().Contains("language")){
@@ -106,42 +106,42 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
                         this.BackToSettings1 = (HoverableTouchScreenButton)child2.GetChildren()[0];
                     }
                     if(child2.Name.ToLower().Contains("language")){
-                        this.SupportedLocalesOptionButton = (OptionButton)child2;
+                        this.SupportedLocalesOptionButton = (ScrollableOptionButton)child2;
                         this.SupportedLocalesOptionButton.Theme = new Theme();
                         this.SupportedLocalesOptionButton.Theme.DefaultFont = new DynamicFont();
-                        ((DynamicFont)this.SupportedLocalesOptionButton.Theme.DefaultFont).FontData = (DynamicFontData)GD.Load("res://media/fonts/en_US.ttf");
-                        ((DynamicFont)this.SupportedLocalesOptionButton.Theme.DefaultFont).Size = 32;
+                        ((DynamicFont)this.SupportedLocalesOptionButton.Theme.DefaultFont).FontData = (DynamicFontData)GD.Load("res://media/fonts/no_locale_en.ttf");
+                        if(main.PlatformType.Equals(PlatformType.MOBILE)){
+                             this.SupportedLocalesOptionButton.RectScale = new Vector2(1.5f,1.5f);
+                             ((DynamicFont)this.SupportedLocalesOptionButton.Theme.DefaultFont).Size = 72;}
+                        else{
+                            ((DynamicFont)this.SupportedLocalesOptionButton.Theme.DefaultFont).Size = 48;}
                         this.SupportedLocalesOptionButton.Clear();
-                        int i = 0;
+                        int id = 0;
                         int currentLocaleId = 0;
-                        foreach(var locale in Strings.SupportedLocales()){
-                            this.SupportedLocalesOptionButton.AddItem(locale, i);
-                            if(locale == DbHandler.Globals.Locale){
-                                currentLocaleId = i;}
-                            i++;
-                            }
-                        this.SupportedLocalesOptionButton.Selected = currentLocaleId;
-                    }
-                }
-            }
-            if(child is VBoxContainer && child.Name.ToLower().Contains("manage")){
-                this.ManageGameDataVboxContainer = (VBoxContainer)child;
+                        var uniqueLocales = new HashSet<String>();
+                        foreach(var locale in TranslationServer.GetLoadedLocales()){
+                            uniqueLocales.Add((String)locale);}
+                        foreach(var locale in uniqueLocales){
+                            var localeName = TranslationServer.GetLocaleName(locale);
+                            this.LocaleNameToLocale[TranslationServer.GetLocaleName(locale)] = locale;
+                            this.SupportedLocalesOptionButton.AddItem(localeName, id);
+                            if(locale == TranslationServer.GetLocale()){
+                                currentLocaleId = id;}
+                            id++;}
+                        this.SupportedLocalesOptionButton.Selected = currentLocaleId;}}}
+            if(child is VBoxContainer && child.Name.ToLower().Contains("control")){
+                this.ControlVboxContainer = (VBoxContainer)child;
                 foreach(Node child2 in child.GetChildren()){
-                    if(child2.Name.ToLower().Contains("changegameslot")){
-                        this.ChangeGameSlotButton = (HoverableTouchScreenButton)child2.GetChildren()[0];
-                        ((Label)child2).Text = (String)Strings.UI["ChangeGameSlot"];
-                    } else if(child2.Name.ToLower().Contains("activegameslot")){
-                        this.ActiveGameSlot = (Label)child2;
-                        this.ActiveGameSlot.Text = (String)Strings.UI["GameSlot"] + " " + DbHandler.Globals.ActiveGameSlotNum;
-                    } else if(child2.Name.ToLower().Contains("clear")){
-                        this.ClearGameDataButton = (HoverableTouchScreenButton)child2.GetChild(0);
-                        ((Label)child2).Text = (String)Strings.UI["ClearGameData"];}
-                    else if(child2.Name.ToLower().Contains("back")){
-                        this.BackToSettings2 = (HoverableTouchScreenButton)child2.GetChild(0);
-                    }
-                }
-            }            
-            }
+                    if(child2.Name.ToLower().Contains("back")){
+                        this.BackToSettings2 = (HoverableTouchScreenButton)child2.GetChild(0);}
+                    if(child2.Name.ToLower().Contains("attack")){
+                        this.attackRemapButton = (RemapActionHoverableTouchScreenButton)child2.GetChild(0);}
+                    if(child2.Name.ToLower().Contains("forage")){
+                        this.forageRemapButton = (RemapActionHoverableTouchScreenButton)child2.GetChild(0);}
+                    if(child2.Name.ToLower().Contains("item")){
+                        this.itemRemapButton = (RemapActionHoverableTouchScreenButton)child2.GetChild(0);}
+                    if(child2.Name.ToLower().Contains("default")){
+                        this.ResetToDefaults = (HoverableTouchScreenButton)child2.GetChild(0);}}}}
         this.hideAllContainers();}
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -153,6 +153,8 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
                 this.MainMenuVBoxContainer.Visible = false;
                 this.SettingsVboxContainer.Visible = false;
                 if(Input.IsActionJustPressed("ui_accept") || Input.IsMouseButtonPressed(1)){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                        "res://media/samples/ui/accept_1.wav");
                     this.ResetActiveState(TitleScreenState.TRANSITIONING_TO_MAIN_MENU);}
             break;
             case TitleScreenState.TRANSITIONING_TO_MAIN_MENU:
@@ -176,52 +178,82 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
             case TitleScreenState.IN_MAIN_MENU:
                 this.hideAllContainers(but: MainMenuVBoxContainer);
                 if(this.PlayButton.UserHasJustSelected()){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                        new string[]{"res://media/samples/ui/accept_1.wav"});
                     SceneTransitioner.Transition(FromScene: this.GetTree().GetRoot().GetChild(0), 
                                         ToSceneStr: "res://scenes/level_select/level_select.tscn",
                                         effect: SceneTransitionEffect.FADE_BLACK,
                                         numSeconds: 2f,
                                         FadeOutAudio: true);}
                 if(this.ExitButton.UserHasJustSelected()){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                        new string[]{"res://media/samples/ui/decline_1.wav"});
                     SceneTransitioner.Transition(FromScene: this.GetTree().GetRoot().GetChild(0),
                                         ToSceneStr: "res://scenes/misc/exit_black.tscn",
                                         effect: SceneTransitionEffect.FADE_INTO,
                                         numSeconds: 2f,
                                         FadeOutAudio: true);}
                 if(this.SettingsButton.UserHasJustSelected()){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                        new string[]{"res://media/samples/ui/accept_1.wav"});
                     this.ResetActiveState(TitleScreenState.IN_SETTINGS);
                 }
                 break;
             case TitleScreenState.IN_SETTINGS:
                 this.hideAllContainers(but: this.SettingsVboxContainer);
                 if(this.ManageGameDataButton.UserHasJustSelected()){
-                    this.ResetActiveState(TitleScreenState.IN_MANAGE_GAME_DATA);}
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                        new string[]{"res://media/samples/ui/accept_1.wav"});
+                    this.ResetActiveState(TitleScreenState.IN_CONTROL_SETTINGS);}
                 if(this.BackToMainMenuButton1.UserHasJustSelected()){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                        new string[]{"res://media/samples/ui/decline_1.wav"});
                     this.ResetActiveState(TitleScreenState.IN_MAIN_MENU);}
                 if(this.ChangeLanguageButton.UserHasJustSelected()){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                        new string[]{"res://media/samples/ui/accept_1.wav"});
                     this.ResetActiveState(TitleScreenState.IN_CHANGE_LANGUAGE);}
                 break;
             case TitleScreenState.IN_CHANGE_LANGUAGE:
                 this.hideAllContainers(but: this.ChangeLanguageContainer);
-                if(this.BackToSettings1.UserHasJustSelected()){
-                    this.ResetActiveState(TitleScreenState.IN_SETTINGS);
-                    var globals = DbHandler.Globals;
-                    globals.Locale = this.SupportedLocalesOptionButton.Text;
-                    DbHandler.Globals = globals;
-                    Strings.ClearCache();
-                    this._Ready();
-                    }
-                break;
-            case TitleScreenState.IN_MANAGE_GAME_DATA:
-                 this.hideAllContainers(but: this.ManageGameDataVboxContainer);
-                if(this.ChangeGameSlotButton.UserHasJustSelected()){
+                if(this.SupportedLocalesOptionButton.PopupIsVisible){
+                    this.BackToSettings1.Visible = false;
+                } else {
+                    this.BackToSettings1.Visible = true;
                 }
-                if(this.ClearGameDataButton.UserHasJustSelected()){
-                    DbHandler.DeleteGlobalsAndActiveGameSlotDbs();
-                    Strings.ClearCache();
-                    this._Ready();
-                    this.ResetActiveState(TitleScreenState.IN_MAIN_MENU);}
+                if(this.BackToSettings1.UserHasJustSelected()){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                        new string[]{"res://media/samples/ui/decline_1.wav"});
+                    var selectedLocale = this.LocaleNameToLocale[this.SupportedLocalesOptionButton.Text];
+                    if(selectedLocale != TranslationServer.GetLocale()){
+                        var globals = DbHandler.Globals;
+                        globals.Locale = this.LocaleNameToLocale[this.SupportedLocalesOptionButton.Text];
+                        TranslationServer.SetLocale(globals.Locale);
+                        DbHandler.Globals = globals;
+                        SceneTransitioner.Transition(FromScene: this.GetTree().GetRoot().GetChild(0), 
+                                                     ToSceneStr: "res://scenes/misc/reload_locales_workaround.tscn",
+                                                     effect: SceneTransitionEffect.FADE_BLACK,
+                                                     numSeconds: 1f,
+                                                     FadeOutAudio: true);
+                        }
+                    else{
+                        this.ResetActiveState(TitleScreenState.IN_SETTINGS);
+                        this._Ready();}
+                }
+                break;
+            case TitleScreenState.IN_CONTROL_SETTINGS:
+                this.hideAllContainers(but: this.ControlVboxContainer);
                 if(this.BackToSettings2.UserHasJustSelected()){
-                    this.ResetActiveState(TitleScreenState.IN_SETTINGS);
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                        new string[]{"res://media/samples/ui/decline_1.wav"});
+                    this.ResetActiveState(TitleScreenState.IN_SETTINGS);}
+                if(this.ResetToDefaults.UserHasJustSelected()){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                        new string[]{"res://media/samples/ui/accept_1.wav"});
+                    DbHandler.ResetInputMapToDefault();
+                    this.attackRemapButton._Ready();
+                    this.forageRemapButton._Ready();
+                    this.itemRemapButton._Ready();
                 }
                 break;
             }}
@@ -231,7 +263,7 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
             this.MainMenuVBoxContainer,
             this.SettingsVboxContainer,
             this.ChangeLanguageContainer,
-            this.ManageGameDataVboxContainer
+            this.ControlVboxContainer
         };
         foreach(var container in containers){
             if(container.Equals(but)){

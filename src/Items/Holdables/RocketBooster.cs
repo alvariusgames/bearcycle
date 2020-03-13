@@ -42,6 +42,9 @@ public class RocketBooster : FSMKinematicBody2D<RocketState>, IHoldable, IIntera
                 this.CollisionPolygon2D = (CollisionPolygon2D)child;}
         }
     }
+    public void InteractWith(Player player){
+        player.PickupHoldable(this);}
+
 
      private void makeCollideable(bool collidability){
         if(collidability){
@@ -58,6 +61,8 @@ public class RocketBooster : FSMKinematicBody2D<RocketState>, IHoldable, IIntera
     }
 
     public void ReactToActionPress(float delta){}
+
+    public void PickupPreAction(){}
 
     public void PostDepletionAction(float delta){
         this.IsBeingHeld = false;

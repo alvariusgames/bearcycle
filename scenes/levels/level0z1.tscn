@@ -1,0 +1,1027 @@
+[gd_scene load_steps=50 format=2]
+
+[ext_resource path="res://scenes/levels/level0.cs" type="Script" id=1]
+[ext_resource path="res://media/levels/level1_forest/cloud1.png" type="Texture" id=2]
+[ext_resource path="res://media/levels/level1_forest/sky1.png" type="Texture" id=3]
+[ext_resource path="res://media/tilesets/sonic_like_ground/platform.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/Level/Platforms.cs" type="Script" id=5]
+[ext_resource path="res://src/Level/CollisionPolygonParentOfBorderedPolygon.cs" type="Script" id=6]
+[ext_resource path="res://scenes/player/player.tscn" type="PackedScene" id=7]
+[ext_resource path="res://media/tilesets/app_forest_1/tiles/tile_middle.png" type="Texture" id=8]
+[ext_resource path="res://media/tilesets/app_forest_1/border_tiles.tres" type="TileSet" id=9]
+[ext_resource path="res://addons/bordered-polygon-2d/bordered_polygon_2d.gd" type="Script" id=10]
+[ext_resource path="res://addons/bordered-polygon-2d/icon.png" type="Texture" id=11]
+[ext_resource path="res://media/tilesets/app_forest_1/four_sided_brown_sides.tres" type="TileSet" id=12]
+[ext_resource path="res://media/tilesets/app_forest_1/tiles/tile_side.png" type="Texture" id=13]
+[ext_resource path="res://src/Level/ZoneCollider.cs" type="Script" id=14]
+[ext_resource path="res://scenes/items/stage/StageSpring.tscn" type="PackedScene" id=15]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_3.png" type="Texture" id=16]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_bush.png" type="Texture" id=17]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_full_1.png" type="Texture" id=18]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_single_1.png" type="Texture" id=19]
+[ext_resource path="res://scenes/items/stage/SpeedBoost1.tscn" type="PackedScene" id=20]
+[ext_resource path="res://media/levels/level1_forest/trees/tree1.png" type="Texture" id=21]
+[ext_resource path="res://media/levels/level1_forest/trees/tree2.png" type="Texture" id=22]
+[ext_resource path="res://media/tilesets/app_forest_1/tiles/empty.png" type="Texture" id=23]
+[ext_resource path="res://media/tilesets/app_forest_1/two_sided_border_tiles.tres" type="TileSet" id=24]
+[ext_resource path="res://scenes/items/food/forest/Smore.tscn" type="PackedScene" id=25]
+[ext_resource path="res://scenes/items/food/forest/BerryBush.tscn" type="PackedScene" id=26]
+[ext_resource path="res://scenes/items/stage/SafetyCheckpoint.tscn" type="PackedScene" id=27]
+[ext_resource path="res://src/Utils/Misc/TutorialRotationThrowaway.cs" type="Script" id=28]
+[ext_resource path="res://scenes/items/holdables/Spring.tscn" type="PackedScene" id=29]
+[ext_resource path="res://src/Utils/Misc/RemoveWallWhenHealthIs100.cs" type="Script" id=30]
+[ext_resource path="res://media/fonts/en_US.ttf" type="DynamicFontData" id=31]
+[ext_resource path="res://media/UI/tutorial/left_key.png" type="Texture" id=32]
+[ext_resource path="res://media/UI/tutorial/right_key.png" type="Texture" id=33]
+[ext_resource path="res://media/UI/misc/arrow1_forward.png" type="Texture" id=34]
+[ext_resource path="res://scenes/items/stage/EndLevel.tscn" type="PackedScene" id=35]
+[ext_resource path="res://scenes/npc/bird1/Bird.tscn" type="PackedScene" id=36]
+[ext_resource path="res://scenes/npc/deer1/Deer.tscn" type="PackedScene" id=37]
+[ext_resource path="res://media/UI/tutorial/down_key.png" type="Texture" id=38]
+[ext_resource path="res://src/Utils/Misc/CancelHorizMomentum.cs" type="Script" id=42]
+[ext_resource path="res://src/Items/MakeMyParentHover.cs" type="Script" id=46]
+[ext_resource path="res://media/empty.png" type="Texture" id=54]
+[ext_resource path="res://media/UI/tutorial/up_key.png" type="Texture" id=55]
+[ext_resource path="res://scenes/title_screen/PlatformDepButton.tscn" type="PackedScene" id=57]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 4361.93, 569.815, -277.033, -20.6248, 277.033, 20.6248, 4655.88, 589.857, -165.397, -5.91453, 165.397, 5.91453, 5016.57, 665.092, -241.362, 149.563, 241.362, -149.563, 5744.5, 659.71, 41.603, 175.562, -41.603, -175.562, 5456.52, 607.495, 121.844, 14.5842, -121.844, -14.5842, 5101.42, 737.347, 37.763, 93.1487, -37.763, -93.1487, 4457.24, 487.564, -10.883, -81.6225, 10.883, 81.6225, 4250.94, 496.296, 0, 0, 0, 0, 4361.93, 569.815 )
+}
+
+[sub_resource type="Curve2D" id=2]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 15480.4, 936.921, -195.137, -75.0347, 195.137, 75.0347, 16192.8, 1022.6, 0, 0, 0, 0, 16848.1, 1152.71 )
+}
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 391.654, 36.766 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 119.166, 314.834 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 72
+outline_size = 5
+outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
+font_data = ExtResource( 31 )
+
+[sub_resource type="SpriteFrames" id=6]
+animations = [ {
+"frames": [ ExtResource( 55 ), ExtResource( 54 ), ExtResource( 33 ), ExtResource( 54 ), ExtResource( 38 ), ExtResource( 54 ), ExtResource( 32 ), ExtResource( 54 ) ],
+"loop": true,
+"name": "default",
+"speed": 2.0
+} ]
+
+[node name="level0" type="Node2D"]
+position = Vector2( -115, -1 )
+script = ExtResource( 1 )
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+scroll_ignore_camera_zoom = true
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+position = Vector2( -49.7608, -199.374 )
+motion_scale = Vector2( 0.15, 0 )
+
+[node name="Sprite2" type="Sprite" parent="ParallaxBackground/ParallaxLayer2"]
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 60000, 1500 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+position = Vector2( -49.7608, -199.374 )
+motion_scale = Vector2( 0.125, 0 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 60000, 1500 )
+
+[node name="Player" parent="." instance=ExtResource( 7 )]
+position = Vector2( 2505.52, 885.085 )
+
+[node name="Platforms" type="Node2D" parent="."]
+
+[node name="PlatformZoneOne" type="StaticBody2D" parent="Platforms"]
+position = Vector2( -115, 0 )
+scale = Vector2( 2, 2 )
+z_index = -2
+collision_layer = 4
+collision_mask = 35
+script = ExtResource( 5 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Platforms/PlatformZoneOne"]
+position = Vector2( -1531.44, -130.196 )
+scale = Vector2( 0.5, 0.5 )
+script = ExtResource( 6 )
+
+[node name="BorderedPolygon" parent="Platforms/PlatformZoneOne/CollisionPolygon2D" instance=ExtResource( 4 )]
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 5677.03, 1240.43, 5850.09, 1183.67, 6003.79, 1263.17, 6274.1, 1244.62, 6549.7, 1186.32, 6712.09, 1182.7, 6883.48, 1181.95, 7119.46, 1093.57, 7350.01, 1120.07, 7577.91, 1069.72, 7673.25, 1011.64, 7729.37, 938.255, 7798.44, 899.403, 7886.93, 944.731, 7968.96, 1048.34, 8139.48, 1061.29, 8309.99, 1026.75, 8465.4, 1128.2, 8590.64, 1212.17, 8672.09, 1263.62, 8852.07, 1273.28, 9071.88, 1287.39, 9235.76, 1287.19, 9410.46, 1278.81, 9493.32, 1174.62, 9581.4, 1142.49, 9657.93, 1185.77, 9701.87, 1242.25, 9756.46, 1299.8, 9886.64, 1317.21, 10072.1, 1316.35, 10989.2, 1316.34, 11052.1, 1279.33, 11028.8, 318.11, 11040.9, 289.301, 11222.7, 287.085, 11555.1, 294.018, 11542.2, 431.488, 11482.1, 491.63, 11389, 504.518, 11271.2, 503.049, 11227.5, 536.211, 11216.8, 1266.37, 11264.9, 1310.79, 12560.1, 1319.28, 13062.2, 1323.81, 14261.4, 1305.53, 14443.7, 1223.9, 14577, 1106.91, 14650.2, 981.781, 14723, 963.328, 14850.7, 1051.73, 15112.2, 1200.28, 15334.6, 1284.25, 15408.6, 1259.81, 15459.9, 1209.54, 15443.4, 728.721, 15488.4, 713.924, 15620.6, 713.924, 15676.4, 740.351, 15684.7, 1176.71, 15704.7, 1201.08, 17315.1, 1233.58, 17348.6, 1207.29, 17351.6, 761.273, 17414.6, 712.586, 17529.2, 702.562, 17566.4, 774.161, 17561.8, 1083.88, 17570.9, 1275.92, 17625.4, 1333.93, 17734.4, 1363.82, 17988.7, 1364.68, 18219.8, 1354.76, 18380.7, 1327.36, 18562.2, 1279.42, 18723.2, 1258.87, 19089.8, 1279.74, 19612.2, 1413.57, 20013.6, 1465.37, 20291.4, 1441.38, 20451.8, 1430.84, 20554.1, 1452.42, 24310.7, 1501.37, 24733.8, 1496.05, 24912.8, 1476.53, 25026.7, 1427.73, 25130.8, 1304.09, 25162.1, 1172.73, 25127.5, 1040.55, 25039.7, 913.665, 25026.7, 819.311, 25075, -700.239, 25191.7, -762.49, 27285.4, -950.964, 27550.6, -809.526, 28098.4, 3909.31, 27919.9, 5229.54, 27300.8, 6628.31, 19433.8, 7534.65, 9886.63, 6650, 5823.69, 5450, 2576.56, 4067.19, 477.652, 3573.33, 193.682, 3338.75, 359.84, -771.395, 502.779, -786.458, 3360.07, -842.44, 3458.15, -790.817, 3519.33, -665.522, 3520.62, 760.723, 3506.06, 846.799, 3551.29, 916.587, 3635.04, 949.202, 3820.8, 951.795, 4028.66, 956.555, 4141.31, 920.061, 4217.47, 874.047, 4306.04, 916.844, 4358.9, 993.189, 4397.07, 1078.34, 4549.76, 1163.5, 4705.38, 1163.5, 4830.5, 1081.75, 4910, 986.353, 5039.85, 912.152, 5180.3, 914.802, 5292.61, 1009.37, 5416.79, 1130.75, 5581.09, 1207.6 )
+uv = PoolVector2Array( 5669.89, 1220.77, 5850.09, 1183.67, 6003.79, 1263.17, 6274.1, 1244.62, 6549.7, 1186.32, 6712.09, 1182.7, 6883.48, 1181.95, 7119.46, 1093.57, 7350.01, 1120.07, 7577.91, 1069.72, 7829.48, 973.689, 7993.25, 869.832, 8065.15, 753.992, 8192.98, 650.135, 8268.87, 630.163, 8336.78, 646.141, 8372.73, 702.064, 8424.66, 817.904, 8476.59, 1089.53, 8528.52, 1217.35, 8676.31, 1273.28, 8852.07, 1273.28, 8939.95, 1257.3, 9027.96, 1198.18, 9066.38, 1179.8, 9108.13, 1164.77, 9154.9, 1169.78, 9207.58, 1177.41, 9255.51, 1177.41, 9315.43, 1137.46, 9419.29, 1069.56, 9471.21, 1057.57, 9539.12, 1145.45, 9595.04, 1213.36, 9662.95, 1285.26, 9742.84, 1313.22, 9886.64, 1317.21, 10072.1, 1316.35, 12560.1, 1319.28, 13033.6, 1290.01, 13184.3, 1218.26, 13351.7, 1091.5, 13566.5, 1030.82, 13720.1, 1141.59, 13876.2, 1325.37, 14120.4, 1330.4, 14258.9, 1264.95, 14385.6, 1148.2, 14440.4, 1048.88, 14495.2, 935.86, 14553.4, 894.763, 14625.4, 887.913, 14666.5, 894.763, 14731.5, 939.285, 14827.4, 1042.03, 14909.6, 1189.29, 15036.3, 1384.51, 15262.2, 1611.06, 15415.1, 1705.41, 15626.6, 1757.47, 15805.6, 1760.72, 15922.7, 1715.17, 16039.8, 1624.07, 16114.6, 1500.44, 16156.9, 1367.04, 16179.7, 1230.4, 16235, 1093.75, 16277.3, 1064.47, 16348.9, 1041.69, 16410.7, 1057.96, 16469.3, 1087.24, 16592.4, 1165.66, 16786.3, 1216.01, 17040.5, 1231.11, 17184, 1208.46, 17365.3, 1195.87, 17493.7, 1238.67, 17682.1, 1197.22, 17836.2, 1214.35, 17956.1, 1279.42, 18219.8, 1354.76, 18380.7, 1327.36, 18562.2, 1279.42, 18723.2, 1258.87, 19089.8, 1279.74, 19612.2, 1413.57, 20013.6, 1465.37, 20291.4, 1441.38, 20451.8, 1430.84, 20554.1, 1452.42, 20662, 1510.7, 20744, 1631.57, 20774.2, 1832.31, 20730.9, 2097.68, 20634.6, 2254.22, 20508.1, 2477, 20519.1, 2662.28, 20571.9, 2867.82, 20742.3, 3099.79, 20933.1, 3264.22, 20941.3, 3354.3, 20902.9, 3434.47, 20809.4, 3531.34, 20839.4, 3651.59, 20966.4, 3753.47, 21218.6, 3771.85, 21654.5, 3758.48, 22038.1, 3735.57, 22401.1, 3594.71, 22514.9, 3475.81, 22633.8, 3382.76, 22764.3, 3353.04, 22871.6, 3368.95, 23017.7, 3429.34, 23182.7, 3599.74, 23407, 3717.78, 23886.6, 3719.52, 24055.2, 3695, 24183.9, 3623.35, 24285.7, 3492.24, 24354.2, 3303.88, 24394.7, 3025.05, 24351.3, 2664.3, 24384.7, 2599.16, 24441.5, 2569.1, 24505, 2575.78, 24586.8, 2629.22, 24741.9, 2724.77, 25005.6, 2700.8, 25590.2, 2630.83, 25638, 2537.56, 25638.2, 1714.17, 25550.7, 1489.82, 25371.5, 1366.79, 25388.8, 1293.4, 25473, 1248.07, 26060.1, 1239.44, 26196, 1433.7, 26247.8, 1718.26, 26639.7, 2987.67, 25931.5, 3849.58, 24780.7, 4692.85, 22458.8, 4514.75, 19506, 4035.62, 18414, 3489.63, 17678.6, 3043.92, 5059.91, 2468.06, 1999.91, 2243.33, 2314.82, 296.857, 2508.61, 165.433, 2602.72, 146.123, 2904.19, 161.196, 3086.57, 174.763, 3110.69, 210.939, 3098.63, 257.666, 2975.03, 331.525, 2840.93, 434.191, 2755.01, 600.3, 2749.28, 739.2, 2841.36, 914.145, 2985.98, 992.29, 3262.41, 1023.78, 3491.43, 1044.54, 4178.99, 1041.57, 4333.65, 1050.17, 4428.16, 1064.49, 4511.21, 1067.35, 4562.65, 1042.25, 4582.7, 962.058, 4569.81, 890.46, 4544.04, 830.317, 4508.24, 771.606, 4539.08, 739.209, 4591.51, 674.62, 4659.87, 620.958, 4710.55, 600.102, 4763.52, 590.819, 4822.88, 611.391, 4906.88, 636.391, 4969.34, 635.419, 4996.9, 658.114, 4977.49, 724.951, 5004.46, 796.446, 5050.6, 854.009, 5116.48, 858.521, 5176.95, 844.984, 5213.08, 822.089, 5313.43, 1003.55, 5416.79, 1130.75, 5581.09, 1207.6 )
+border_size = -64
+border_overlap = -16
+border_textures = ExtResource( 9 )
+border_clockwise_shift = 3
+border_texture_scale = Vector2( 0.5, 0.5 )
+border_texture_offset = Vector2( 80, -1 )
+
+[node name="PlatformZoneTwo" type="StaticBody2D" parent="Platforms"]
+collision_layer = 512
+collision_mask = 0
+script = ExtResource( 5 )
+
+[node name="CollisionPolygdon2D" type="CollisionPolygon2D" parent="Platforms/PlatformZoneTwo"]
+script = ExtResource( 6 )
+
+[node name="BorderedPolygon2D" parent="Platforms/PlatformZoneTwo/CollisionPolygdon2D" instance=ExtResource( 4 )]
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 6927.79, 16.7831, 9116.72, 21.0568, 9116.72, 68.7703, 6924.92, 90.6964 )
+border_size = -64
+border_overlap = -16
+border_textures = ExtResource( 12 )
+border_clockwise_shift = 3
+border_texture_scale = Vector2( 0.5, 0.5 )
+border_texture_offset = Vector2( 0, 0 )
+smooth_level = 0.0
+
+[node name="CollisionPolygdon2D2" type="CollisionPolygon2D" parent="Platforms/PlatformZoneTwo"]
+script = ExtResource( 6 )
+
+[node name="BorderedPolygon2D" parent="Platforms/PlatformZoneTwo/CollisionPolygdon2D2" instance=ExtResource( 4 )]
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 9054.1, 40.0465, 9053.15, -384.604, 9127.25, -386.504, 9116.8, 66.6465 )
+border_size = -64
+border_overlap = -16
+border_textures = ExtResource( 12 )
+border_clockwise_shift = 4
+border_texture_scale = Vector2( 0.5, 0.5 )
+border_texture_offset = Vector2( 0, 0 )
+smooth_level = 0.0
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Platforms/PlatformZoneTwo"]
+script = ExtResource( 6 )
+
+[node name="BorderedPolygon2D" type="Polygon2D" parent="Platforms/PlatformZoneTwo/CollisionPolygon2D2"]
+self_modulate = Color( 1, 1, 1, 0 )
+z_index = -13
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 18700.3, 1221.63, 18851.5, 1216.35, 18950, 1189.98, 19034.4, 1130.21, 19095.9, 1061.64, 19124, 945.606, 19122.3, 855.943, 19087.1, 752.216, 19008, 674.86, 18921.7, 642.641, 18818.1, 640.436, 18732.8, 661.019, 18674, 693.363, 18609.3, 744.819, 18573.3, 833.031, 18554.2, 933.738, 18448.2, 940.774, 18453.3, 575.036, 18540.3, 539.487, 19143.4, 544.761, 19230.2, 577.1, 19226.2, 1269.53, 18600.1, 1262.06 )
+script = ExtResource( 10 )
+__meta__ = {
+"_editor_icon": ExtResource( 11 )
+}
+border_size = -60
+border_overlap = -16
+border_texture = ExtResource( 13 )
+border_texture_scale = Vector2( 0.5, 0.5 )
+
+[node name="PlatformZoneThree" type="StaticBody2D" parent="Platforms"]
+collision_layer = 1024
+collision_mask = 0
+script = ExtResource( 5 )
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Platforms/PlatformZoneThree"]
+script = ExtResource( 6 )
+
+[node name="BorderedPolygon2D" type="Polygon2D" parent="Platforms/PlatformZoneThree/CollisionPolygon2D2"]
+self_modulate = Color( 1, 1, 1, 0 )
+z_index = -14
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 18936.3, 1217.7, 18809.1, 1203.45, 18704.6, 1171, 18634.6, 1123.1, 18584.8, 1061.34, 18546.4, 986.007, 18550.2, 892.974, 18581.7, 806, 18624.5, 739.253, 18675.6, 699.016, 18756.8, 659.553, 18845, 647.947, 18921.6, 648.721, 18987.4, 675.029, 19050.8, 719.909, 19101.1, 778.716, 19124.4, 866.153, 19131.3, 942.758, 19212.6, 947.76, 19209.7, 595.697, 19133.1, 555.651, 18536.3, 555.794, 18459.1, 575.552, 18448.2, 1286.39, 19022.5, 1277.88 )
+script = ExtResource( 10 )
+__meta__ = {
+"_editor_icon": ExtResource( 11 )
+}
+border_size = -64
+border_overlap = -16
+border_texture = ExtResource( 13 )
+border_texture_scale = Vector2( 0.5, 0.5 )
+
+[node name="Colliders" type="Node2D" parent="Platforms"]
+
+[node name="Group1" type="Node2D" parent="Platforms/Colliders"]
+
+[node name="AllZonesNotTwo" type="KinematicBody2D" parent="Platforms/Colliders/Group1"]
+position = Vector2( -12.2617, 2.74097 )
+collision_layer = 0
+collision_mask = 256
+script = ExtResource( 14 )
+ZoneTwo = false
+
+[node name="200" type="CollisionPolygon2D" parent="Platforms/Colliders/Group1/AllZonesNotTwo"]
+polygon = PoolVector2Array( 6865.8, -385.019, 6943.07, -372.656, 6803.58, 232.755, 9239.47, 320.643, 9262.19, -426.87, 9314.44, -445.047, 9296.27, 361.54, 6706.87, 283.212 )
+
+[node name="AllZones" type="KinematicBody2D" parent="Platforms/Colliders/Group1"]
+position = Vector2( 48.6777, -61.7769 )
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 14 )
+
+[node name="100" type="CollisionPolygon2D" parent="Platforms/Colliders/Group1/AllZones"]
+polygon = PoolVector2Array( 6382.34, -386.039, 6502.86, 690.16, 9395.69, 793.753, 9418.99, -468.834, 8401.71, -463.537, 8354.29, -151.113, 8273.39, 60.8893, 7914.55, 68.7747, 7855.33, -92.2286, 7033.01, -137.939, 6947.56, -348.872, 6428.28, -392.811, 7022.21, -430.198, 7079.99, -179.047, 8298.57, -176.111, 8321.67, -552.591, 9507.51, -543.378, 9488.87, 868.297, 6454.91, 751.806 )
+
+[node name="Group2" type="Node2D" parent="Platforms/Colliders"]
+
+[node name="AllZonesNotTwo" type="KinematicBody2D" parent="Platforms/Colliders/Group2"]
+position = Vector2( -12196.2, -1833.33 )
+collision_layer = 0
+collision_mask = 256
+script = ExtResource( 14 )
+ZoneTwo = false
+
+[node name="200" type="CollisionPolygon2D" parent="Platforms/Colliders/Group2/AllZonesNotTwo"]
+polygon = PoolVector2Array( 31194.7, 2457.58, 31190.1, 2098.59, 31683.2, 2293.99, 31744.5, 3096.03, 31655.9, 3091.49, 31612.7, 2341.7, 31265.1, 2187.2, 31269.6, 2464.39 )
+
+[node name="AllZonesNotTwo2" type="KinematicBody2D" parent="Platforms/Colliders/Group2"]
+position = Vector2( -12196.2, -1833.33 )
+collision_layer = 0
+collision_mask = 256
+script = ExtResource( 14 )
+ZoneTwo = false
+
+[node name="200" type="CollisionPolygon2D" parent="Platforms/Colliders/Group2/AllZonesNotTwo2"]
+position = Vector2( 10419.6, 191.26 )
+polygon = PoolVector2Array( 20458.2, 2457.14, 20574.8, 2375.69, 20601.4, 2408.27, 20490.8, 2492.29 )
+
+[node name="AllZonesNotThree3" type="KinematicBody2D" parent="Platforms/Colliders/Group2"]
+position = Vector2( -12196.2, -1833.33 )
+collision_layer = 0
+collision_mask = 256
+script = ExtResource( 14 )
+ZoneThree = false
+
+[node name="200" type="CollisionPolygon2D" parent="Platforms/Colliders/Group2/AllZonesNotThree3"]
+position = Vector2( 11087.2, 104.904 )
+polygon = PoolVector2Array( 20047.8, 2495.48, 20086.4, 2458.62, 20165.2, 2572.43, 20124, 2592.27 )
+
+[node name="AllZonesNotThree4" type="KinematicBody2D" parent="Platforms/Colliders/Group2"]
+position = Vector2( -12196.2, -1833.33 )
+collision_layer = 0
+collision_mask = 256
+script = ExtResource( 14 )
+ZoneThree = false
+
+[node name="200" type="CollisionPolygon2D" parent="Platforms/Colliders/Group2/AllZonesNotThree4"]
+polygon = PoolVector2Array( 30378.8, 3095.51, 30392.5, 2383.16, 30971.3, 2112.6, 30967.9, 2444.8, 30923.4, 2444.8, 30916.5, 2198.22, 30440.5, 2434.53, 30430.2, 3112.64 )
+
+[node name="AllZones" type="KinematicBody2D" parent="Platforms/Colliders/Group2"]
+position = Vector2( -12135.2, -1897.85 )
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 14 )
+
+[node name="100" type="CollisionPolygon2D" parent="Platforms/Colliders/Group2/AllZones"]
+polygon = PoolVector2Array( 30112.4, 3194.28, 30170.6, 2403.15, 30972, 2026.43, 31704.9, 2228.49, 31924.1, 3303.88, 31961.7, 3293.6, 31756.3, 2195.8, 30972.2, 1974.56, 30116.5, 2358.48, 30071.3, 3194.28 )
+
+[node name="Group3" type="Node2D" parent="Platforms/Colliders"]
+
+[node name="AllZones2" type="KinematicBody2D" parent="Platforms/Colliders/Group3"]
+position = Vector2( -12135.2, -1897.85 )
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 14 )
+
+[node name="AllZonesNotTwo" type="KinematicBody2D" parent="Platforms/Colliders/Group3"]
+position = Vector2( -12135.2, -1897.85 )
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 14 )
+
+[node name="Garnishes" type="Node2D" parent="Platforms"]
+z_index = -5
+
+[node name="Flowers" type="Node2D" parent="Platforms/Garnishes"]
+
+[node name="FlowerB" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 5920.41, 1009.19 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 16 )
+
+[node name="FlowerC4" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 13925.7, 951.134 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC5" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 13744.9, 941.083 )
+rotation = 0.0475715
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC10" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 20591.1, 1212.69 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC13" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 20762.5, 1216.08 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC11" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 21495.3, 1215.79 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC12" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 21671, 1209.14 )
+rotation = -0.106856
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC6" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 9899.51, 1039.09 )
+rotation = 0.0136814
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC7" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 10081.3, 1041.41 )
+rotation = 0.0136814
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC8" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 10266.8, 1039.01 )
+rotation = -0.0153745
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerC9" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 9716.48, 1043.2 )
+rotation = -0.0153745
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerD" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 3566.86, 905.15 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD5" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 3566.86, 905.15 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD6" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 15558.2, 978.814 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD4" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 8598.29, 1029.83 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD8" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 12391, 452.163 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD7" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 1441.09, 872.589 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD2" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 18521, 1196.59 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD3" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 18361.6, 1200.39 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerD9" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 20895.4, 1219.46 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerE2" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 19103.3, 530.818 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerE3" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 18102, 1722.7 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerE6" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 16896.1, 1181.31 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="Trees" type="Node2D" parent="Platforms/Garnishes"]
+
+[node name="TreeA2" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 6762.15, 871.64 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA3" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 4028.04, 654.283 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA12" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 1910.95, 490.508 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA4" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 20751.8, 1051.33 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA5" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 20252.4, 1045.7 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA6" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 15955.4, 852.689 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA9" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 15761.3, 821.234 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA10" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 13338.4, 777.306 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA11" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 11878.3, 734.326 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA13" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 10041.6, 884.545 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeA16" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 8431.8, 891.788 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeB2" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 3237.54, 802.584 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB3" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 683.337, 515.37 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB4" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 17937.3, 1033.99 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB6" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 20378.2, 1043.57 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB8" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 13498.7, 795.749 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB9" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 8689.27, 867.891 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB14" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 9818.59, 879.67 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB15" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 10135.9, 871.319 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB12" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 16351.7, 941.098 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB13" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 16188.7, 908.495 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="TreeB7" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 21389.3, 1074.3 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="PlatformFillIn" type="Node2D" parent="Platforms/Garnishes"]
+
+[node name="BorderedPolygon2D" type="Polygon2D" parent="Platforms/Garnishes/PlatformFillIn"]
+self_modulate = Color( 1, 1, 1, 0 )
+position = Vector2( 10622.2, 234.579 )
+texture = ExtResource( 23 )
+polygon = PoolVector2Array( 7953.93, 826.304, 7940.13, 758.987, 7937.52, 681.097, 7948.95, 620.362, 7831.53, 613.735, 7830.43, 844.022 )
+script = ExtResource( 10 )
+__meta__ = {
+"_editor_icon": ExtResource( 11 )
+}
+border_size = -48
+border_overlap = -16
+border_textures = ExtResource( 24 )
+border_texture_scale = Vector2( 0.5, 0.5 )
+smooth_level = 0.3
+
+[node name="Polygon2D" type="Polygon2D" parent="Platforms/Garnishes/PlatformFillIn"]
+position = Vector2( 10671.4, 163.281 )
+z_index = -2
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 7870.51, 881.044, 7845.73, 731.208, 7797.31, 739.629, 7804.36, 971.458, 7849.93, 963.372 )
+
+[node name="Misc" type="Node2D" parent="Platforms/Garnishes"]
+
+[node name="Items" type="Node2D" parent="."]
+
+[node name="Holdables" type="Node2D" parent="Items"]
+
+[node name="Spring" parent="Items/Holdables" instance=ExtResource( 29 )]
+position = Vector2( 12753.9, 898.494 )
+JumpVelocity = 1500
+
+[node name="Enemies" type="Node2D" parent="Items"]
+position = Vector2( 106.01, 5.05809 )
+
+[node name="BirdPath2D1" type="Path2D" parent="Items/Enemies"]
+position = Vector2( 11402.8, 169.91 )
+curve = SubResource( 1 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Items/Enemies/BirdPath2D1"]
+position = Vector2( 4361.93, 569.815 )
+rotation = 0.0277413
+
+[node name="Bird" parent="Items/Enemies/BirdPath2D1/PathFollow2D" instance=ExtResource( 36 )]
+Calories = 1500
+
+[node name="DeerPath2D1" type="Path2D" parent="Items/Enemies"]
+curve = SubResource( 2 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Items/Enemies/DeerPath2D1"]
+position = Vector2( 15480.4, 936.921 )
+rotation = 0.0231285
+loop = false
+
+[node name="Deer" parent="Items/Enemies/DeerPath2D1/PathFollow2D" instance=ExtResource( 37 )]
+Calories = 1500
+
+[node name="Foods" type="Node2D" parent="Items"]
+
+[node name="Smores" type="Node2D" parent="Items/Foods"]
+
+[node name="S\'more" parent="Items/Foods/Smores" instance=ExtResource( 25 )]
+position = Vector2( 5501.19, 905.859 )
+
+[node name="S\'more2" parent="Items/Foods/Smores" instance=ExtResource( 25 )]
+position = Vector2( 5339.56, 817.088 )
+
+[node name="Bushes" type="Node2D" parent="Items"]
+z_index = -2
+
+[node name="Blueberries" parent="Items/Bushes" instance=ExtResource( 26 )]
+position = Vector2( 5825.95, 934.949 )
+scale = Vector2( 1, 1 )
+lootableCalories = 1500
+
+[node name="SpeedBoosts" type="Node2D" parent="Items"]
+
+[node name="SpeedBoost" parent="Items/SpeedBoosts" instance=ExtResource( 20 )]
+position = Vector2( 10801.7, 1017.57 )
+
+[node name="SpeedBoost2" parent="Items/SpeedBoosts" instance=ExtResource( 20 )]
+position = Vector2( 17705.8, 1169.56 )
+
+[node name="SafetyCheckpoints" type="Node2D" parent="Items"]
+
+[node name="SafetyCheckPoint1" parent="Items/SafetyCheckpoints" instance=ExtResource( 27 )]
+
+[node name="SafetyCheckPoint2" parent="Items/SafetyCheckpoints" instance=ExtResource( 27 )]
+position = Vector2( 3640.59, 496.835 )
+
+[node name="SafetyCheckPoint3" parent="Items/SafetyCheckpoints" instance=ExtResource( 27 )]
+position = Vector2( 4730.79, 489.847 )
+
+[node name="SafetyCheckPoint4" parent="Items/SafetyCheckpoints" instance=ExtResource( 27 )]
+position = Vector2( 7412.23, 515.713 )
+
+[node name="EndLevel" parent="Items" instance=ExtResource( 35 )]
+position = Vector2( 21131.7, 1158.34 )
+
+[node name="Springs" type="Node2D" parent="Items"]
+
+[node name="StageSpring" parent="Items/Springs" instance=ExtResource( 15 )]
+position = Vector2( 7641.26, 997.18 )
+
+[node name="Misc" type="Node2D" parent="Items"]
+
+[node name="TutorialRotationThrowaway" type="KinematicBody2D" parent="Items/Misc"]
+position = Vector2( 8164.32, 536.523 )
+scale = Vector2( 2, 2 )
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 28 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Misc/TutorialRotationThrowaway"]
+position = Vector2( 321.445, 66.1645 )
+shape = SubResource( 3 )
+
+[node name="RemoveableWall" type="StaticBody2D" parent="Items/Misc"]
+position = Vector2( -21.2651, -4.17389 )
+scale = Vector2( 2, 2 )
+
+[node name="RemoveWallWhenHealthIs100" type="KinematicBody2D" parent="Items/Misc/RemoveableWall"]
+position = Vector2( 3138.76, 500.544 )
+z_index = -5
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 30 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Items/Misc/RemoveableWall/RemoveWallWhenHealthIs100"]
+position = Vector2( -86.9792, 0.925323 )
+polygon = PoolVector2Array( 46.4885, -69.3973, -347.338, -199.563, -444.728, -173.904, -413.82, -119.085, -379.412, -145.911, -307.098, -117.919, -245.865, -89.9264, -244.699, -42.106, -219.641, -18.977, -184.972, -80.0241, -118.649, -98.8658, -55.3408, -58.9214, -27.4551, -3.90359, 47.2046, 14.3731 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Items/Misc/RemoveableWall"]
+z_index = -2
+script = ExtResource( 6 )
+
+[node name="Platform" parent="Items/Misc/RemoveableWall/CollisionPolygon2D" instance=ExtResource( 4 )]
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 3095.72, 528.303, 3098.89, 68.9605, 3114.95, 57.7968, 3151.41, 58.8172, 3161.72, 82.8495, 3160.77, 520.369, 3148.53, 548.573, 3120.1, 549.866 )
+border_size = -32
+border_overlap = -8
+border_textures = ExtResource( 12 )
+border_texture_scale = Vector2( 0.25, 0.25 )
+border_texture_offset = Vector2( 80, -1 )
+
+[node name="CancelHorizMomentum" type="KinematicBody2D" parent="Items/Misc"]
+position = Vector2( 14765.7, 415.61 )
+scale = Vector2( 2, 2 )
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 42 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Misc/CancelHorizMomentum"]
+position = Vector2( 115.098, -171.615 )
+shape = SubResource( 4 )
+
+[node name="Texts" type="Node2D" parent="."]
+position = Vector2( 10.585, 11.3684 )
+
+[node name="Navigation" type="Node2D" parent="Texts"]
+position = Vector2( 2403.22, 632.364 )
+z_index = -4
+
+[node name="TUT_NAV" type="Label" parent="Texts/Navigation"]
+margin_left = 483.0
+margin_top = -163.0
+margin_right = 1028.0
+margin_bottom = 179.0
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "TUT_NAV"
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MakeMyParentHover" type="Node2D" parent="Texts/Navigation"]
+script = ExtResource( 46 )
+
+[node name="LeftArrow" type="Sprite" parent="Texts/Navigation"]
+position = Vector2( 223.327, 17.757 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 32 )
+
+[node name="RightArrow" type="Sprite" parent="Texts/Navigation"]
+position = Vector2( 365.798, 17.3066 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 33 )
+
+[node name="EatFood1" type="Node2D" parent="Texts"]
+position = Vector2( 4561.74, 383.082 )
+z_index = -4
+
+[node name="TUT_EAT1" type="Label" parent="Texts/EatFood1"]
+margin_left = 267.0
+margin_top = 53.0
+margin_right = 801.0
+margin_bottom = 333.0
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "TUT_EAT1"
+align = 1
+valign = 2
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MakeMyParentHover" type="Node2D" parent="Texts/EatFood1"]
+script = ExtResource( 46 )
+
+[node name="EatFood2" type="Node2D" parent="Texts"]
+position = Vector2( 4746.73, 445.394 )
+z_index = -4
+
+[node name="TUT_EAT2" type="Label" parent="Texts/EatFood2"]
+margin_left = 874.069
+margin_top = 112.789
+margin_right = 1417.07
+margin_bottom = 361.789
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "TUT_EAT2"
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MakeMyParentHover" type="Node2D" parent="Texts/EatFood2"]
+script = ExtResource( 46 )
+
+[node name="Arrow" type="Sprite" parent="Texts/EatFood2"]
+position = Vector2( 1338.54, 340.24 )
+rotation = 2.35619
+scale = Vector2( 1.5, 1.5 )
+texture = ExtResource( 34 )
+
+[node name="ui_forage" parent="Texts/EatFood2" instance=ExtResource( 57 )]
+position = Vector2( 771.499, 242.082 )
+
+[node name="Item1" type="Node2D" parent="Texts"]
+position = Vector2( 6423.91, 737.46 )
+z_index = -4
+
+[node name="TUT_EAT2" type="Label" parent="Texts/Item1"]
+margin_left = 857.413
+margin_top = -94.48
+margin_right = 1400.41
+margin_bottom = 154.52
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "TUT_ITEM1"
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MakeMyParentHover" type="Node2D" parent="Texts/Item1"]
+script = ExtResource( 46 )
+
+[node name="ui_forage" parent="Texts/Item1" instance=ExtResource( 57 )]
+position = Vector2( 766.996, 37.3628 )
+
+[node name="GoDown" type="Node2D" parent="Texts"]
+position = Vector2( 8402.98, -190.113 )
+z_index = -4
+
+[node name="Sprite" type="Sprite" parent="Texts/GoDown"]
+position = Vector2( 440.382, -103.456 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 38 )
+
+[node name="TUT_FLOOR1" type="Label" parent="Texts/GoDown"]
+margin_left = -257.0
+margin_top = -288.0
+margin_right = 362.0
+margin_bottom = -51.0
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "TUT_FLOOR1"
+align = 2
+valign = 2
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TUT_FLOOR2" type="Label" parent="Texts/GoDown"]
+margin_left = -264.0
+margin_top = -27.0
+margin_right = 501.0
+margin_bottom = 313.0
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "TUT_FLOOR2"
+align = 2
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MakeMyParentHover" type="Node2D" parent="Texts/GoDown"]
+script = ExtResource( 46 )
+
+[node name="Rotate" type="Node2D" parent="Texts"]
+position = Vector2( 8948.33, 514.871 )
+z_index = -4
+
+[node name="TUT_NAV" type="Label" parent="Texts/Rotate"]
+margin_left = 173.368
+margin_top = 87.4955
+margin_right = 718.368
+margin_bottom = 429.495
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "TUT_ROTATE"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MakeMyParentHover" type="Node2D" parent="Texts/Rotate"]
+script = ExtResource( 46 )
+
+[node name="LeftArrow" type="Sprite" parent="Texts/Rotate"]
+position = Vector2( 223.327, 17.757 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 32 )
+
+[node name="RightArrow" type="Sprite" parent="Texts/Rotate"]
+position = Vector2( 365.798, 17.3066 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 33 )
+
+[node name="SpeedBoost" type="Node2D" parent="Texts"]
+position = Vector2( 10189.7, 819.885 )
+z_index = -4
+
+[node name="TUT_EAT2" type="Label" parent="Texts/SpeedBoost"]
+margin_left = 553.499
+margin_top = -25.427
+margin_right = 669.499
+margin_bottom = 73.573
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "+"
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MakeMyParentHover" type="Node2D" parent="Texts/SpeedBoost"]
+script = ExtResource( 46 )
+
+[node name="RightArrow" type="Sprite" parent="Texts/SpeedBoost"]
+position = Vector2( 464.58, 21.6921 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 33 )
+
+[node name="ui_forage" parent="Texts/SpeedBoost" instance=ExtResource( 57 )]
+position = Vector2( 763.344, 21.1558 )
+
+[node name="Item2" type="Node2D" parent="Texts"]
+position = Vector2( 11850.9, 496.964 )
+z_index = -4
+
+[node name="TUT_ITEM2" type="Label" parent="Texts/Item2"]
+margin_left = 990.253
+margin_top = -149.171
+margin_right = 1533.25
+margin_bottom = 99.8295
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "TUT_ITEM2"
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MakeMyParentHover" type="Node2D" parent="Texts/Item2"]
+script = ExtResource( 46 )
+
+[node name="Arrow" type="Sprite" parent="Texts/Item2"]
+position = Vector2( 881.563, 198.932 )
+rotation = 1.57079
+scale = Vector2( 1.5, 1.5 )
+texture = ExtResource( 34 )
+
+[node name="ui_forage" parent="Texts/Item2" instance=ExtResource( 57 )]
+position = Vector2( 886.864, -6.68066 )
+
+[node name="Item3" type="Node2D" parent="Texts"]
+position = Vector2( 12892.7, 448.803 )
+z_index = -4
+
+[node name="TUT_ITEM3" type="Label" parent="Texts/Item3"]
+margin_left = 640.0
+margin_top = 4.0
+margin_right = 1267.0
+margin_bottom = 495.0
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "TUT_ITEM3"
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MakeMyParentHover" type="Node2D" parent="Texts/Item3"]
+script = ExtResource( 46 )
+
+[node name="Arrow" type="Sprite" parent="Texts/Item3"]
+position = Vector2( 1201.04, -85.4785 )
+rotation = -0.76824
+scale = Vector2( 1.5, 1.5 )
+texture = ExtResource( 34 )
+
+[node name="ui_use_item" parent="Texts/Item3" instance=ExtResource( 57 )]
+position = Vector2( 573.918, 248.375 )
+
+[node name="Attack" type="Node2D" parent="Texts"]
+position = Vector2( 14514.8, 775.05 )
+z_index = -4
+
+[node name="+" type="Label" parent="Texts/Attack"]
+margin_left = 528.092
+margin_top = -116.107
+margin_right = 644.092
+margin_bottom = -17.1071
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "+"
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MakeMyParentHover" type="Node2D" parent="Texts/Attack"]
+script = ExtResource( 46 )
+
+[node name="AllArrows" type="AnimatedSprite" parent="Texts/Attack"]
+position = Vector2( 459.027, -68.988 )
+scale = Vector2( 0.5, 0.5 )
+frames = SubResource( 6 )
+frame = 2
+playing = true
+
+[node name="TUT_ATTACK1" type="Label" parent="Texts/Attack"]
+margin_left = 359.597
+margin_top = 16.2194
+margin_right = 902.597
+margin_bottom = 265.219
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "TUT_ATTACK1"
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ui_attack" parent="Texts/Attack" instance=ExtResource( 57 )]
+position = Vector2( 775.407, -64.7715 )

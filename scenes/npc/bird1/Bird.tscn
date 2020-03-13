@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://src/NPC/FlyingEnemy.cs" type="Script" id=1]
+[ext_resource path="res://scenes/npc/bird1/bird1_cutout.tscn" type="PackedScene" id=2]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 39.6995
+height = 38.772
+
+[node name="Bird" type="KinematicBody2D"]
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 1 )
+Calories = 700.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource( 2 )
+
+[node name="CutOutBird" type="Node2D" parent="." instance=ExtResource( 2 )]
+scale = Vector2( 0.075, 0.075 )

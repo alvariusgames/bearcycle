@@ -9,7 +9,6 @@ public class InteractiveLoader : Node {
     private ResourceInteractiveLoader loader;
 
     public override void _Ready(){
-        GD.Print("initialized!");
         foreach(Node child in this.GetChildren()){
             if(child is ViewportContainer){
                 this.viewport = (Viewport)child.GetChild(0);
@@ -45,6 +44,7 @@ public class InteractiveLoader : Node {
                 this.ProgressBar.Value = (loader.GetStage());}
         else {
             var loadedScene = (this.loader.GetResource() as PackedScene).Instance();
+            this.loader.Dispose();
             this.finishLoadingTransitionToScene(loadedScene);
         }
     }
@@ -54,6 +54,7 @@ public class InteractiveLoader : Node {
         if(this.Args.ToLevelStr != null){
             var levelFrameScene = (LevelFrame)(GD.Load("res://scenes/frames/LevelFrame.tscn") as PackedScene).Instance();
             levelFrameScene._Ready();
+            levelFrameScene.SetLevelTitle(this.Args.LevelTitle, this.Args.LevelZone);
             levelFrameScene.Viewport.AddChild(loadedScene);
             toScene = levelFrameScene;}
         else{

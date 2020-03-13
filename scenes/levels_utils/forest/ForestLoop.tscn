@@ -1,0 +1,135 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://src/Level/ZoneCollider.cs" type="Script" id=1]
+[ext_resource path="res://addons/bordered-polygon-2d/bordered_polygon_2d.gd" type="Script" id=2]
+[ext_resource path="res://addons/bordered-polygon-2d/icon.png" type="Texture" id=3]
+[ext_resource path="res://media/tilesets/app_forest_1/two_sided_border_tiles.tres" type="TileSet" id=4]
+[ext_resource path="res://src/Level/CollisionPolygonParentOfBorderedPolygon.cs" type="Script" id=5]
+[ext_resource path="res://media/tilesets/app_forest_1/tiles/tile_middle.png" type="Texture" id=6]
+[ext_resource path="res://media/tilesets/app_forest_1/tiles/tile_side.png" type="Texture" id=7]
+[ext_resource path="res://media/tilesets/app_forest_1/tiles/empty.png" type="Texture" id=8]
+[ext_resource path="res://src/Level/Platforms.cs" type="Script" id=9]
+
+[node name="ForestLoop" type="Node2D"]
+
+[node name="PlatformZoneTwo" type="StaticBody2D" parent="."]
+collision_layer = 512
+collision_mask = 0
+script = ExtResource( 9 )
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="PlatformZoneTwo"]
+script = ExtResource( 5 )
+
+[node name="BorderedPolygon2D" type="Polygon2D" parent="PlatformZoneTwo/CollisionPolygon2D2"]
+self_modulate = Color( 1, 1, 1, 0 )
+z_index = -13
+texture = ExtResource( 6 )
+polygon = PoolVector2Array( 7894.33, 732.222, 7936.84, 602.822, 8049.35, 520.193, 8232.19, 492.064, 8348.22, 548.322, 8423.41, 646, 8446.02, 783.165, 8402.31, 923.345, 8292.28, 1015.29, 8112.64, 1063.43, 7982.55, 1066.95, 7906.95, 1082.77, 7887.61, 1147.82, 7938.59, 1167.16, 8573.25, 1158.37, 8573.25, 409.435, 8502.93, 347.903, 7808.5, 351.419, 7764.55, 397.129, 7764.55, 810.273, 7826.78, 809.101, 7889.37, 806.756 )
+script = ExtResource( 2 )
+__meta__ = {
+"_editor_icon": ExtResource( 3 )
+}
+border_size = -60
+border_overlap = -16
+border_texture = ExtResource( 7 )
+border_texture_scale = Vector2( 0.5, 0.5 )
+
+[node name="PlatformZoneThree" type="StaticBody2D" parent="."]
+collision_layer = 1024
+collision_mask = 0
+script = ExtResource( 9 )
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="PlatformZoneThree"]
+script = ExtResource( 5 )
+
+[node name="BorderedPolygon2D" type="Polygon2D" parent="PlatformZoneThree/CollisionPolygon2D2"]
+self_modulate = Color( 1, 1, 1, 0 )
+z_index = -14
+texture = ExtResource( 6 )
+polygon = PoolVector2Array( 8513.79, 1093.6, 8262.04, 1072.4, 8123.19, 1040.58, 8000.13, 986.078, 7921.02, 891.143, 7889.37, 748.74, 7933.32, 609.854, 8044.08, 511.403, 8188.24, 476.242, 8344.71, 530.741, 8430.85, 653.805, 8441.4, 761.047, 8569.41, 765.877, 8564.89, 410.144, 8492.54, 361.909, 8097.61, 363.417, 7885.08, 361.909, 7770.52, 404.115, 7766.14, 640.531, 7767.09, 1161.89, 8511.14, 1204.9, 8577.39, 1167.8 )
+script = ExtResource( 2 )
+__meta__ = {
+"_editor_icon": ExtResource( 3 )
+}
+border_size = -64
+border_overlap = -16
+border_texture = ExtResource( 7 )
+border_texture_scale = Vector2( 0.5, 0.5 )
+
+[node name="Colliders" type="Node2D" parent="."]
+
+[node name="AllZonesNotTwo" type="KinematicBody2D" parent="Colliders"]
+position = Vector2( -12196.2, -1833.33 )
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 1 )
+ZoneTwo = false
+
+[node name="200" type="CollisionPolygon2D" parent="Colliders/AllZonesNotTwo"]
+position = Vector2( 0, -2.33276 )
+polygon = PoolVector2Array( 21060.5, 3143.74, 21001.1, 1631.23, 20441.9, 1431.5, 20432.5, 2272.79, 20474.3, 2274.46, 20501.8, 1499.41, 20977.1, 1691.15, 20992, 3102.64 )
+
+[node name="AllZonesNotTwo2" type="KinematicBody2D" parent="Colliders"]
+position = Vector2( -12196.2, -1833.33 )
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 1 )
+ZoneTwo = false
+
+[node name="200" type="CollisionPolygon2D" parent="Colliders/AllZonesNotTwo2"]
+position = Vector2( -251.842, 27.979 )
+polygon = PoolVector2Array( 20458.2, 2457.14, 20574.8, 2375.69, 20601.4, 2408.27, 20490.8, 2492.29 )
+
+[node name="AllZonesNotThree3" type="KinematicBody2D" parent="Colliders"]
+position = Vector2( -12196.2, -1833.33 )
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 1 )
+ZoneThree = false
+
+[node name="200" type="CollisionPolygon2D" parent="Colliders/AllZonesNotThree3"]
+position = Vector2( 415.75, -58.3765 )
+polygon = PoolVector2Array( 20047.8, 2495.48, 20086.4, 2458.62, 20165.2, 2572.43, 20124, 2592.27 )
+
+[node name="AllZonesNotThree4" type="KinematicBody2D" parent="Colliders"]
+position = Vector2( -12196.2, -1833.33 )
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 1 )
+ZoneThree = false
+
+[node name="200" type="CollisionPolygon2D" parent="Colliders/AllZonesNotThree4"]
+position = Vector2( -17.5312, -14.0209 )
+polygon = PoolVector2Array( 20423.5, 1455.18, 19776.3, 1571.02, 19776.5, 2997.76, 19831, 2997.76, 19836.3, 1638.92, 20399.5, 1527.08, 20356.5, 2289.49, 20398.3, 2286.15 )
+
+[node name="AllZones" type="KinematicBody2D" parent="Colliders"]
+position = Vector2( -12135.2, -1897.85 )
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 1 )
+
+[node name="100" type="CollisionPolygon2D" parent="Colliders/AllZones"]
+position = Vector2( 25.9004, 56.1199 )
+polygon = PoolVector2Array( 19577.3, 1499.61, 19565.3, 3060.3, 19492.6, 3069.39, 19484.4, 2026.16, 19530.8, 1401.52, 20305.2, 1303.44, 21122.7, 1568.02, 21296.2, 3162.85, 21174.2, 3158.07, 21095.3, 1639.94, 20325.8, 1365.39 )
+
+[node name="PlatformFillIn" type="Node2D" parent="."]
+
+[node name="BorderedPolygon2D" type="Polygon2D" parent="PlatformFillIn"]
+self_modulate = Color( 1, 1, 1, 0 )
+position = Vector2( -49.1841, 71.298 )
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 7966.38, 826.678, 7946.7, 761.611, 7937.52, 681.097, 7948.95, 620.362, 7813.86, 620.902, 7821.98, 846.628 )
+script = ExtResource( 2 )
+__meta__ = {
+"_editor_icon": ExtResource( 3 )
+}
+border_size = -48
+border_overlap = -16
+border_textures = ExtResource( 4 )
+border_texture_scale = Vector2( 0.5, 0.5 )
+smooth_level = 0.3
+
+[node name="Polygon2D" type="Polygon2D" parent="PlatformFillIn"]
+z_index = -2
+texture = ExtResource( 6 )
+polygon = PoolVector2Array( 7870.51, 881.044, 7845.73, 731.208, 7797.31, 739.629, 7804.36, 971.458, 7849.93, 963.372 )

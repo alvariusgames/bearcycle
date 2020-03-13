@@ -2,20 +2,14 @@ using Godot;
 using System;
 using System.Text.RegularExpressions;
 
-public enum LeapingEnemyState { LEAPING_FORWARD, LEAPING_BACKWARD, TRIGGER_GRAZING, GRAZING, UNTRIGGER_GRAZING}
+public enum LeapingEnemyState { LEAPING_FORWARD, LEAPING_BACKWARD, TRIGGER_GRAZING, GRAZING, UNTRIGGER_GRAZING, STANDING_STILL}
 
-public class LeapingEnemy : FSMKinematicBody2D<LeapingEnemyState>, INPC, IFood
+public class LeapingEnemy : NPC<LeapingEnemyState>, INPC, IFood
 {
     public override LeapingEnemyState InitialState { get { return LeapingEnemyState.LEAPING_FORWARD;}}
 
-    public float Calories { get; set; }
-    public String GetDisplayableName(){
-        var name = this.GetName();
-        string pattern = @"\d+$"; //find numbers at end of string
-        string replacement = "";
-        Regex rgx = new Regex(pattern);
-        return rgx.Replace(name, replacement);
-    }
+    [Export]
+    public int Calories { get; set; } = Food.FALLBACK_CALORIES;
 
     public bool isConsumed { get; set; }
 
@@ -33,7 +27,7 @@ public class LeapingEnemy : FSMKinematicBody2D<LeapingEnemyState>, INPC, IFood
         return null;
     } set {}}
 
-    private int leepSpeed = 250;
+    private int leapSpeed = 250;
     public PathFollow2D PathFollow2D;
 
     public Node2D CutOut;
@@ -58,34 +52,35 @@ public class LeapingEnemy : FSMKinematicBody2D<LeapingEnemyState>, INPC, IFood
                         this.CutOutAnimationPlayer = (AnimationPlayer)child2;}
                     else if(((Node2D)child2).Name.Contains("root") && 
                              (child2 is Sprite)){
-                        this.RootSprite = (Sprite)child2;
-                        try{
-                            this.Calories = 1400; //TODO: make me dynamic
-                        } catch(Exception e){
-                            this.Calories = Food.FALLBACK_CALORIES;}}}}}
+                        this.RootSprite = (Sprite)child2;}}}}
         this.CutOutAnimationPlayer.Play("leap1");
         this.initialCutOutScale = this.CutOut.GetScale();}
 
     public override void ReactToState(float delta){
         switch(this.ActiveState){
             case LeapingEnemyState.LEAPING_FORWARD:
-                this.PathFollow2D.SetOffset(this.PathFollow2D.GetOffset() + delta * leepSpeed);;
+                this.PathFollow2D.SetOffset(this.PathFollow2D.GetOffset() + delta * leapSpeed);;
                 this.CutOut.SetScale(this.initialCutOutScale);
                 break;
             case LeapingEnemyState.LEAPING_BACKWARD:
                 this.CutOut.SetScale(new Vector2(-this.initialCutOutScale.x,
                                                  this.initialCutOutScale.y));
-                this.PathFollow2D.SetOffset(this.PathFollow2D.GetOffset() - delta * leepSpeed);;
+                this.PathFollow2D.SetOffset(this.PathFollow2D.GetOffset() - delta * leapSpeed);;
                 break;
- 
+            case LeapingEnemyState.STANDING_STILL:
+                break;
         }
     }
 
-    public void GetHitBy(object node){
+    public override void GetHitBy(object node){
         if(node is AttackWindow){
             GD.Print("Hit an attack window");
             this.CollisionShape2D.Disabled = true;
-            this.CutOut.Visible = false;}}
+            this.CutOut.Visible = false;
+            this.ResetActiveState(LeapingEnemyState.STANDING_STILL);
+            base.DisplayExplosion();
+            base.PlayGetEatenSound();
+            }}
     public override void ReactStateless(float delta){
 
     }

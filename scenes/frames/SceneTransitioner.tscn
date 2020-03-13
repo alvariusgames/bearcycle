@@ -28,4 +28,3 @@ audio_listener_enable_2d = true
 
 [node name="TransitionEffectRunner" type="Node2D" parent="."]
 script = ExtResource( 1 )
-

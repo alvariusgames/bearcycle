@@ -10,7 +10,7 @@ public class main : Node2D{
     // private int a = 2;
     // private string b = "textvar";
 
-    public const String VERSION = "v0.1.0-alpha";
+    public const String VERSION = "v0.1.1-alpha";
     public const float DELTA_NORMALIZER = 60f;
 
     public static Platform Platform = Platform.NONE;
@@ -24,6 +24,13 @@ public class main : Node2D{
     private const float MAX_MOBILE_DIAG_WIDTH = 7f;
 
     public override void _Ready(){
+        this.setPlatformAndPlatformType();
+        DbHandler.ApplyOverrideControlsToInputMap();
+        SoundHandler.SetSampleVolumeLinearUnits(DbHandler.Globals.SampleVolumeLinearUnits);
+        SoundHandler.SetStreamVolumeLinearUnits(DbHandler.Globals.StreamVolumeLinearUnits);
+        if(DbHandler.Globals.Locale != Globals.NO_LOCALE_SET_ARBITRARY_STRING){
+            TranslationServer.SetLocale(DbHandler.Globals.Locale);}}
+    private void setPlatformAndPlatformType(){
         var diagInches = getScreenDiagInInches();
         var name = OS.GetName().ToLower();
         if(name.Contains("android")){
@@ -51,7 +58,6 @@ public class main : Node2D{
 
     public override void _Process(float delta){
        this.GetTree().ChangeScene("res://scenes/title_screen/company_logo.tscn");
-       //this.GetTree().ChangeScene("res://scenes/frames/LevelFrame.tscn");
        //this.GetTree().ChangeScene("res://scenes/level_select/level_select.tscn");
     }
 

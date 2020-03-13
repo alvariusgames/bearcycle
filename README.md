@@ -2,7 +2,7 @@
 
 2D sidescroller about a rogue bear that learns to drive an ATV.
 
-![Gameplay](https://user-images.githubusercontent.com/18691334/54767981-4421fb00-4bcc-11e9-867a-dbb5ee87af64.gif)
+![Gameplay](./misc/gameplay2.gif)
 
 ## About
 

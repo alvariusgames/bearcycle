@@ -33,13 +33,17 @@ public class Spring : FSMKinematicBody2D<SpringState>, IHoldable, IInteractable{
 
     private uint startingCollisionLayer;
     private uint startingCollisionMask;
-    private const String BOING_SAMPLE = "res://media/samples/items/spring.wav";
+    public const String BOING_SAMPLE = "res://media/samples/items/spring.wav";
 
     private AnimatedSprite MonitorAnimSprite;
     private AnimatedSprite CloudAnimSprite;
+    [Export]
+    public int JumpVelocity {get; set;} = 2000;
+    private Node OriginalParent;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready(){
+        this.OriginalParent = this.GetParent();
         this.StartingPosition = this.GetGlobalPosition();
         this.startingCollisionLayer = this.GetCollisionLayer();
         this.startingCollisionMask = this.GetCollisionMask();
@@ -57,6 +61,9 @@ public class Spring : FSMKinematicBody2D<SpringState>, IHoldable, IInteractable{
         }
     }
 
+    public void InteractWith(Player player){
+        player.PickupHoldable(this);}
+
      private void makeCollideable(bool collidability){
         if(collidability){
             this.SetCollisionLayer(this.startingCollisionLayer);
@@ -66,8 +73,8 @@ public class Spring : FSMKinematicBody2D<SpringState>, IHoldable, IInteractable{
             this.SetCollisionMask(0);}}
 
     public void ReactToActionPress(float delta){
-        if(!this.Player.ATV.IsInAir()){
-            this.Player.ATV.SetVelocityOfTwoWheels((this.Player.ATV.CurrentNormal * 1500) + this.Player.ATV.GetVelocityOfTwoWheels());
+        if(!this.Player.ATV.IsInAirNormalized()){
+            this.Player.ATV.SetVelocityOfTwoWheels((this.Player.ATV.CurrentNormal * this.JumpVelocity) + this.Player.ATV.GetVelocityOfTwoWheels());
             this.IsDepleted = true;
             this.CurrentNumActionCalls++;
             SoundHandler.PlaySample<MyAudioStreamPlayer2D>(this.Player.ATV.Bear,
@@ -77,11 +84,20 @@ public class Spring : FSMKinematicBody2D<SpringState>, IHoldable, IInteractable{
 
     public void ReactToActionHold(float delta){}
 
+    public void PickupPreAction(){
+        this.MonitorAnimSprite.Visible = false;
+        this.CloudAnimSprite.Visible = true;
+        this.Player.AboveHeadManager.MakeInteractablePromptTempInvisible();
+        this.Player.AboveHeadManager.AddAboveHead(this);}
+
     public void PostDepletionAction(float delta){
+        this.Player.AboveHeadManager.RemoveAboveHead(this);
+        this.OriginalParent.AddChild(this);
         this.IsBeingHeld = false;
         this.CurrentNumActionCalls = 0;
         this.IsDepleted = false;
         this.SetGlobalPosition(this.StartingPosition);
+
     }
 
     public override void UpdateState(float delta){
@@ -104,10 +120,6 @@ public class Spring : FSMKinematicBody2D<SpringState>, IHoldable, IInteractable{
                 this.makeCollideable(false);
                 this.MonitorAnimSprite.Visible = false;
                 this.CloudAnimSprite.Visible = true;
-                var pos = this.Player.ATV.GetDeFactoGlobalPosition();
-                const float FLOAT_DIST = -175f;
-                pos = new Vector2(pos.x, pos.y + FLOAT_DIST);
-                this.SetGlobalPosition(pos);
             break;
             case(SpringState.NOT_HELD):
                 this.MonitorAnimSprite.Visible = true;

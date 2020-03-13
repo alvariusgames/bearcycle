@@ -52,10 +52,12 @@ public class CameraManager : FSMNode2D<CameraManagerState>{
     }
 
     private Node2D MoveCameraToNode;
+    private Vector2 Offset;
     private float moveVelocity;
-    public void MoveCameraToArbitraryNode(Node2D node, float numSecondsToTransition=1f){
+    public void MoveCameraToArbitraryNode(Node2D node, Vector2 offset, float numSecondsToTransition=1f){
         this.MoveCameraToNode = node;
-        this.moveVelocity = node.GlobalPosition.DistanceTo(this.NodeCameraFollows.GlobalPosition) / numSecondsToTransition;
+        this.Offset = offset;
+        this.moveVelocity = node.GlobalPosition.DistanceTo(this.NodeCameraFollows.GlobalPosition + offset) / numSecondsToTransition;
         var prevGlobalPosition = this.NodeCameraFollows.GlobalPosition;
         this.NodeCameraFollows.GetParent().RemoveChild(this.NodeCameraFollows);
         this.MoveCameraToNode.AddChild(this.NodeCameraFollows);
@@ -65,30 +67,58 @@ public class CameraManager : FSMNode2D<CameraManagerState>{
         this.ResetActiveStateAfter(CameraManagerState.STAY_STATIONARY, numSecondsToTransition);
     }
 
-    private const float HORIZONTAL_MULTIPLIER_EFFECT = 1.20f;
-    private const float VERTICAL_MULTIPLIER_EFFECT = 0.25f;
+    private const float HORIZONTAL_VELOCITY_MULTIPLIER = 1f;
+    private const float HORIZONTAL_DRAG_EFFECT = 0.97f;
+    private const float VERTICAL_VELOCITY_MULTIPLIER = 0.3f;
+    private const float VERTICAL_DRAG_EFFECT = 0.99f;
     private const float HORIZONTAL_OFFSET = 0f;
-    private const float VERTICAL_OFFSET = -100f;
-    private const float MAX_POSITION_X = 700f;
-    private const float MAX_POSITION_Y = 700f;
+    private const float DESKTOP_VERTICAL_OFFSET = -100f;
+    private const float MOBILE_VERTICAL_OFFSET = 0f;
+    private float VerticalOffset { get {
+        if(main.PlatformType.Equals(PlatformType.DESKTOP)){
+            return DESKTOP_VERTICAL_OFFSET;}
+        else if(main.PlatformType.Equals(PlatformType.MOBILE)){
+            return MOBILE_VERTICAL_OFFSET;}
+        else{
+            return DESKTOP_VERTICAL_OFFSET;}}}
+    private const float DESKTOP_MAX_POSITION_X = 700f;
+    private const float DESKTOP_MAX_POSITION_Y = 700f;
+    private const float MOBILE_MAX_POSITION_X = 500f;
+    private const float MOBILE_MAX_POSITION_Y = 500f;
+
+    private Vector2 MaxPosition{ get {
+        if(main.PlatformType.Equals(PlatformType.DESKTOP)){
+            return new Vector2(DESKTOP_MAX_POSITION_X, DESKTOP_MAX_POSITION_Y);}
+        else if(main.PlatformType.Equals(PlatformType.MOBILE)){
+            return new Vector2(MOBILE_MAX_POSITION_X, MOBILE_MAX_POSITION_Y);}
+        else{
+            return new Vector2(DESKTOP_MAX_POSITION_X, DESKTOP_MAX_POSITION_Y);}}}
+
+    private float prevXPosToApply = 0f;
+    private float prevYPosToApply = 0f;
 
     public override void ReactToState(float delta){
         switch(this.ActiveState){
             case CameraManagerState.MOVING_NODE_CAMERA_FOLLOWS:
+
                 var vel = this.Bear.ATV.GetRecentAverageVelocityOfTwoWheels();
-                var xPosToApply = vel.x * HORIZONTAL_MULTIPLIER_EFFECT + HORIZONTAL_OFFSET;
-                if(Math.Abs(xPosToApply) > MAX_POSITION_X){
-                    xPosToApply = (Math.Abs(xPosToApply) / xPosToApply) * MAX_POSITION_X;
-                }
-                var yPosToApply = vel.y * VERTICAL_MULTIPLIER_EFFECT + VERTICAL_OFFSET;
-                if(Math.Abs(yPosToApply) > MAX_POSITION_Y){
-                    yPosToApply = (Math.Abs(yPosToApply) / yPosToApply) * MAX_POSITION_Y;
-                }
+                var xPosToApply = vel.x * HORIZONTAL_VELOCITY_MULTIPLIER + HORIZONTAL_OFFSET;
+                xPosToApply = ((1 - HORIZONTAL_DRAG_EFFECT) * xPosToApply) + (HORIZONTAL_DRAG_EFFECT * this.prevXPosToApply);
+                if(Math.Abs(xPosToApply) > MaxPosition.x){
+                    xPosToApply = (Math.Abs(xPosToApply) / xPosToApply) * MaxPosition.x;}
+                this.prevXPosToApply = xPosToApply;
+
+                var yPosToApply = vel.y * VERTICAL_VELOCITY_MULTIPLIER + VerticalOffset;
+                yPosToApply = ((1 - HORIZONTAL_DRAG_EFFECT) * yPosToApply) + (HORIZONTAL_DRAG_EFFECT * this.prevYPosToApply);
+                if(Math.Abs(yPosToApply) > MaxPosition.y){
+                    yPosToApply = (Math.Abs(yPosToApply) / yPosToApply) * MaxPosition.y;}
+                this.prevYPosToApply = yPosToApply;
+
                 this.NodeCameraFollows.SetPosition(new Vector2(xPosToApply,
-                                                               yPosToApply));
-                break;
+                                                               yPosToApply));            
+               break;
             case CameraManagerState.MOVE_TO_ARBITRARY_NODE:
-                var directionVec = (this.MoveCameraToNode.GlobalPosition - this.NodeCameraFollows.GlobalPosition).Normalized();
+                var directionVec = (this.MoveCameraToNode.GlobalPosition + this.Offset - this.NodeCameraFollows.GlobalPosition).Normalized();
                 var step = directionVec * this.moveVelocity * delta;
                 this.NodeCameraFollows.GlobalPosition += step;
                 break;

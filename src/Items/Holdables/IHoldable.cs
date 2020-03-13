@@ -5,6 +5,7 @@ public interface IHoldable{
     Player Player {get; set;}
     void ReactToActionPress(float delta);
     void ReactToActionHold(float delta);
+    void PickupPreAction();
     void PostDepletionAction(float delta);
     int NumActionCallsToDepleted { get;}
     int CurrentNumActionCalls {get; set;}

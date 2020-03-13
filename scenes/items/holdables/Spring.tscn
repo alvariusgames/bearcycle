@@ -1,0 +1,62 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://media/sprites/items/interactables/monitor_base/cloud_floaty/cloud_floaty10.png" type="Texture" id=1]
+[ext_resource path="res://media/sprites/items/holdables/icons/spring_monitor_overlay.png" type="Texture" id=2]
+[ext_resource path="res://media/sprites/items/interactables/monitor_base/cloud_floaty/cloud_floaty8.png" type="Texture" id=3]
+[ext_resource path="res://media/sprites/items/interactables/monitor_base/monitor1.png" type="Texture" id=4]
+[ext_resource path="res://src/Items/Holdables/Spring.cs" type="Script" id=5]
+[ext_resource path="res://media/sprites/items/interactables/monitor_base/monitor2.png" type="Texture" id=6]
+[ext_resource path="res://media/sprites/items/interactables/monitor_base/cloud_floaty/cloud_floaty9.png" type="Texture" id=7]
+[ext_resource path="res://media/sprites/items/interactables/monitor_base/cloud_floaty/cloud_floaty12.png" type="Texture" id=8]
+[ext_resource path="res://media/sprites/items/interactables/monitor_base/monitor3.png" type="Texture" id=9]
+[ext_resource path="res://media/sprites/items/interactables/monitor_base/cloud_floaty/cloud_floaty13.png" type="Texture" id=10]
+[ext_resource path="res://media/sprites/items/interactables/monitor_base/cloud_floaty/cloud_floaty7.png" type="Texture" id=11]
+[ext_resource path="res://media/sprites/items/interactables/monitor_base/cloud_floaty/cloud_floaty11.png" type="Texture" id=12]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 66.6982, 63.7271 )
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 4 ), ExtResource( 6 ), ExtResource( 9 ), ExtResource( 6 ) ],
+"loop": true,
+"name": "default",
+"speed": 15.0
+} ]
+
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ ExtResource( 1 ), ExtResource( 12 ), ExtResource( 8 ), ExtResource( 10 ), ExtResource( 8 ), ExtResource( 12 ), ExtResource( 1 ), ExtResource( 7 ), ExtResource( 3 ), ExtResource( 11 ), ExtResource( 3 ), ExtResource( 7 ) ],
+"loop": true,
+"name": "default",
+"speed": 15.0
+} ]
+
+[node name="Spring" type="KinematicBody2D"]
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 5 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 0.4, 0.4 )
+z_index = -5
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -0.100008, 0.906555 )
+shape = SubResource( 1 )
+
+[node name="Monitor" type="AnimatedSprite" parent="."]
+scale = Vector2( 0.4, 0.4 )
+z_index = -6
+frames = SubResource( 2 )
+frame = 2
+playing = true
+
+[node name="CloudFloaty" type="AnimatedSprite" parent="."]
+visible = false
+position = Vector2( 0, -2.5 )
+scale = Vector2( 0.4, 0.4 )
+frames = SubResource( 3 )
+frame = 4
+playing = true

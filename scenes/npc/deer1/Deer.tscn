@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://src/NPC/LeapingEnemy.cs" type="Script" id=1]
+[ext_resource path="res://scenes/npc/deer1/deer1_cutout.tscn" type="PackedScene" id=2]
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 97.2738, 69.524 )
+
+[node name="Deer" type="KinematicBody2D"]
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 1 )
+Calories = 1400.0
+
+[node name="CutOutDeer" type="Node2D" parent="." instance=ExtResource( 2 )]
+scale = Vector2( 0.33, 0.33 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 14.8253, -20.8481 )
+shape = SubResource( 4 )

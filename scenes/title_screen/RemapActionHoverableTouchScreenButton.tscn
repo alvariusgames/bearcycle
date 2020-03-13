@@ -1,0 +1,104 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://media/UI/title_screen/control_button_unhovered.png" type="Texture" id=1]
+[ext_resource path="res://media/UI/title_screen/control_button_hovered.png" type="Texture" id=2]
+[ext_resource path="res://src/UI/RemapActionHoverableTouchScreenButton.cs" type="Script" id=3]
+[ext_resource path="res://media/fonts/no_locale_en.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://media/fonts/en_US.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://scenes/title_screen/PlatformDepButton.tscn" type="PackedScene" id=6]
+[ext_resource path="res://media/UI/75perc_trans.png" type="Texture" id=7]
+[ext_resource path="res://media/UI/misc/arrow1_backward.png" type="Texture" id=8]
+[ext_resource path="res://src/Items/MakeMyParentHover.cs" type="Script" id=9]
+
+[sub_resource type="DynamicFont" id=1]
+size = 48
+outline_size = 3
+outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 72
+outline_size = 4
+outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
+font_data = ExtResource( 4 )
+
+[node name="RemapButton" type="TouchScreenButton"]
+position = Vector2( -77.9207, 1.948 )
+z_index = -1
+normal = ExtResource( 1 )
+pressed = ExtResource( 2 )
+script = ExtResource( 3 )
+
+[node name="UI_ATTACK_NAME" type="Label" parent="."]
+margin_left = -385.325
+margin_top = 43.2809
+margin_right = 224.675
+margin_bottom = 142.281
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "UI_NAME"
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Colon" type="Label" parent="UI_ATTACK_NAME"]
+margin_left = 617.173
+margin_top = -4.43213
+margin_right = 656.173
+margin_bottom = 94.5679
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = ":"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlatformDepButton" parent="." instance=ExtResource( 6 )]
+position = Vector2( 442.343, 98.2203 )
+
+[node name="Popup" type="Node2D" parent="."]
+visible = false
+z_index = 5
+
+[node name="75transp" type="Sprite" parent="Popup"]
+position = Vector2( 1087.05, 495.752 )
+scale = Vector2( 8, 6 )
+texture = ExtResource( 7 )
+
+[node name="UI_ATTACK_NAME" type="Label" parent="Popup"]
+margin_left = 1263.29
+margin_top = 46.4629
+margin_right = 1873.29
+margin_bottom = 145.463
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "UI_NAME"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UI_PRESS_KEY_IN" type="Label" parent="Popup"]
+margin_left = 635.751
+margin_top = 44.7927
+margin_right = 1245.75
+margin_bottom = 143.793
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "UI_PRESS_KEY_IN"
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Arrow" type="Sprite" parent="Popup"]
+position = Vector2( 717.857, 95.7358 )
+texture = ExtResource( 8 )
+
+[node name="MakeMyParentHoverNotVerticalHorizontal" type="Node2D" parent="Popup/Arrow"]
+script = ExtResource( 9 )

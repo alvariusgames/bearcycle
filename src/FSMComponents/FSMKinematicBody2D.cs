@@ -57,7 +57,12 @@ public abstract class FSMKinematicBody2D<StateEnum> : KinematicBody2D, IFSMObjec
     public abstract void ReactStateless(float delta);
     public abstract void ReactToState(float delta);
 
+    private Boolean runOnce = true;
+
     public override void _Process(float delta) {
+        if(this.runOnce){
+            this.ResetActiveState(this.InitialState);
+            this.runOnce = false;}
         this.UpdateState(delta);
         this.ReactStateless(delta);
         this.handleTimers(delta);

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/geteaten2.wav-be6ddcb103f98abf829beaa1c091af3f.sample"
+
+[deps]
+
+source_file="res://media/samples/npc/meaty_enemy/geteaten2.wav"
+dest_files=[ "res://.import/geteaten2.wav-be6ddcb103f98abf829beaa1c091af3f.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

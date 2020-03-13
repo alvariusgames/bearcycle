@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://src/Player/AboveHeadManager.cs" type="Script" id=1]
+[ext_resource path="res://media/sprites/items/interactables/player_ui_prompt/mag_glass.png" type="Texture" id=2]
+[ext_resource path="res://media/sprites/items/interactables/player_ui_prompt/mag_glass_bg.png" type="Texture" id=3]
+[ext_resource path="res://src/Items/BounceParentsOpacity.cs" type="Script" id=4]
+[ext_resource path="res://src/Items/MakeMyParentHover.cs" type="Script" id=5]
+
+[node name="AboveHeadManager" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="InteractablePrompt" type="Node2D" parent="."]
+
+[node name="Bg" type="Sprite" parent="InteractablePrompt"]
+texture = ExtResource( 3 )
+
+[node name="BounceParentsOpacity" type="Node2D" parent="InteractablePrompt/Bg"]
+script = ExtResource( 4 )
+startOpac = 0.2
+stopOpac = 0.6
+
+[node name="MagGlass" type="Sprite" parent="InteractablePrompt"]
+texture = ExtResource( 2 )
+
+[node name="MakeMyParentHover" type="Node2D" parent="InteractablePrompt"]
+script = ExtResource( 5 )

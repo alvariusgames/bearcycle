@@ -1,46 +1,59 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://scenes/title_screen/TitleScreenPressStart.cs" type="Script" id=1]
 [ext_resource path="res://media/UI/title_screen/bg_two_1080.png" type="Texture" id=2]
 [ext_resource path="res://media/UI/title_screen/bg_one_1080.png" type="Texture" id=3]
 [ext_resource path="res://media/UI/title_screen/logo_transp_1080.png" type="Texture" id=4]
 [ext_resource path="res://media/fonts/en_US.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://media/fonts/no_locale_en.ttf" type="DynamicFontData" id=6]
 [ext_resource path="res://src/UI/HoverControlBoxContainer.cs" type="Script" id=7]
 [ext_resource path="res://media/UI/title_screen/button_unhovered.png" type="Texture" id=8]
 [ext_resource path="res://media/UI/title_screen/button_hovered.png" type="Texture" id=9]
 [ext_resource path="res://src/UI/HoverableTouchScreenButton.cs" type="Script" id=10]
+[ext_resource path="res://src/UI/ScrollableOptionButton.cs" type="Script" id=11]
+[ext_resource path="res://scenes/title_screen/RemapActionHoverableTouchScreenButton.tscn" type="PackedScene" id=12]
 
 [sub_resource type="DynamicFont" id=1]
+size = 32
+outline_size = 3
+outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
+font_data = ExtResource( 6 )
+
+[sub_resource type="DynamicFont" id=2]
 size = 64
 outline_size = 4
 outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
 font_data = ExtResource( 5 )
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=3]
 size = 42
 outline_size = 3
 outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
-font_data = ExtResource( 5 )
+font_data = ExtResource( 6 )
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=4]
 size = 28
 outline_color = Color( 1, 1, 1, 0.501961 )
 font_data = ExtResource( 5 )
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=5]
 size = 42
 outline_size = 8
 outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
 font_data = ExtResource( 5 )
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=6]
 size = 128
 outline_size = 24
 outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
 font_data = ExtResource( 5 )
 
-[sub_resource type="DynamicFont" id=6]
-size = 32
+[sub_resource type="DynamicFont" id=7]
+size = 42
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=8]
+size = 72
 font_data = ExtResource( 5 )
 
 [node name="main" type="Node2D"]
@@ -60,14 +73,25 @@ texture = ExtResource( 3 )
 position = Vector2( 960, 540 )
 texture = ExtResource( 4 )
 
-[node name="PressStart" type="Label" parent="."]
-margin_left = 802.041
-margin_top = 943.692
-margin_right = 1125.04
-margin_bottom = 1077.69
+[node name="TM" type="Label" parent="Logo"]
+margin_left = 125.103
+margin_top = 288.903
+margin_right = 173.103
+margin_bottom = 334.903
 custom_fonts/font = SubResource( 1 )
+text = "TM"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UI_PRESS_START" type="Label" parent="."]
+margin_left = 394.606
+margin_top = 938.149
+margin_right = 1444.61
+margin_bottom = 1067.15
+custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
-text = "Press Start"
+text = "UI_PRESS_START"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -78,20 +102,23 @@ margin_left = 1369.83
 margin_top = 1014.35
 margin_right = 1969.83
 margin_bottom = 1094.35
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
-text = "Luddite Games, 2019"
+text = "Luddite Games, 2020"
 align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Version" type="Label" parent="."]
 margin_left = 20.9161
 margin_top = 1024.83
 margin_right = 238.916
 margin_bottom = 1082.83
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 4 )
 custom_colors/font_color = Color( 1, 1, 1, 0.501961 )
-text = "v0.1.0-alpha"
+text = "v0.1.1-alpha"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -104,18 +131,22 @@ margin_top = 139.461
 margin_right = 579.962
 margin_bottom = 951.461
 script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Play" type="Label" parent="MainMenuButtons"]
+[node name="UI_PLAY" type="Label" parent="MainMenuButtons"]
 margin_right = 350.0
 margin_bottom = 200.0
 rect_min_size = Vector2( 0, 200 )
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
-text = "Play"
+text = "UI_PLAY"
 align = 1
 valign = 1
+autowrap = true
 
-[node name="Play2" type="TouchScreenButton" parent="MainMenuButtons/Play"]
+[node name="Play2" type="TouchScreenButton" parent="MainMenuButtons/UI_PLAY"]
 position = Vector2( -42.9737, 30.6828 )
 z_index = -1
 normal = ExtResource( 8 )
@@ -127,9 +158,9 @@ margin_top = 204.0
 margin_right = 350.0
 margin_bottom = 404.0
 rect_min_size = Vector2( 0, 200 )
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
-text = "Shop"
+text = "UI_SHOP"
 align = 1
 valign = 1
 
@@ -145,9 +176,9 @@ margin_top = 408.0
 margin_right = 350.0
 margin_bottom = 608.0
 rect_min_size = Vector2( 0, 200 )
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
-text = "Settings"
+text = "UI_SETTINGS"
 align = 1
 valign = 1
 
@@ -163,9 +194,9 @@ margin_top = 612.0
 margin_right = 350.0
 margin_bottom = 812.0
 rect_min_size = Vector2( 0, 200 )
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
-text = "Exit"
+text = "UI_EXIT"
 align = 1
 valign = 1
 
@@ -186,13 +217,12 @@ margin_bottom = 951.461
 script = ExtResource( 7 )
 
 [node name="ManageGameData" type="Label" parent="SettingsButtons"]
-margin_right = 351.0
+margin_right = 366.0
 margin_bottom = 200.0
 rect_min_size = Vector2( 0, 200 )
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
-text = "Manage Game
-Data"
+text = "UI_CONTROLS"
 align = 1
 valign = 1
 
@@ -205,12 +235,12 @@ script = ExtResource( 10 )
 
 [node name="ChangeLanguage" type="Label" parent="SettingsButtons"]
 margin_top = 204.0
-margin_right = 351.0
+margin_right = 366.0
 margin_bottom = 404.0
 rect_min_size = Vector2( 0, 200 )
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
-text = "Change language"
+text = "UI_CHANGE_LANG"
 align = 1
 valign = 1
 
@@ -223,10 +253,10 @@ script = ExtResource( 10 )
 
 [node name="BackToMainMenu" type="Label" parent="SettingsButtons"]
 margin_top = 408.0
-margin_right = 351.0
+margin_right = 366.0
 margin_bottom = 608.0
 rect_min_size = Vector2( 0, 200 )
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 6 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "<"
 align = 1
@@ -239,74 +269,91 @@ normal = ExtResource( 8 )
 pressed = ExtResource( 9 )
 script = ExtResource( 10 )
 
-[node name="ManageGameDataButtons" type="VBoxContainer" parent="."]
-visible = false
+[node name="ControlButtons" type="VBoxContainer" parent="."]
 anchor_right = 0.46
-margin_left = 228.962
-margin_top = 139.461
-margin_right = 625.962
-margin_bottom = 951.461
+margin_left = 238.702
+margin_top = 32.3202
+margin_right = 716.702
+margin_bottom = 1048.32
 script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="ActiveGameSlot" type="Label" parent="ManageGameDataButtons"]
-margin_right = 397.0
+[node name="UI_CHANGE_ATTACK" type="Label" parent="ControlButtons"]
+margin_right = 478.0
 margin_bottom = 200.0
 rect_min_size = Vector2( 0, 200 )
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
-text = "Game slot"
+text = "
+"
 align = 1
 valign = 1
 
-[node name="ChangeGameSlot" type="Label" parent="ManageGameDataButtons"]
+[node name="ui_attack" parent="ControlButtons/UI_CHANGE_ATTACK" instance=ExtResource( 12 )]
+
+[node name="UI_CHNG_FORAGE" type="Label" parent="ControlButtons"]
 margin_top = 204.0
-margin_right = 397.0
+margin_right = 478.0
 margin_bottom = 404.0
 rect_min_size = Vector2( 0, 200 )
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
-text = "Change game slot"
 align = 1
 valign = 1
 
-[node name="ChangeGameSlot" type="TouchScreenButton" parent="ManageGameDataButtons/ChangeGameSlot"]
-position = Vector2( -40.0913, 23.671 )
-z_index = -1
-normal = ExtResource( 8 )
-pressed = ExtResource( 9 )
-script = ExtResource( 10 )
+[node name="ui_forage" parent="ControlButtons/UI_CHNG_FORAGE" instance=ExtResource( 12 )]
 
-[node name="ClearGameData" type="Label" parent="ManageGameDataButtons"]
+[node name="UI_CHNG_ITEM" type="Label" parent="ControlButtons"]
 margin_top = 408.0
-margin_right = 397.0
+margin_right = 478.0
 margin_bottom = 608.0
 rect_min_size = Vector2( 0, 200 )
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
-text = "Clear All Game Data"
 align = 1
 valign = 1
 
-[node name="ClearGameData" type="TouchScreenButton" parent="ManageGameDataButtons/ClearGameData"]
-position = Vector2( -40.0913, 23.671 )
+[node name="ui_use_item" parent="ControlButtons/UI_CHNG_ITEM" instance=ExtResource( 12 )]
+
+[node name="ResetToDefaults" type="Label" parent="ControlButtons"]
+margin_top = 612.0
+margin_right = 478.0
+margin_bottom = 812.0
+rect_min_size = Vector2( 0, 200 )
+custom_fonts/font = SubResource( 7 )
+custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
+text = "UI_RESET_CONTROLS"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="ResetToDefaults" type="TouchScreenButton" parent="ControlButtons/ResetToDefaults"]
+position = Vector2( -33.2823, 29.2993 )
+scale = Vector2( 1.2, 1 )
 z_index = -1
 normal = ExtResource( 8 )
 pressed = ExtResource( 9 )
 script = ExtResource( 10 )
 
-[node name="BackToMainMenu" type="Label" parent="ManageGameDataButtons"]
-margin_top = 612.0
-margin_right = 397.0
-margin_bottom = 812.0
+[node name="BackToMainMenu" type="Label" parent="ControlButtons"]
+margin_top = 816.0
+margin_right = 478.0
+margin_bottom = 1016.0
 rect_min_size = Vector2( 0, 200 )
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 6 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "<"
 align = 1
 valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="BackToMainMenu" type="TouchScreenButton" parent="ManageGameDataButtons/BackToMainMenu"]
+[node name="BackToMainMenu" type="TouchScreenButton" parent="ControlButtons/BackToMainMenu"]
 position = Vector2( -33.2823, 29.2993 )
+scale = Vector2( 1.2, 1 )
 z_index = -1
 normal = ExtResource( 8 )
 pressed = ExtResource( 9 )
@@ -320,19 +367,23 @@ margin_top = 139.461
 margin_right = 579.962
 margin_bottom = 1094.46
 script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="SupportedLanguages" type="OptionButton" parent="ChangeLanguageButtons"]
 margin_right = 350.0
-margin_bottom = 51.0
-custom_fonts/font = SubResource( 6 )
+margin_bottom = 105.0
+custom_fonts/font = SubResource( 8 )
 align = 1
+script = ExtResource( 11 )
 
 [node name="BackToMainMenu" type="Label" parent="ChangeLanguageButtons"]
-margin_top = 55.0
+margin_top = 109.0
 margin_right = 350.0
-margin_bottom = 955.0
+margin_bottom = 1009.0
 rect_min_size = Vector2( 0, 900 )
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 6 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "<"
 align = 1

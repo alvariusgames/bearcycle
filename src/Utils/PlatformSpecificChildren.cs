@@ -9,7 +9,7 @@ public class PlatformSpecificChildren : Node2D
 
     // Called when the node enters the scene tree for the first time.
 
-    private Godot.Collections.Array GetPlatformSpecificChildren(){
+    protected Godot.Collections.Array GetPlatformSpecificChildren(){
         foreach(Node2D child in this.GetChildren()){
             if(child.Name.ToLower().Contains("mobile") && main.PlatformType == PlatformType.MOBILE){
                 child.Visible = true;

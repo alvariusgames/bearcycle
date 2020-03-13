@@ -10,6 +10,7 @@ public interface IAudioStreamPlayer : IDisposable{
     Boolean IsPlaying();
     Node GetParent();
     Boolean StreamPaused { get; set;}
+    float GetPlaybackPosition();
     Node SelfNode { get; } 
     //TODO: fix this horrible workaround and get better at static type programming
     float PitchScale { get; set; }

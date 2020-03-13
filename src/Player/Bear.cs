@@ -16,7 +16,7 @@ public class Bear : FSMKinematicBody2D<BearState>{
     private const float FRICTION_EFFECT = 0.95f;
 
     public Vector2 velocity = new Vector2(0,0);
-    public AnimationPlayer CutOutAnimationPlayer;
+    public BearAnimationPlayer AnimationPlayer;
     public Node2D CutOut;
     public ATV ATV;
     public CollisionShape2D CollisionShape2D;
@@ -24,15 +24,14 @@ public class Bear : FSMKinematicBody2D<BearState>{
     private const String NOM2_SAMPLE = "res://media/samples/bear/nom2.wav";
     private const String WHIMPER1_SAMPLE = "res://media/samples/bear/whimper1.wav";
     private const String THUD1_SAMPLE = "res://media/samples/atv/wheel_thud1.wav";
-
     public override void _Ready(){
         this.ResetActiveState(this.InitialState);
         foreach(var child in this.GetChildren()){
             if(((Node2D)child).Name.ToLower().Contains("cutout")){
                 this.CutOut = (Node2D)child;
                 foreach(var child2 in this.CutOut.GetChildren()){
-                    if(child2 is AnimationPlayer){
-                        this.CutOutAnimationPlayer = (AnimationPlayer)child2;}
+                    if(child2 is BearAnimationPlayer){
+                        this.AnimationPlayer = (BearAnimationPlayer)child2;}
                 }
             }
             else if (child is CollisionShape2D){
@@ -63,13 +62,13 @@ public class Bear : FSMKinematicBody2D<BearState>{
                 this.SetActiveState(BearState.HIT_SEQ_FALL_OFF, 100);
                 this.SetActiveStateAfter(BearState.HIT_SEQ_TRIGGER_TEMP_INVINC, 200, hitTimeSec);
                 this.SetActiveStateAfter(BearState.TRIGGER_END_HIT_SEQ, 300, hitTimeSec + invincTimeSec);
-                this.ATV.Player.playBearAnimation("die1");
+                this.AnimationPlayer.AdvancedPlay("die1");
                 SoundHandler.PlaySample<MyAudioStreamPlayer2D>(this, 
                     new string[] {WHIMPER1_SAMPLE});
                 this.ATV.Player.DropActiveHoldable(delta);
                 break;
             case BearState.HIT_SEQ_FALL_OFF:
-                this.ATV.Player.playBearAnimation("die1");
+                this.AnimationPlayer.AdvancedPlay("die1");
                 this.applyGravity(delta);
                 this.MoveAndSlide(this.velocity);
                 this.velocity.x *= 0.95f;
@@ -100,8 +99,8 @@ public class Bear : FSMKinematicBody2D<BearState>{
                 this.ATV.ReattachBear();
                 this.SetActiveState(BearState.HIT_SEQ_INVINC, 300);
                 this.ATV.Player.UpdateHealth(Player.DEFAULT_HIT_UNIT);
-                this.ATV.Player.stopAllBearAnimation();
-                this.ATV.Player.playBearAnimation("invinc1");                
+                this.AnimationPlayer.Stop();
+                this.AnimationPlayer.AdvancedPlay("invinc2");                
                 break;
             case BearState.HIT_SEQ_INVINC:
                 this.velocity.x = 0f;
@@ -111,8 +110,8 @@ public class Bear : FSMKinematicBody2D<BearState>{
                 }
                 break;
             case BearState.TRIGGER_END_HIT_SEQ:
-                this.ATV.Player.stopAllBearAnimation();
-                this.ATV.Player.playBearAnimation("idleBounce1");
+                this.AnimationPlayer.Stop();
+                this.AnimationPlayer.AdvancedPlay("idleBounce1");
                 this.ResetActiveState(BearState.ON_ATV);
                 break;
             case BearState.ON_ATV:

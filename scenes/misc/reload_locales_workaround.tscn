@@ -1,0 +1,108 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://media/fonts/en_US.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://scenes/misc/ReloadLocalesWorkaround.cs" type="Script" id=2]
+[ext_resource path="res://media/fonts/no_locale_en.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=2]
+size = 72
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 72
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 72
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=1]
+size = 90
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[node name="ReloadLocalesWorkaround" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+position = Vector2( 0, -1.43201 )
+color = Color( 0, 0, 0, 1 )
+polygon = PoolVector2Array( -179.501, 1123.26, -151.54, -51.121, 2317.06, -47.1265, 2061.41, 1602.6 )
+
+[node name="UI_RESTART_GAME" type="Label" parent="Polygon2D"]
+margin_left = 365.629
+margin_top = 252.0
+margin_right = 1666.63
+margin_bottom = 518.0
+custom_fonts/font = SubResource( 2 )
+text = "UI_RESTART_GAME"
+align = 1
+valign = 2
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UI_LOADING_LOCALE" type="Label" parent="Polygon2D"]
+margin_left = 372.445
+margin_top = -16.1049
+margin_right = 1673.45
+margin_bottom = 249.895
+custom_fonts/font = SubResource( 2 )
+text = "UI_LOADING_LOCALE"
+align = 1
+valign = 2
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UI_IF_SEE_ERRORS" type="Label" parent="Polygon2D"]
+margin_left = 356.629
+margin_top = 572.0
+margin_right = 1671.63
+margin_bottom = 859.0
+custom_fonts/font = SubResource( 3 )
+text = "UI_IF_SEE_ERRORS"
+align = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HardcodedAdvice" type="Label" parent="Polygon2D"]
+margin_left = 363.856
+margin_top = 828.433
+margin_right = 1667.86
+margin_bottom = 1190.43
+custom_fonts/font = SubResource( 4 )
+text = "(Please restart the game
+if you see errors)"
+align = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="UI_PRESS_START" type="Label" parent="."]
+margin_left = 10.9626
+margin_top = 6.64508
+margin_right = 708.966
+margin_bottom = 130.645
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "UI_PRESS_START"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ViewportContainer" type="ViewportContainer" parent="."]
+margin_right = 1915.0
+margin_bottom = 1087.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="ViewportContainer"]
+handle_input_locally = false
+render_target_update_mode = 3

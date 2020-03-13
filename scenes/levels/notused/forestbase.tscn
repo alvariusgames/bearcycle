@@ -1,0 +1,350 @@
+[gd_scene load_steps=39 format=2]
+
+[ext_resource path="res://scenes/levels/level1.cs" type="Script" id=1]
+[ext_resource path="res://media/levels/level1_forest/cloud1.png" type="Texture" id=2]
+[ext_resource path="res://media/levels/level1_forest/sky1.png" type="Texture" id=3]
+[ext_resource path="res://media/tilesets/sonic_like_ground/platform.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/Level/Platforms.cs" type="Script" id=5]
+[ext_resource path="res://src/Level/CollisionPolygonParentOfBorderedPolygon.cs" type="Script" id=6]
+[ext_resource path="res://scenes/player/player.tscn" type="PackedScene" id=7]
+[ext_resource path="res://media/tilesets/app_forest_1/tiles/tile_middle.png" type="Texture" id=8]
+[ext_resource path="res://media/tilesets/app_forest_1/border_tiles.tres" type="TileSet" id=9]
+[ext_resource path="res://scenes/items/stage/SafetyCheckpoint.tscn" type="PackedScene" id=10]
+[ext_resource path="res://media/tilesets/app_forest_1/four_sided_brown_sides.tres" type="TileSet" id=12]
+[ext_resource path="res://scenes/items/stage/OneUp.tscn" type="PackedScene" id=13]
+[ext_resource path="res://src/Level/ZoneCollider.cs" type="Script" id=14]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_2.png" type="Texture" id=15]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_3.png" type="Texture" id=16]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_bush.png" type="Texture" id=17]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_full_1.png" type="Texture" id=18]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_single_1.png" type="Texture" id=19]
+[ext_resource path="res://media/levels/level1_forest/min_flowers_single_2.png" type="Texture" id=20]
+[ext_resource path="res://media/levels/level1_forest/trees/tree1.png" type="Texture" id=21]
+[ext_resource path="res://media/levels/level1_forest/trees/tree2.png" type="Texture" id=22]
+[ext_resource path="res://scenes/levels_utils/forest/ForestLoop.tscn" type="PackedScene" id=23]
+[ext_resource path="res://scenes/items/food/forest/BerryBush.tscn" type="PackedScene" id=24]
+[ext_resource path="res://scenes/items/SpaceRock.tscn" type="PackedScene" id=25]
+[ext_resource path="res://scenes/items/stage/SpeedBoost1.tscn" type="PackedScene" id=26]
+[ext_resource path="res://scenes/items/stage/EndLevel.tscn" type="PackedScene" id=27]
+[ext_resource path="res://scenes/items/holdables/Spring.tscn" type="PackedScene" id=28]
+[ext_resource path="res://scenes/items/food/forest/Smore.tscn" type="PackedScene" id=30]
+[ext_resource path="res://scenes/items/stage/StageSpring.tscn" type="PackedScene" id=31]
+[ext_resource path="res://src/NPC/FlyingEnemy.cs" type="Script" id=40]
+[ext_resource path="res://scenes/npc/bird1/bird1_cutout.tscn" type="PackedScene" id=41]
+[ext_resource path="res://scenes/npc/deer1/deer1_cutout.tscn" type="PackedScene" id=43]
+[ext_resource path="res://src/NPC/LeapingEnemy.cs" type="Script" id=52]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( -179.292, 76.1596, 0, 0, 3392.64, 749.625, -163.744, -181.747, 163.744, 181.747, 3755.16, 832.703, -165.397, -5.91453, 165.397, 5.91453, 4031.99, 487.734, 0, 0, 0, 0, 4084.02, 699.267, -631.894, 319.723, 631.894, -319.723, 4516, 702.341, 266.856, 239.163, -266.856, -239.163, 4286.92, 369.815, 844.853, -374.016, -844.853, 374.016, 3565, 245.669, 0, 0, 0, 0, 3392.64, 749.625 )
+}
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 39.6995
+height = 38.772
+
+[sub_resource type="Curve2D" id=3]
+_data = {
+"points": PoolVector2Array( -497.586, -81.795, 497.586, 81.795, 4096.78, 196.173, 111.332, 236.297, -111.332, -236.297, 4167.6, 430.754, -279.137, 226.45, 279.137, -226.45, 2742.19, 74.9534, -252.201, -347.629, 252.201, 347.629, 2692.73, 210.952, -284.01, -215.848, 284.01, 215.848, 4096.78, 196.173 )
+}
+
+[sub_resource type="Curve2D" id=4]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 11.2109, -5.75513, 0, 0, 0, 0, 1599.27, -3.36353 )
+}
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 72.767, 66.7323 )
+
+[node name="level1" type="Node2D"]
+position = Vector2( -115, -1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+offset = Vector2( 0, 400 )
+transform = Transform2D( 1, 0, 0, 1, 0, 400 )
+scroll_ignore_camera_zoom = true
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2( 0.15, 0 )
+motion_offset = Vector2( 0, -540 )
+
+[node name="Sprite2" type="Sprite" parent="ParallaxBackground/ParallaxLayer2"]
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 120000, 1500 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2( 0.125, 0 )
+motion_offset = Vector2( 0, -540 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 120000, 1500 )
+
+[node name="Player" parent="." instance=ExtResource( 7 )]
+position = Vector2( 2879.83, 893.596 )
+
+[node name="Platforms" type="Node2D" parent="."]
+
+[node name="ForestLoop" parent="Platforms" instance=ExtResource( 23 )]
+
+[node name="PlatformZoneOne" type="StaticBody2D" parent="Platforms"]
+position = Vector2( -115, 0 )
+scale = Vector2( 2, 2 )
+z_index = -2
+collision_layer = 4
+collision_mask = 35
+script = ExtResource( 5 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Platforms/PlatformZoneOne"]
+position = Vector2( -1531.44, -130.196 )
+scale = Vector2( 0.5, 0.5 )
+script = ExtResource( 6 )
+
+[node name="BorderedPolygon" parent="Platforms/PlatformZoneOne/CollisionPolygon2D" instance=ExtResource( 4 )]
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 6081.04, 1367.49, 6494.68, 1334.13, 6628.11, 1234.05, 6701.5, 1113.97, 6721.51, 827.089, 6494.68, 533.541, 6708.17, 513.526, 7175.18, 1667.71, 6274.52, 2094.69, 5347.17, 1741.09, 5280.46, 1180.68, 5267.11, 480.168, 5447.25, 480.168, 5473.93, 1180.68, 5674.08, 1307.44 )
+border_size = -64
+border_overlap = -16
+border_textures = ExtResource( 9 )
+border_clockwise_shift = 3
+border_texture_scale = Vector2( 0.5, 0.5 )
+border_texture_offset = Vector2( 80, -1 )
+
+[node name="PlatformZoneTwo" type="StaticBody2D" parent="Platforms"]
+collision_layer = 512
+collision_mask = 0
+script = ExtResource( 5 )
+
+[node name="CollisionPolygdon2D" type="CollisionPolygon2D" parent="Platforms/PlatformZoneTwo"]
+script = ExtResource( 6 )
+
+[node name="BorderedPolygon2D" parent="Platforms/PlatformZoneTwo/CollisionPolygdon2D" instance=ExtResource( 4 )]
+texture = ExtResource( 8 )
+polygon = PoolVector2Array( 20321.8, 2431.17, 21073.6, 2282.41, 21093.2, 2368.4, 20340.3, 2511.14 )
+border_size = -64
+border_overlap = -16
+border_textures = ExtResource( 12 )
+border_clockwise_shift = 3
+border_texture_scale = Vector2( 0.5, 0.5 )
+border_texture_offset = Vector2( 0, 0 )
+smooth_level = 0.0
+
+[node name="Colliders" type="Node2D" parent="Platforms"]
+
+[node name="Group1" type="Node2D" parent="Platforms/Colliders"]
+
+[node name="ZoneCollider" type="KinematicBody2D" parent="Platforms/Colliders/Group1"]
+position = Vector2( -12.2617, 2.74097 )
+collision_layer = 0
+collision_mask = 256
+script = ExtResource( 14 )
+priority = 200
+ZoneTwo = false
+
+[node name="200" type="CollisionPolygon2D" parent="Platforms/Colliders/Group1/ZoneCollider"]
+position = Vector2( 34.7266, 164.212 )
+polygon = PoolVector2Array( 20220.4, 2165.81, 20235.1, 2265.65, 20270.3, 2374.29, 20329, 2444.76, 20542.7, 2472.09, 20707, 2425.36, 21049.1, 2369.59, 21129.4, 2319.73, 21161.1, 2257.85, 21177, 2176.93, 21178.6, 2086.49, 21153.2, 2002.4, 21197.6, 1983.36, 21213.5, 2064.28, 21230.9, 2169, 21207.1, 2249.92, 21189.7, 2327.66, 21097.4, 2405.76, 20704, 2467.56, 20538.1, 2508.26, 20358.4, 2532.85, 20202.8, 2482.93, 20138.2, 2374.29, 20135.2, 2130.58, 20217.5, 2098.28 )
+
+[node name="ZoneCollider2" type="KinematicBody2D" parent="Platforms/Colliders/Group1"]
+position = Vector2( 48.6777, -61.7769 )
+collision_layer = 2048
+collision_mask = 256
+script = ExtResource( 14 )
+
+[node name="100" type="CollisionPolygon2D" parent="Platforms/Colliders/Group1/ZoneCollider2"]
+position = Vector2( 26.7149, 121.176 )
+polygon = PoolVector2Array( 20055.9, 2152.98, 20000.1, 2335.03, 20014.8, 2511.2, 20064.7, 2640.4, 20229.1, 2705, 20565.8, 2719.32, 20796.8, 2661.04, 21032.1, 2596.29, 21206.9, 2505.63, 21263.9, 2372.92, 21291.6, 2262.15, 21284.1, 2146.35, 21261.4, 2055.72, 21162.1, 1986.19, 21059, 1978.26, 20896.7, 1996.3, 20624.3, 2062.35, 20273.6, 2140.1, 20080, 2143.27, 19986.1, 2101.09, 20218.1, 2075.04, 20679.8, 1975.08, 20982.9, 1911.62, 21167.5, 1871.5, 21235.9, 1930.75, 21344.7, 2040.64, 21390.9, 2199.79, 21346.5, 2423.71, 21279.9, 2506.99, 21181.8, 2593.96, 21056, 2651.33, 20848.7, 2719.8, 20526.7, 2773.47, 20352.8, 2771.62, 20020.4, 2786.69, 19965.9, 2641.28, 19913.6, 2461.79, 19906.8, 2305.02, 19976.6, 2144.17 )
+
+[node name="Garnishes" type="Node2D" parent="Platforms"]
+
+[node name="Flowers" type="Node2D" parent="Platforms/Garnishes"]
+
+[node name="FlowerA" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 905.559, 759.625 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 15 )
+
+[node name="FlowerB" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 5609.42, 994.908 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 16 )
+
+[node name="FlowerC6" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 17601.4, 2887.21 )
+rotation = 0.669748
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 17 )
+
+[node name="FlowerD" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 3566.86, 905.15 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 18 )
+
+[node name="FlowerE" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 1719.53, 360.652 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerF" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 5046.9, 359.691 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 20 )
+
+[node name="FlowerE8" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 33098.3, 3660.34 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 19 )
+
+[node name="FlowerF3" type="Sprite" parent="Platforms/Garnishes/Flowers"]
+position = Vector2( 34657.8, 2062.22 )
+scale = Vector2( 0.5, 0.5 )
+z_index = -4
+texture = ExtResource( 20 )
+
+[node name="Trees" type="Node2D" parent="Platforms/Garnishes"]
+
+[node name="TreeA" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 630.417, 591.364 )
+z_index = -5
+texture = ExtResource( 21 )
+
+[node name="TreeB" type="Sprite" parent="Platforms/Garnishes/Trees"]
+position = Vector2( 1042.24, 596.095 )
+z_index = -5
+texture = ExtResource( 22 )
+
+[node name="Misc" type="Node2D" parent="Platforms/Garnishes"]
+
+[node name="Foods" type="Node2D" parent="."]
+
+[node name="Bushes" type="Node2D" parent="Foods"]
+z_index = -2
+
+[node name="Blueberries6" parent="Foods/Bushes" instance=ExtResource( 24 )]
+position = Vector2( 1592.23, 269.692 )
+scale = Vector2( 1, 1 )
+lootableCalories = 1500
+
+[node name="Smores" type="Node2D" parent="Foods"]
+
+[node name="Smore" parent="Foods/Smores" instance=ExtResource( 30 )]
+position = Vector2( 609.511, -132.502 )
+
+[node name="Items" type="Node2D" parent="."]
+
+[node name="SafetyCheckpoints" type="Node2D" parent="Items"]
+
+[node name="SafetyCheckPoint1" parent="Items/SafetyCheckpoints" instance=ExtResource( 10 )]
+
+[node name="Holdables" type="Node2D" parent="Items"]
+
+[node name="Spring" parent="Items/Holdables" instance=ExtResource( 28 )]
+position = Vector2( 16586.6, 2653.86 )
+JumpVelocity = 1600
+
+[node name="Stage" type="Node2D" parent="Items"]
+
+[node name="SpeedBoosts" type="Node2D" parent="Items/Stage"]
+
+[node name="SpeedBoost" parent="Items/Stage/SpeedBoosts" instance=ExtResource( 26 )]
+position = Vector2( -91.6347, 714.238 )
+rotation = 0.116174
+
+[node name="StageSpring" parent="Items/Stage" instance=ExtResource( 31 )]
+position = Vector2( 27145.4, 2470.87 )
+VelocityToApply = 1800
+
+[node name="Misc" type="Node2D" parent="Items"]
+
+[node name="SpaceRock2" parent="Items/Misc" instance=ExtResource( 25 )]
+position = Vector2( 23229.3, 1702.89 )
+RockNum = 2
+
+[node name="OneUp" parent="Items/Misc" instance=ExtResource( 13 )]
+position = Vector2( 7861.64, 309.095 )
+UUID = 1
+
+[node name="EndLevel" parent="Items" instance=ExtResource( 27 )]
+position = Vector2( 67681.1, 9658.51 )
+
+[node name="NPC" type="Node2D" parent="."]
+
+[node name="Enemies" type="Node2D" parent="NPC"]
+
+[node name="Birds" type="Node2D" parent="NPC/Enemies"]
+
+[node name="BirdPath2D1" type="Path2D" parent="NPC/Enemies/Birds"]
+position = Vector2( 11402.8, 169.91 )
+curve = SubResource( 1 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Birds/BirdPath2D1"]
+position = Vector2( 3392.64, 749.625 )
+rotation = -0.43005
+
+[node name="Bird" type="KinematicBody2D" parent="NPC/Enemies/Birds/BirdPath2D1/PathFollow2D"]
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 40 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Birds/BirdPath2D1/PathFollow2D/Bird"]
+rotation = 1.5708
+shape = SubResource( 2 )
+
+[node name="CutOutBird" parent="NPC/Enemies/Birds/BirdPath2D1/PathFollow2D/Bird" instance=ExtResource( 41 )]
+scale = Vector2( 0.075, 0.075 )
+
+[node name="BirdPath2D6" type="Path2D" parent="NPC/Enemies/Birds"]
+position = Vector2( 23765.7, 1132.77 )
+curve = SubResource( 3 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Birds/BirdPath2D6"]
+position = Vector2( 4096.78, 196.173 )
+rotation = 0.165424
+
+[node name="Bird" type="KinematicBody2D" parent="NPC/Enemies/Birds/BirdPath2D6/PathFollow2D"]
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 40 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Birds/BirdPath2D6/PathFollow2D/Bird"]
+rotation = 1.5708
+shape = SubResource( 2 )
+
+[node name="CutOutBird" parent="NPC/Enemies/Birds/BirdPath2D6/PathFollow2D/Bird" instance=ExtResource( 41 )]
+scale = Vector2( 0.075, 0.075 )
+
+[node name="Deers" type="Node2D" parent="NPC/Enemies"]
+
+[node name="DeerPath2D5" type="Path2D" parent="NPC/Enemies/Deers"]
+position = Vector2( 26272.7, 2506.61 )
+curve = SubResource( 4 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="NPC/Enemies/Deers/DeerPath2D5"]
+position = Vector2( 11.2109, -5.75513 )
+rotation = 0.00150612
+loop = false
+
+[node name="Deer" type="KinematicBody2D" parent="NPC/Enemies/Deers/DeerPath2D5/PathFollow2D"]
+position = Vector2( 81.3024, -26.8302 )
+collision_layer = 32
+collision_mask = 264
+script = ExtResource( 52 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC/Enemies/Deers/DeerPath2D5/PathFollow2D/Deer"]
+shape = SubResource( 5 )
+
+[node name="CutOutDeer" parent="NPC/Enemies/Deers/DeerPath2D5/PathFollow2D/Deer" instance=ExtResource( 43 )]
+scale = Vector2( 0.33, 0.33 )

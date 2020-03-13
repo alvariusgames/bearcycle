@@ -11,11 +11,10 @@ public class SpeedBoost : FSMKinematicBody2D<SpeedBoostState>, IInteractable
     public int InteractPriority { get { return 500;}}
     public Sprite Sprite;
     public Vector2 Direction;
-    public float Magnitude;
+    [Export]
+    public float SpeedToApply {get; set;} = 800f;
     public Vector2 VelocityToApply;
     public CollisionShape2D CollisionShape2D;
-    public Boolean IsForward = false;
-    public Boolean IsBackward = false;
     const float RESET_TIME_SECONDS = 0.2f;
 
     public AnimationPlayer AnimationPlayer;
@@ -31,18 +30,22 @@ public class SpeedBoost : FSMKinematicBody2D<SpeedBoostState>, IInteractable
                 this.CollisionShape2D = (CollisionShape2D)child;
             }
         }
-        this.IsForward = this.CollisionShape2D.Name.ToLower().Contains("forward");
-        this.IsBackward = this.CollisionShape2D.Name.ToLower().Contains("backward");
         this.Direction = new Vector2(1,0).Rotated(this.Rotation);
-        this.Magnitude = (float)Convert.ToDouble(this.Sprite.Name);
-        this.VelocityToApply = new Vector2(this.Direction.x * this.Magnitude,
-                                                this.Direction.y * this.Magnitude);
+        this.VelocityToApply = new Vector2(this.Direction.x * this.SpeedToApply,
+                                                this.Direction.y * this.SpeedToApply);
         this.AnimationPlayer.Play("default");}
 
-    public void GetHitBy(Node node){
+    public void InteractWith(Player player){
+        player.ATV.FrontWheel.PlayEngineRevSound();
+        var accellMagnitude = Wheel.MAX_FORWARD_ACCEL * 2;
+        if(player.ATV.Direction == ATVDirection.FORWARD){
+            player.ATV.SetAccellOfTwoWheels(accellMagnitude);
+            player.ATV.SetVelocityOfTwoWheels(this.VelocityToApply * 2);}
+        else if(player.ATV.Direction == ATVDirection.BACKWARD){
+            player.ATV.SetAccellOfTwoWheels(-accellMagnitude);
+            player.ATV.SetVelocityOfTwoWheels(-this.VelocityToApply * 2);}
         this.SetActiveState(SpeedBoostState.TRIGGER_HIT_OF_BOOST, 100);
         this.CollisionShape2D.Disabled = true;
-
     }
 
     public override void UpdateState(float delta){}

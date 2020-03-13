@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public enum EndLevelState {NOT_ACTIVATED, SPINNING, ACTIVATED, _TMP_EXIT_TO_MAIN_MENU}
+public enum EndLevelState {NOT_ACTIVATED, SPINNING, ACTIVATED, EXIT_TO_MAIN_MENU, TRIGGER_TRANSITION_TO_NEXT_ZONE}
 
 public class EndLevel : FSMKinematicBody2D<EndLevelState>
 {
@@ -16,7 +16,10 @@ public class EndLevel : FSMKinematicBody2D<EndLevelState>
     public Sprite UnactivatedSprite;
     public Sprite ActivatedSprite;
     public CollisionShape2D CollisionShape2D;
+    private ILevel currentLevel;
+    private Player player;
     private const float NUM_SEC_SPIN = 2f;
+    private const int NUM_UNITS_CAMERA_ABOVE = 300;
 
     public override void _Ready(){
         foreach(Node2D child in this.GetChildren()){
@@ -31,22 +34,41 @@ public class EndLevel : FSMKinematicBody2D<EndLevelState>
                 this.CollisionShape2D = (CollisionShape2D)child;}}}
 
     public void EndLevel_(Player player){
-        player.MoveCameraTo(this, 2f);
+        this.player = player;
+        this.currentLevel = this.player.ActiveLevel;
+        player.CurrentHealth = Player.MAX_HEALTH;
+        player.MoveCameraTo(this, new Vector2(0, -NUM_UNITS_CAMERA_ABOVE), 2f);
         this.CollisionShape2D.Disabled = true;
         this.ResetActiveState(EndLevelState.SPINNING);
         this.ResetActiveStateAfter(EndLevelState.ACTIVATED, NUM_SEC_SPIN);
         SoundHandler.StopAllStream();
         SoundHandler.PlayStream<MyAudioStreamPlayer>(this,
             new String[] {"res://media/music/short/end_level_classic.ogg"});
-        SoundHandler.SetSampleVolume(SoundHandler.GetSampleVolume() * 0f);
-        this.ResetActiveStateAfter(EndLevelState._TMP_EXIT_TO_MAIN_MENU, 10f); 
-        DbHandler.SaveLevelStatsRecord(1, (int)player.TotalCalories, true, 
-                                       player.ActiveLevel.SpaceRock1Collected,
-                                       player.ActiveLevel.SpaceRock2Collected,
-                                       player.ActiveLevel.SpaceRock3Collected
-        );
+        SoundHandler.StopAllSample(); //???
+        //SoundHandler.SetSampleVolumeLinearUnits(SoundHandler.GetSampleVolumeLinearUnits() * 0f);
+        if(this.levelIsLastZone(this.currentLevel)){
+            this.ResetActiveStateAfter(EndLevelState.EXIT_TO_MAIN_MENU, 10f);
+            DbHandler.SaveLevelStatsRecord(this.currentLevel.LevelNum, (int)this.player.TotalCalories, true, 
+                                           player.ActiveLevel.SpaceRock1Collected,
+                                           player.ActiveLevel.SpaceRock2Collected,
+                                           player.ActiveLevel.SpaceRock3Collected);}
+        else{
+            this.ResetActiveStateAfter(EndLevelState.TRIGGER_TRANSITION_TO_NEXT_ZONE, 10f);
+    }}
+
+    private Boolean levelIsLastZone(ILevel level){
+        return this.getNextZoneNodePath(level) == null;
     }
 
+    private String getNextZoneNodePath(ILevel level){
+        var nextZoneNumber = LevelNode2D.GetZoneNumFromNodePath(level.NodePath) + 1;
+        var nextZoneNodePath = String.Format("res://scenes/levels/level{0}z{1}.tscn",
+                                             level.LevelNum, nextZoneNumber);
+        if((new File()).FileExists(nextZoneNodePath)){
+            return nextZoneNodePath;}
+        else{
+            return null;}
+    }
     public override void UpdateState(float delta){}
     public override void ReactToState(float delta){
         switch(this.ActiveState){
@@ -66,14 +88,25 @@ public class EndLevel : FSMKinematicBody2D<EndLevelState>
                 this.AnimatedSprite.Visible = false;
                 this.ActivatedSprite.Visible = true;
                 break;
-            case EndLevelState._TMP_EXIT_TO_MAIN_MENU:
+            case EndLevelState.EXIT_TO_MAIN_MENU:
+                FourDirectJoystick.SendButtonReleaseToAllDirections(); //Bug where input is still pressed going into next level...
                 SceneTransitioner.Transition(FromScene: this.GetTree().GetRoot().GetChild(0),
                                              ToSceneStr: "res://scenes/level_select/level_select.tscn",
                                              effect: SceneTransitionEffect.FADE_BLACK,
                                              numSeconds: 1f,
                                              FadeOutAudio: true);
                 break;
-
+            case EndLevelState.TRIGGER_TRANSITION_TO_NEXT_ZONE:
+                FourDirectJoystick.SendButtonReleaseToAllDirections();
+                SceneTransitioner.TransitionToNextLevelZone(FromScene: this.GetTree().Root.GetChild(0),
+                                                            CurrentLevel: this.currentLevel,
+                                                            NextLevelZoneSceneStr: this.getNextZoneNodePath(this.currentLevel),
+                                                            NextLevelZoneNum: LevelNode2D.GetZoneNumFromNodePath(this.currentLevel.NodePath) + 1,
+                                                            onLoadPlayerCalories: this.player.TotalCalories,
+                                                            effect: SceneTransitionEffect.FADE_BLACK,
+                                                            numSeconds: 2f,
+                                                            FadeOutAudio: true);
+                break;
         }
     }
     public override void ReactStateless(float delta){}

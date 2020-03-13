@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public enum ClawAttackState { NORMAL, TRIGGER_ACTION, TRIGGER_ATTACK, ATTACK, TRIGGER_END_ATTACK}
+public enum ClawAttackState { NORMAL, TRIGGER_ACTION, TRIGGER_ATTACK, ATTACK, TRIGGER_END_ATTACK, LOCKED}
 
 public class ClawAttack : FSMNode2D<ClawAttackState>, IHoldable {
 
@@ -41,12 +41,21 @@ public class ClawAttack : FSMNode2D<ClawAttackState>, IHoldable {
 
     public void ReactToActionHold(float delta){}
 
+    public void PickupPreAction(){}
+
     public void PostDepletionAction(float delta){}
 
     public override void UpdateState(float delta){
     }
 
     public override void ReactStateless(float delta){}
+
+    private Boolean IsAttackingInOppositeDirectionOfATV(){
+        var attackWindowState = this.Player.AttackWindow.ActiveState;
+        var atvDir = this.Player.ATV.Direction;
+        return (attackWindowState.Equals(AttackWindowState.ATTACKING_FORWARD) &&  atvDir.Equals(ATVDirection.BACKWARD)) ||
+               (attackWindowState.Equals(AttackWindowState.ATTACKING_BACKWARD) && atvDir.Equals(ATVDirection.FORWARD));
+    }
 
     public void PlayRoarSound(){
         SoundHandler.PlaySample<MyAudioStreamPlayer2D>(this.Player.ATV.Bear,
@@ -56,6 +65,22 @@ public class ClawAttack : FSMNode2D<ClawAttackState>, IHoldable {
             new string[] {WOOSH1_SAMPLE},
             VolumeMultiplier: 0.75f);}
 
+    private void updateBearAttackAnimationFromDirection(){
+        String animation = null;
+        if(this.Player.AttackWindow.ActiveState.Equals(AttackWindowState.ATTACKING_FORWARD) ||
+           this.Player.AttackWindow.ActiveState.Equals(AttackWindowState.ATTACKING_BACKWARD) || 
+           this.Player.AttackWindow.ActiveState.Equals(AttackWindowState.ATTACKING_DIRECTIONLESS_DEFAULT)){
+                if(this.IsAttackingInOppositeDirectionOfATV()){
+                    animation = "attack_backwards1";}
+                else {
+                    animation = "attack1";}}
+        else if(this.Player.AttackWindow.ActiveState.Equals(AttackWindowState.ATTACKING_UPWARD)){
+                animation = "attack_up1";}
+        else if(this.Player.AttackWindow.ActiveState.Equals(AttackWindowState.ATTACKING_DOWNWARD)){
+                animation = "attack_down1";}
+        if(animation != null){
+            this.Player.ATV.Bear.AnimationPlayer.AdvancedPlay(animation, skipIfAlreadyPlaying: true);}}
+
     public override void ReactToState(float delta){
         switch(this.ActiveState){
             case ClawAttackState.NORMAL:
@@ -63,17 +88,21 @@ public class ClawAttack : FSMNode2D<ClawAttackState>, IHoldable {
                 break;
             case ClawAttackState.TRIGGER_ATTACK:
                 var attackDurationS = 0.5f;
-                this.Player.playBearAnimation("attack1");
                 this.PlayRoarSound();
                 this.SetActiveState(ClawAttackState.ATTACK, 200);
+                this.Player.AttackWindow.TriggerAttack();
+                this.Player.ATV.Bear.AnimationPlayer.Stop();
+                this.updateBearAttackAnimationFromDirection();
                 this.SetActiveStateAfter(ClawAttackState.TRIGGER_END_ATTACK, 400, attackDurationS);
                 break;
             case ClawAttackState.ATTACK:
-                this.Player.AttackWindow.SetActiveState(AttackWindowState.ATTACKING, 100);
+                this.updateBearAttackAnimationFromDirection();
                 break;
             case ClawAttackState.TRIGGER_END_ATTACK:
-                this.Player.playBearAnimation("idleBounce1");
+                this.Player.ATV.Bear.AnimationPlayer.AdvancedPlay("idleBounce1");
                 this.ResetActiveState(ClawAttackState.NORMAL);
+                break;
+            case ClawAttackState.LOCKED:
                 break;}}
 
 

@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using LiteDB;
+using System.Collections.Generic;
 using System.Linq;
 public static class DbHandler{
     private static String GlobalsDbPath = OS.GetUserDataDir() + "/globals.db";
@@ -61,11 +62,42 @@ public static class DbHandler{
         }
     }
 
+    public static void SetCurrentLevelHoveringOver(int levelNum){
+        var slot = DbHandler.ActiveSlot;
+        slot.currentLevelNumHoveringOver = levelNum;
+        DbHandler.ActiveSlot = slot;
+    }
+    public static void SetHighestLevelUnlocked(int levelNum){
+        var slot = DbHandler.ActiveSlot;
+        slot.HighestLevelNumUnlocked = levelNum;
+        DbHandler.ActiveSlot = slot;
+    }
+
+    public static Boolean IsLevelUnlocked(int levelNum){
+        return levelNum <= DbHandler.ActiveSlot.HighestLevelNumUnlocked;
+    }
+
     public static LevelStatsRecord GetLevelStatsRecordFor(int levelNum){
+        if(levelNum == 0){
+            // You can't store id of 0 in database, and we don't really care about storing
+            // stats for the tutorial level -- so bypass the Db and return Default
+            return LevelStatsRecord.Default;}
         ActiveSlotInitializationCheck();
         using(var db = new LiteDatabase(ActiveSlotDbPath)){
                 var col = db.GetCollection<LevelStatsRecord>("levelstatsrecord");
-                return col.FindById(levelNum);
+                var output = col.FindById(levelNum);
+                if(output == null){
+                    GD.Print("LevelStatsRecord for " + levelNum + " doesn't exist, making one...");
+                    DbHandler.SaveLevelStatsRecord(levelNum,
+                                                   LevelStatsRecord.Default.TotalCalories,
+                                                   LevelStatsRecord.Default.IsCompleted,
+                                                   LevelStatsRecord.Default.SpaceRock1Collected,
+                                                   LevelStatsRecord.Default.SpaceRock2Collected,
+                                                   LevelStatsRecord.Default.SpaceRock3Collected,
+                                                   false);
+                    return col.FindById(levelNum);}
+                else {
+                    return output;}
         }
     }
 
@@ -107,6 +139,35 @@ public static class DbHandler{
        }
     }
 
+    public static Dictionary<int, INonRefreshable> GetNonRefreshablesFor(int levelNum){
+        if(levelNum == 0){
+            new Dictionary<int, INonRefreshable>();}
+        ActiveSlotInitializationCheck();
+        using(var db = new LiteDatabase(ActiveSlotDbPath)){
+            var col = db.GetCollection<NonRefreshable>("nonrefreshable");
+            var dbNonRefreshables = col.Find(x => x.LevelNum == levelNum);
+            var output = new Dictionary<int, INonRefreshable>();
+            foreach(var dbNonRefreshable in dbNonRefreshables){
+                output[dbNonRefreshable.UUID] = dbNonRefreshable;}
+            return output;}
+    }
+
+    public static void SaveNonRefreshable(INonRefreshable n){
+        using(var db = new LiteDatabase(ActiveSlotDbPath)){
+            var col = db.GetCollection<NonRefreshable>("nonrefreshable");
+            var nonRefreshable = new NonRefreshable(){
+                Id = n.UUID,
+                UUID = n.UUID,
+                LevelNum = n.LevelNum}; 
+            col.Insert(nonRefreshable);}
+    }
+
+    public static void ClearAllNonRefreshables(){
+        using(var db = new LiteDatabase(ActiveSlotDbPath)){
+            var col = db.GetCollection<NonRefreshable>("nonrefreshable");
+            col.Delete(x => true);}
+    }
+
     public static void DeleteGlobalsAndActiveGameSlotDbs(){
         DeleteActiveGameSlotDatabase();
         DeleteGlobalsDatabase();
@@ -121,6 +182,74 @@ public static class DbHandler{
         var dir = new Directory();
         dir.Remove(GlobalsDbPath);
     }
+
+    public static void ResetInputMapToDefault(){
+        DbHandler.OverrideControlAction("ui_attack",
+                                        Controllers.Keyboard.Id,
+                                        Controllers.Keyboard.DefaultAttackIndex);
+        DbHandler.OverrideControlAction("ui_forage",
+                                        Controllers.Keyboard.Id,
+                                        Controllers.Keyboard.DefaultForageIndex);
+         DbHandler.OverrideControlAction("ui_use_item",
+                                        Controllers.Keyboard.Id,
+                                        Controllers.Keyboard.DefaultUseItemIndex);
+        InputMap.LoadFromGlobals(); //Not the same as our `Globals`
+    }
+
+    public static void ApplyOverrideControlsToInputMap(){
+        InputMap.LoadFromGlobals(); //Different from our `Globals`
+        InputEventKey ekey;
+        InputEventJoypadButton ejoy;
+
+        if(DbHandler.Globals.AttackControlOverrideController.Equals(Controllers.Keyboard.Id)){
+            ekey = new InputEventKey();
+            ekey.Scancode = DbHandler.Globals.AttackControlOverrideIndex;
+            writeActionAndEventToInputMap("ui_attack", ekey);}
+        else if(DbHandler.Globals.AttackControlOverrideController.Equals(Controllers.JoyPad.Id)){
+            ejoy = new InputEventJoypadButton();
+            ejoy.ButtonIndex = (int)DbHandler.Globals.AttackControlOverrideIndex;
+            writeActionAndEventToInputMap("ui_attack", ejoy);}
+
+        if(DbHandler.Globals.ForageControlOverrideController.Equals(Controllers.Keyboard.Id)){
+            ekey = new InputEventKey();
+            ekey.Scancode = DbHandler.Globals.ForageControlOverrideIndex;
+            writeActionAndEventToInputMap("ui_forage", ekey);}
+        else if(DbHandler.Globals.ForageControlOverrideController.Equals(Controllers.JoyPad.Id)){
+            ejoy = new InputEventJoypadButton();
+            ejoy.ButtonIndex = (int)DbHandler.Globals.ForageControlOverrideIndex;
+            writeActionAndEventToInputMap("ui_forage", ejoy);}
+
+        if(DbHandler.Globals.UseItemControlOverrideController.Equals(Controllers.Keyboard.Id)){
+            ekey = new InputEventKey();
+            ekey.Scancode = DbHandler.Globals.UseItemControlOverrideIndex;
+            writeActionAndEventToInputMap("ui_use_item", ekey);}
+        else if(DbHandler.Globals.UseItemControlOverrideController.Equals(Controllers.JoyPad.Id)){
+            ejoy = new InputEventJoypadButton();
+            ejoy.ButtonIndex = (int)DbHandler.Globals.UseItemControlOverrideIndex;
+            writeActionAndEventToInputMap("ui_use_item", ejoy);}
+    }
+
+    private static void writeActionAndEventToInputMap(String action, InputEvent @event){
+        foreach(var otherAction in new String[]{"ui_attack", "ui_forage", "ui_use_item"}){
+            if(InputMap.ActionHasEvent(otherAction, @event)){
+                InputMap.ActionEraseEvent(otherAction, @event);}}
+        InputMap.ActionAddEvent(action, @event);}
+
+    public static void OverrideControlAction(String action,
+                                             uint controllerId,
+                                             uint index){
+        var globals = DbHandler.Globals;
+        if(action.Equals("ui_attack")){
+            globals.AttackControlOverrideController = controllerId;
+            globals.AttackControlOverrideIndex = index;}
+        if(action.Equals("ui_forage")){
+            globals.ForageControlOverrideController = controllerId;
+            globals.ForageControlOverrideIndex = index;}
+        if(action.Equals("ui_use_item")){
+            globals.UseItemControlOverrideController = controllerId;
+            globals.UseItemControlOverrideIndex = index;}
+        DbHandler.Globals = globals;
+        DbHandler.ApplyOverrideControlsToInputMap();}
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)

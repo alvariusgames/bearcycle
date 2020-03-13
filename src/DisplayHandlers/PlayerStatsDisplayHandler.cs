@@ -11,34 +11,33 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
     public override PlayerStatsDisplayHandlerState InitialState {
         get { return PlayerStatsDisplayHandlerState.DEFAULT;}}
     private Player activePlayer;
-    private LevelFrameBannerBase baseHolder;
+    public LevelFrameBannerBase LevelFrameBannerBase;
     private Sprite speedometerMeter;
     private TextureProgress healthProgressBar;
     private Label totalCaloriesLabel;
     private Label accellLabel;
+    private Label livesLabel;
     private IFood lastFoodDisplayed;
     private Label lastFoodEatenDisplayLabel;
     private Container lastFoodEatenContainer;
     private Sprite lastFoodEatenDisplaySprite;
-    private AnimatedSprite InteractableFlashPrompt;
     private AnimatedSprite HealthWarningFlashPrompt;
     private AnimatedSprite LastFoodEatenBorder;
     private int interactableFlashPromptCounter = 0;
     private Sprite HoldableIcon;
     private Sprite NumActionCallsGraphic1To6;
-    private Color InitialInteractableFlashPromptModulate;
+    private Node2D TouchScreenButtons;
+    private TouchScreenButton UiUseItemTouchScreenButton;
 
     public override void _Ready(){
         if(this.GetChild(0) is PlatformSpecificChildren){
             ((PlatformSpecificChildren)this.GetChild(0)).PopulateChildrenWithPlatformSpecificNodes(this);}
         this.ResetActiveState(this.InitialState);
         this.setPlayerAndCameraMembers();
+        this.makeTransparentOnMobile();
         foreach(Node child in this.GetChildren()){
             if(child is Sprite && child.Name.ToLower().Contains("speedometermeter")){
                 this.speedometerMeter = (Sprite)child;}
-            if(child is AnimatedSprite && child.Name.Contains("nteractable")){
-                this.InteractableFlashPrompt = (AnimatedSprite)child;
-                this.InitialInteractableFlashPromptModulate = this.InteractableFlashPrompt.Modulate;}
             if(child is AnimatedSprite && child.Name.ToLower().Contains("healthwarningflashprompt")){
                 this.HealthWarningFlashPrompt = (AnimatedSprite)child;}
             if(child is Sprite && child.Name.Contains("oldable")){
@@ -49,12 +48,19 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
             if(child is TextureProgress){
                 this.healthProgressBar = (TextureProgress)child;}
             if((child is Label) && (child.GetName().ToLower().Contains("total"))){
-                this.totalCaloriesLabel= (Label)child;
-                this.totalCaloriesLabel.Text = (String)Strings.UI["Calories"];}
+                this.totalCaloriesLabel= (Label)child;}
             if((child is Label) && (child.GetName().ToLower().Contains("accell"))){
                 this.accellLabel= (Label)child;}
+            if((child is Label) && (child.GetName().ToLower().Contains("lives"))){
+                this.livesLabel = (Label)child;}
             if(child is Sprite && child.Name.ToLower().Contains("baseholder")){
-                this.baseHolder = (LevelFrameBannerBase)child;}
+                this.LevelFrameBannerBase = (LevelFrameBannerBase)child;}
+            if(child.Name.ToLower().Contains("touchscreenbuttons")){
+                this.TouchScreenButtons = (Node2D)child;
+                foreach(Node subchild in child.GetChildren()){
+                    if(subchild.Name.ToLower().Contains("item")){
+                        this.UiUseItemTouchScreenButton = (TouchScreenButton)subchild;}}
+            }
             if(child is Container){
                 this.lastFoodEatenContainer = (Container)child;
                 foreach(Node subChild in child.GetChildren()){
@@ -65,6 +71,10 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
                     if(subChild is AnimatedSprite && subChild.Name.ToLower().Contains("foodeatenborder")){
                         this.LastFoodEatenBorder = (AnimatedSprite)subChild;}}
             }}}
+
+    private void makeTransparentOnMobile(){
+        if(main.PlatformType.Equals(PlatformType.MOBILE)){
+            this.Modulate = new Color(this.Modulate.r, this.Modulate.g, this.Modulate.b, 0.75f);}}
 
     private void setPlayerAndCameraMembers(){                                   
            var player = this.tryGetPlayerFrom(this.GetTree().GetRoot());        
@@ -82,12 +92,17 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
 
     public override void ReactStateless(float delta){
         this.healthProgressBar.Value = this.activePlayer.CurrentHealth;
-        this.totalCaloriesLabel.Text = Strings.UI["Calories"] + ": " + this.activePlayer.TotalCalories.ToString();
+        this.totalCaloriesLabel.Text = this.Tr("UI_CALORIES") + ": " + this.activePlayer.TotalCalories.ToString();
         this.accellLabel.Text = "FPS: " + (1 / delta).ToString("0");
+        this.livesLabel.Text = "x " + this.activePlayer.NumLives;
         this.rotateSpeedometer();
         this.handleHealthWarningFlashPrompt(delta);
-        this.handleInteractableFlashPrompt(delta);
         this.handleHoldableIcon(delta);
+        if(this.TouchScreenButtons != null){
+            if(this.activePlayer.ActiveHoldable is ClawAttack){
+                this.UiUseItemTouchScreenButton.Visible = false;}
+            else{
+                this.UiUseItemTouchScreenButton.Visible = true;}}
     }
     private void rotateSpeedometer(){
         var lowerBoundDeg = 160;
@@ -103,39 +118,11 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
     private void handleHealthWarningFlashPrompt(float delta){
        if(this.activePlayer.IsInHealthDanger){
            this.HealthWarningFlashPrompt.Visible = true;
-           this.baseHolder.BlinkRed = true;}
+           this.LevelFrameBannerBase.BlinkRed = true;}
        else {
            this.HealthWarningFlashPrompt.Visible = false;
-           this.baseHolder.BlinkRed = false;
-           this.baseHolder.ResetToDefaultColor();}}
-
-    private void handleInteractableFlashPrompt(float delta){
-        if(this.activePlayer.WholeBodyKinBody.IsOverInteractable){
-            this.HealthWarningFlashPrompt.Visible = false;
-            if(this.interactableFlashPromptCounter < 100){
-                this.interactableFlashPromptCounter = 100;}
-            if(this.interactableFlashPromptCounter < 200){
-                this.InteractableFlashPrompt.Modulate = new Color(
-                    this.InitialInteractableFlashPromptModulate.r, 
-                    this.InitialInteractableFlashPromptModulate.g, 
-                    this.InitialInteractableFlashPromptModulate.b,
-                    this.interactableFlashPromptCounter / 255f);
-                this.interactableFlashPromptCounter += 10;}
-        } else {
-            if(this.interactableFlashPromptCounter > 100){
-                this.interactableFlashPromptCounter = 100;
-            }
-            if(this.interactableFlashPromptCounter < 0){
-                this.interactableFlashPromptCounter = 0;
-            }
-            this.interactableFlashPromptCounter -= 10;
-                this.InteractableFlashPrompt.Modulate = new Color(
-                    this.InitialInteractableFlashPromptModulate.r, 
-                    this.InitialInteractableFlashPromptModulate.g, 
-                    this.InitialInteractableFlashPromptModulate.b,
-                    this.interactableFlashPromptCounter / 255f);
-        }
-    }
+           this.LevelFrameBannerBase.BlinkRed = false;
+           this.LevelFrameBannerBase.ResetToDefaultColor();}}
 
     private void handleHoldableIcon(float delta){
         this.HoldableIcon.Texture = this.activePlayer.ActiveHoldable.UIDisplayIcon;

@@ -7,13 +7,15 @@ public class SceneTransitionerArguments{
     public Node FromScene;
     public String ToSceneStr;
     public String ToLevelStr;
+    public String LevelTitle;
+    public int LevelZone = -1;
     public SceneTransitionEffect effect;
     public float numSeconds;
     public Boolean FadeOutAudio;}
 
 public static class SceneTransitioner{
 
-    public static void TransitionToLevel(Node FromScene, String ToLevelStr,
+    public static void TransitionToLevel(Node FromScene, String ToLevelStr, String LevelTitle, int LevelZone = -1,
                                          SceneTransitionEffect effect = SceneTransitionEffect.DIRECT_CUT,
                                          float numSeconds = 0f,
                                          Boolean FadeOutAudio = false){
@@ -21,6 +23,8 @@ public static class SceneTransitioner{
         interactiveLoaderScene.Args = new SceneTransitionerArguments{
             FromScene = FromScene,
             ToLevelStr = ToLevelStr,
+            LevelTitle = LevelTitle,
+            LevelZone = LevelZone,
             effect = effect,
             numSeconds = numSeconds,
             FadeOutAudio = FadeOutAudio
@@ -94,5 +98,42 @@ public static class SceneTransitioner{
 
         RootNode.AddChild(transitionerScene);
         return;
+    }
+
+    public static void RestartLevel(Node FromScene, ILevel Level,
+                                   SafetyCheckPoint SafetyCheckPoint,
+                                   int onLoadPlayerCalories,
+                                   SceneTransitionEffect effect = SceneTransitionEffect.DIRECT_CUT, 
+                                   float numSeconds = 0f,
+                                   Boolean FadeOutAudio = false){
+        var newLevel = (LevelNode2D)(GD.Load(Level.NodePath) as PackedScene).Instance();
+        newLevel.SpaceRock1Collected = Level.SpaceRock1Collected;
+        newLevel.SpaceRock2Collected = Level.SpaceRock2Collected;
+        newLevel.SpaceRock3Collected = Level.SpaceRock3Collected;
+        newLevel.OnLoadPlacePlayerAt(SafetyCheckPoint);
+        newLevel.OnLoadSetPlayerCaloriesTo(onLoadPlayerCalories);
+        var levelFrame = SceneTransitioner.SetLevelInLevelFrame(newLevel, Level.Title, Level.Zone);
+        SceneTransitioner.TransitionAlreadyLoadedScenes(FromScene, levelFrame, effect, numSeconds, FadeOutAudio);}
+ 
+    public static LevelFrame SetLevelInLevelFrame(Node loadedLevelScene, String LevelTitle, int LevelZone){
+        var levelFrameScene = (LevelFrame)(GD.Load("res://scenes/frames/LevelFrame.tscn") as PackedScene).Instance();
+        levelFrameScene._Ready();
+        levelFrameScene.SetLevelTitle(LevelTitle, LevelZone);
+        levelFrameScene.Viewport.AddChild(loadedLevelScene);
+        return levelFrameScene;}
+
+    public static void TransitionToNextLevelZone(Node FromScene, ILevel CurrentLevel, String NextLevelZoneSceneStr,
+                                                 int onLoadPlayerCalories,
+                                                 SceneTransitionEffect effect = SceneTransitionEffect.DIRECT_CUT,
+                                                 int NextLevelZoneNum = 1,
+                                                 float numSeconds = 0f,
+                                                 Boolean FadeOutAudio = false){
+        var newLevel = (LevelNode2D)(GD.Load(NextLevelZoneSceneStr) as PackedScene).Instance();
+        newLevel.SpaceRock1Collected = CurrentLevel.SpaceRock1Collected;
+        newLevel.SpaceRock2Collected = CurrentLevel.SpaceRock2Collected;
+        newLevel.SpaceRock3Collected = CurrentLevel.SpaceRock3Collected;
+        newLevel.OnLoadSetPlayerCaloriesTo(onLoadPlayerCalories);
+        var levelFrame = SceneTransitioner.SetLevelInLevelFrame(newLevel, CurrentLevel.Title, NextLevelZoneNum);
+        SceneTransitioner.TransitionAlreadyLoadedScenes(FromScene, levelFrame, effect, numSeconds, FadeOutAudio);
     }
 }
