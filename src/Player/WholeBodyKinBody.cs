@@ -1,5 +1,5 @@
 using Godot;
-using System;
+using System.Collections.Generic;
 
 public enum WholeBodyState { NORMAL, 
                             INTERACTING_WITH_INTERACTABLE, 
@@ -10,7 +10,7 @@ public class WholeBodyKinBody : FSMKinematicBody2D<WholeBodyState>{
     public Player Player;
     public bool IsOverInteractable = false;
 
-    public override WholeBodyState InitialState { get { return WholeBodyState.NORMAL;}}
+    public override WholeBodyState InitialState { get { return WholeBodyState.NORMAL;}set{}}
 
     public override void _Ready(){
         this.Player = (Player)this.GetParent();}
@@ -31,19 +31,27 @@ public class WholeBodyKinBody : FSMKinematicBody2D<WholeBodyState>{
     }
 
     private void reactToInput(float delta){
-        if(Input.IsActionJustPressed("ui_use_item") &&
-           this.Player.ATV.ActiveState == ATVState.WITH_BEAR &&
-           this.Player.ActiveHoldable != null){
+        if(this.Player.ATV.ActiveState == ATVState.WITH_BEAR &&
+            this.Player.ActiveHoldable != null){
+            if(Input.IsActionJustPressed("ui_use_item") && 
+               this.timeElapsedSinceLastActionPress > MIN_ACTION_PRESS_WAITING_PERIOD_SEC){
+                this.timeElapsedSinceLastActionPress = 0f;
                 this.Player.ActiveHoldable.ReactToActionPress(delta);}
-        else if(Input.IsActionPressed("ui_use_item") &&
-                this.Player.ATV.ActiveState == ATVState.WITH_BEAR &&
-                this.Player.ActiveHoldable != null){
-                    this.Player.ActiveHoldable.ReactToActionHold(delta);}
+            else if(Input.IsActionPressed("ui_use_item")){
+                this.Player.ActiveHoldable.ReactToActionHold(delta);}
+            if(Input.IsActionJustReleased("ui_use_item")){
+                this.Player.ActiveHoldable.ReactToActionRelease(delta);
+            }}
         if(Input.IsActionJustPressed("ui_attack") &&
            this.Player.ATV.ActiveState == ATVState.WITH_BEAR){
                 this.Player.ClawAttack.ReactToActionPress(delta);}}
 
+    private float timeElapsedSinceLastActionPress = 0f;
+
+    private const float MIN_ACTION_PRESS_WAITING_PERIOD_SEC = 1f;
+
     public override void ReactStateless(float delta){
+        this.timeElapsedSinceLastActionPress += delta;
         this.SetGlobalPosition(this.Player.ATV.GetDeFactoGlobalPosition());
         this.SetGlobalRotation(this.Player.ATV.GetDeFactorGlobalRotation());
         if(this.Player.ATV.Direction == ATVDirection.FORWARD){
@@ -51,22 +59,32 @@ public class WholeBodyKinBody : FSMKinematicBody2D<WholeBodyState>{
         else if (this.Player.ATV.Direction == ATVDirection.BACKWARD){
            this.SetScale(new Vector2(-1,1));}
         if(this.Player.ATV.ActiveState == ATVState.WITH_BEAR){
-            this.reactToSlideCollisions(delta);}}    
+            this.reactToCollisions(delta);}}    
 
-    private void reactToSlideCollisions(float delta){
+    private Queue<Godot.Object> externallyReportedColliders = new Queue<Godot.Object>();
+    public void reportExternalCollider(Godot.Object collider){
+        ///Used mainly by RigidBody2D for reporting on these collisions
+        ///that take place outside of `getSlideCollision()`
+        this.externallyReportedColliders.Enqueue(collider);}
+
+    private void reactToCollisions(float delta){
         if(!this.Player.ActiveState.Equals(PlayerState.ALIVE)){
             return;}
         ZoneCollider highestPriorityZoneCollider = null;
         IInteractable highestPriorityInteractable = null;
         this.IsOverInteractable = false;
         this.MoveAndSlide(new Vector2(0,0));
-        for(int i = 0; i < this.GetSlideCount(); i++){
-            var collision = this.GetSlideCollision(i);
+        var colliders = new List<Godot.Object>();
+        for(int i=0; i< this.GetSlideCount(); i++){
+            colliders.Add(this.GetSlideCollision(i).Collider);}
+        while(this.externallyReportedColliders.Count > 0){
+            colliders.Add(this.externallyReportedColliders.Dequeue());}
 
+        foreach(Node collider in colliders){
             //ZoneColliderArea
             //----------------
-            if(collision.Collider is ZoneCollider){
-                var zoneCollider = (ZoneCollider)(collision.Collider); //TODO: find more elegant solution
+            if(collider is ZoneCollider){
+                var zoneCollider = (ZoneCollider)(collider); //TODO: find more elegant solution
                 if(highestPriorityZoneCollider == null){
                     highestPriorityZoneCollider = zoneCollider;
                 } else if(highestPriorityZoneCollider.priority <= zoneCollider.priority){
@@ -74,10 +92,10 @@ public class WholeBodyKinBody : FSMKinematicBody2D<WholeBodyState>{
 
             //IInteractable Area
             //------------------
-            else if(collision.Collider is IInteractable){
+            else if(collider is IInteractable){
                 this.IsOverInteractable = true;
                 this.SetActiveState(WholeBodyState.INTERACTING_WITH_INTERACTABLE, 200);
-                var interactable = (IInteractable)(collision.Collider);
+                var interactable = (IInteractable)(collider);
                 if(highestPriorityInteractable == null){
                     highestPriorityInteractable = interactable;
                 } else if(highestPriorityInteractable.InteractPriority <= interactable.InteractPriority){
@@ -87,55 +105,31 @@ public class WholeBodyKinBody : FSMKinematicBody2D<WholeBodyState>{
 
             //NPC Area
             //---------
-            else if(collision.Collider is INPC && this.Player.ATV.Bear.ActiveState != BearState.HIT_SEQ_INVINC){
-                var npc = (INPC)collision.Collider;
+            else if(collider is INPC){
+                var npc = (INPC)collider;
                 npc.GetHitBy(this);
-                this.Player.GetHitBy(npc);}
+                if(this.Player.ATV.Bear.ActiveState != BearState.HIT_SEQ_INVINC){
+                    this.Player.GetHitBy(npc);}}
+
+            //NPC Attack Area
+            //---------------
+            else if(collider is NPCAttackWindow){
+                if(this.Player.ATV.Bear.ActiveState != BearState.HIT_SEQ_INVINC){
+                    var npcAttackWindow = (NPCAttackWindow)collider;
+                    npcAttackWindow.GetHitBy(this);
+                    if(this.Player.ATV.Bear.ActiveState != BearState.HIT_SEQ_INVINC){
+                        this.Player.GetHitBy(npcAttackWindow);}}}
 
             //IConsumable Area
             //---------------
-            else if(collision.Collider is IConsumeable){
-                ((IConsumeable)collision.Collider).consume(this);}
+            else if(collider is IConsumeable){
+                ((IConsumeable)collider).Consume(this.Player);}}
             
-            //EndLevel Area
-            //-------------
-
-            else if(collision.Collider is EndLevel){
-                ((EndLevel)collision.Collider).EndLevel_(this.Player);
-            }
-            }
-
         //INTERACTABLE LOGIC TO APPLY AFTER ALL COLLISIONS
-        if(highestPriorityInteractable != null && Input.IsActionJustPressed("ui_forage")){
+        if(highestPriorityInteractable != null &&
+           Input.IsActionJustPressed("ui_forage") &&
+           this.timeElapsedSinceLastActionPress > MIN_ACTION_PRESS_WAITING_PERIOD_SEC){
             highestPriorityInteractable.InteractWith(this.Player);}
-        /*
-        if(highestPriorityInteractable is SpeedBoost && Input.IsActionJustPressed("ui_forage")){
-                this.Player.ATV.FrontWheel.PlayEngineRevSound();
-                var speedBoost = (SpeedBoost)highestPriorityInteractable;
-                var accellMagnitude = Wheel.MAX_FORWARD_ACCEL * 2;
-                if(this.Player.ATV.Direction == ATVDirection.FORWARD){
-                    this.Player.ATV.SetAccellOfTwoWheels(accellMagnitude);
-                    this.Player.ATV.SetVelocityOfTwoWheels(speedBoost.VelocityToApply * 2);}
-                else if(this.Player.ATV.Direction == ATVDirection.BACKWARD){
-                    this.Player.ATV.SetAccellOfTwoWheels(-accellMagnitude);
-                    this.Player.ATV.SetVelocityOfTwoWheels(-speedBoost.VelocityToApply * 2);}
-                speedBoost.GetHitBy(this);}
-            else if(highestPriorityInteractable is IHoldable && Input.IsActionJustPressed("ui_forage")){
-                var Holdable = (IHoldable)highestPriorityInteractable;
-                this.Player.PickupHoldable(Holdable);}
-            else if(highestPriorityInteractable is InfiniteFoodRegion && Input.IsActionJustPressed("ui_forage")){
-                var infiniteFoodRegion = (InfiniteFoodRegion)highestPriorityInteractable;
-                infiniteFoodRegion.InteractWith(this.Player);}
-            else if(highestPriorityInteractable is StageSpring && Input.IsActionJustPressed("ui_forage")){
-                var stageSpring = ((StageSpring)highestPriorityInteractable);
-                stageSpring.TriggerHit();
-                SoundHandler.PlaySample<MyAudioStreamPlayer2D>(this.Player.ATV.Bear,
-                    new string[] {Spring.BOING_SAMPLE});
-                var springNormalRadians = stageSpring.Rotation + (1.5f * Math.PI);
-                var springNormalVec2 = new Vector2((float)Math.Cos(springNormalRadians), (float)Math.Sin(springNormalRadians));
-                this.Player.ATV.SetVelocityOfTwoWheels((springNormalVec2 * stageSpring.VelocityToApply) + this.Player.ATV.GetVelocityOfTwoWheels());
-            }
-            */
 
         //ZONE COLLIDER LOGIC
         if(highestPriorityZoneCollider != null &&

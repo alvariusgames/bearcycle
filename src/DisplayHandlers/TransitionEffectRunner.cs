@@ -1,9 +1,10 @@
 using Godot;
 using System;
 
-public class TransitionEffectRunner : FSMNode2D<SceneTransitionEffect>
-{
-    public override SceneTransitionEffect InitialState { get { return SceneTransitionEffect.DIRECT_CUT; }}
+public class TransitionEffectRunner : FSMNode2D<SceneTransitionEffect>{
+    //This is needed since SceneTransitioner updates state before `_Process()`
+    private SceneTransitionEffect initialState = SceneTransitionEffect.DIRECT_CUT;
+    public override SceneTransitionEffect InitialState { get { return this.initialState;} set{this.initialState = value;}}
     public Viewport ToViewport;
     public Viewport FromViewport;
     public ViewportContainer FromViewportContainer;

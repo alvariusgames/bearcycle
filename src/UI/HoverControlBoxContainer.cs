@@ -19,7 +19,9 @@ public class HoverControlBoxContainer : VBoxContainer {
         this.updateHovered();
         foreach(Node child in this.GetChildren()){
             if(child.GetChildCount() != 0 && child.GetChild(0) is TouchScreenButton){
-                HoverableItems.Add((Node)child.GetChildren()[0]);}
+                HoverableItems.Add((Node)child.GetChild(0));}
+            if(child.GetChildCount() != 0 && child.GetChild(0) is SlotArea){
+                HoverableItems.Add((Node)child.GetChild(0));}
             else if(child is OptionButton){
                 var button = (OptionButton)child;
                 button.GetPopup().FocusMode = FocusModeEnum.All;
@@ -52,14 +54,22 @@ public class HoverControlBoxContainer : VBoxContainer {
                 if(button.Equals(this.HoveredItem)){
                     button.SetGraphicToPressed();
                 } else {
-                    button.SetGraphicToUnpressed();}
-            } else if(item is OptionButton){
+                    button.SetGraphicToUnpressed();}}
+            else if(item is OptionButton){
                 var button = (OptionButton)item;
                 button.SetFocusMode(FocusModeEnum.All);
                 if(button.Equals(this.HoveredItem)){
                     button.GrabFocus();}
                 else{
-                    button.ReleaseFocus();}}}}
+                    button.ReleaseFocus();}}
+            else if(item is SlotArea){
+                var slotArea = (SlotArea)item;
+                if(slotArea.Equals(this.HoveredItem)){
+                    slotArea.SetToHovered();}
+                else{
+                    slotArea.SetToUnhovered();}}
+            
+            }}
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta){
@@ -85,14 +95,18 @@ public class HoverControlBoxContainer : VBoxContainer {
                 this.IncrementMenuUp();}}
             if(Input.IsActionJustPressed("ui_accept")){
                 if(this.HoveredItem is HoverableTouchScreenButton){
-                    ((HoverableTouchScreenButton)this.HoveredItem).MimicTouch();
-                } if(this.HoveredItem is OptionButton){
+                    ((HoverableTouchScreenButton)this.HoveredItem).MimicTouch();}
+                if(this.HoveredItem is OptionButton){
                     var button = (OptionButton)this.HoveredItem;
                      if(!this.isOptionButtonPopupOpened(button)){
-                        this.closeOptionButtonWorkaround(button);}}}
+                        this.closeOptionButtonWorkaround(button);}}
+                if(this.HoveredItem is SlotArea){
+                    ((SlotArea)this.HoveredItem).MimicTouch();}}
             if(Input.IsActionJustReleased("ui_accept")){
                 if(this.HoveredItem is HoverableTouchScreenButton){
-                    ((HoverableTouchScreenButton)this.HoveredItem).MimicTouchRelease();}}}}
+                    ((HoverableTouchScreenButton)this.HoveredItem).MimicTouchRelease();}
+                if(this.HoveredItem is SlotArea){
+                    ((SlotArea)this.HoveredItem).MimicTouchRelease();}}}}
 
     private Boolean isOptionButtonPopupOpened(OptionButton button){
         return (button.GetPopup().Visible == true) && //Butto `Pressed` status gets updated

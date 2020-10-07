@@ -3,69 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public abstract class FSMNode2D<StateEnum> : Node2D, IFSMObject<StateEnum> {    public StateEnum ActiveState {get; private set;}
-    
-    public abstract StateEnum InitialState {get;}
-    public int ActiveStatePriority {get; private set;}
-    public void SetActiveState(StateEnum ActiveState, int priority){
-        if(priority >= ActiveStatePriority){
-            this.ActiveState = ActiveState;
-            this.ActiveStatePriority = priority;}}
-
-    public void ResetActiveState(StateEnum ActiveState){
-        this.ActiveStatePriority = 0;
-        this.ActiveState = ActiveState;}
-
-    private class TimerAttrs{
-        public float secondsCount;
-        public float numSecondsToTriggerStateChange;
-        public StateEnum stateToSetTo;
-        public int priorityToSetTo;
-        public Boolean callResetState;
-        public TimerAttrs(float numSecondsToTriggerStateChange,
-                          StateEnum stateToSetTo,
-                          int priorityToSetTo,
-                          bool callResetState){
-            this.secondsCount = 0f;
-            this.numSecondsToTriggerStateChange = numSecondsToTriggerStateChange;
-            this.stateToSetTo = stateToSetTo;
-            this.priorityToSetTo = priorityToSetTo;
-            this.callResetState = callResetState;}}
-    private List<TimerAttrs> timersSet = new List<TimerAttrs>();
-
-    public void SetActiveStateAfter(StateEnum ActiveState, int priority, float numSeconds){
-        this.timersSet.Add(new TimerAttrs(numSeconds, ActiveState, priority, false));}
-    
-    public void ResetActiveStateAfter(StateEnum ActiveState, float numSeconds){
-        this.timersSet.Add(new TimerAttrs(numSeconds, ActiveState, -1, true));}
-    
-    public void ForceClearAllTimers(){
-        this.timersSet = new List<TimerAttrs>();}
-
-    protected void handleTimers(float delta){
-        for(var i=0; i<this.timersSet.Count(); i++){
-            var timerAttr = this.timersSet[i];
-            timerAttr.secondsCount += delta;
-            if(timerAttr.secondsCount >= timerAttr.numSecondsToTriggerStateChange){
-                if(timerAttr.callResetState){
-                    this.ResetActiveState(timerAttr.stateToSetTo);
-                } else {
-                    this.SetActiveState(timerAttr.stateToSetTo, timerAttr.priorityToSetTo);
-                }
-                this.timersSet.Remove(timerAttr);}}}
-
+public abstract class FSMNode2D<StateEnum> : Node2D, IFSMObject<StateEnum> {
+    public abstract StateEnum InitialState {get; set;}
+    public StateEnum ActiveState {get; set;}
+    public int ActiveStatePriority {get; set;}
+    public List<TimerAttrs<StateEnum>> timersSet {get; set; } = new List<TimerAttrs<StateEnum>>();
+    public Boolean runOnce {get; set;} = true;
     public abstract void UpdateState(float delta);
     public abstract void ReactStateless(float delta);
     public abstract void ReactToState(float delta);
-
-    private Boolean runOnce = true;
-    public override void _Process(float delta) {
-        if(this.runOnce){
-            this.runOnce = false;
-            if(this.ActiveState.Equals(this.InitialState)){
-                //TODO: fix this hacky piece of garbage
-                this.ResetActiveState(this.InitialState);}}
-        this.UpdateState(delta);
-        this.ReactStateless(delta);
-        this.handleTimers(delta);
-        this.ReactToState(delta);}}
+    public override void _Process(float delta){
+        this.FSMProcess<StateEnum>(delta);
+    }
+} 

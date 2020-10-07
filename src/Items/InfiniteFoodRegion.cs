@@ -32,7 +32,7 @@ public class InfiniteFoodRegion : KinematicBody2D, IInteractable
         foreach(Node2D child in this.GetChildren()){
             if(child is CollisionShape2D){
                 foreach(Node2D child2 in child.GetChildren() ){
-                    Bundles.Add(child2);}}
+                    this.Bundles.Add(child2);}}
             if(child is Sprite){
                 if(child.Name.ToLower().Contains("foodicon")){
                     this.FoodIconSprite = (Sprite)child;}}}

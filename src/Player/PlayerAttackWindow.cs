@@ -3,9 +3,9 @@ using System;
 
 public enum AttackWindowState {TRIGGER_ATTACK, ATTACKING_DIRECTIONLESS_DEFAULT, ATTACKING_FORWARD, ATTACKING_BACKWARD, ATTACKING_UPWARD, ATTACKING_DOWNWARD, NOT_ATTACKING}
 
-public class AttackWindow : FSMKinematicBody2D<AttackWindowState>
+public class PlayerAttackWindow : FSMKinematicBody2D<AttackWindowState>
 {
-    public override AttackWindowState InitialState { get { return AttackWindowState.NOT_ATTACKING;}}
+    public override AttackWindowState InitialState { get { return AttackWindowState.NOT_ATTACKING;}set{}}
     public CollisionPolygon2D CollisionPolygon2D;
     public Polygon2D Polygon2D;
     public Player Player;
@@ -17,11 +17,11 @@ public class AttackWindow : FSMKinematicBody2D<AttackWindowState>
 
     private void makeCollideable(bool collidability){
         if(collidability){
-            this.SetCollisionLayer(this.startingCollisionLayer);
-            this.SetCollisionMask(this.startingCollisionMask);}
+            this.CollisionLayer = this.startingCollisionLayer;
+            this.CollisionMask = this.startingCollisionMask;}
        else {
-            this.SetCollisionLayer(0);
-            this.SetCollisionMask(0);}}
+            this.CollisionLayer = 0;
+            this.CollisionMask = 0;}}
 
     public override void _Ready(){
         this.Player = (Player)this.GetParent();
@@ -39,15 +39,9 @@ public class AttackWindow : FSMKinematicBody2D<AttackWindowState>
     }
     
     private void updateStateBasedInputsAndPrevAttacks(){
-        if(Input.IsActionPressed("ui_right") && this.numTimesChangedDirectionDuringAttack < MAX_NUM_TIMES_CHANGED_DIRECTION){
-            if(!this.ActiveState.Equals(AttackWindowState.ATTACKING_FORWARD)){
-                this.numTimesChangedDirectionDuringAttack++;}
-            this.SetActiveState(AttackWindowState.ATTACKING_FORWARD, 100);}
-        else if(Input.IsActionPressed("ui_left") && this.numTimesChangedDirectionDuringAttack < MAX_NUM_TIMES_CHANGED_DIRECTION ){
-            if(!this.ActiveState.Equals(AttackWindowState.ATTACKING_BACKWARD)){
-                this.numTimesChangedDirectionDuringAttack++;}
-            this.SetActiveState(AttackWindowState.ATTACKING_BACKWARD, 100);}
-        else if(Input.IsActionPressed("ui_up") && this.numTimesChangedDirectionDuringAttack < MAX_NUM_TIMES_CHANGED_DIRECTION ){
+        //Prioritize up/down keys over left/right keys for attack (more intuitive
+        //when you are accellerating and want to attack up/down)
+        if(Input.IsActionPressed("ui_up") && this.numTimesChangedDirectionDuringAttack < MAX_NUM_TIMES_CHANGED_DIRECTION ){
             if(!this.ActiveState.Equals(AttackWindowState.ATTACKING_UPWARD)){
                 this.numTimesChangedDirectionDuringAttack++;}
             this.SetActiveState(AttackWindowState.ATTACKING_UPWARD, 100);}
@@ -55,6 +49,14 @@ public class AttackWindow : FSMKinematicBody2D<AttackWindowState>
             if(!this.ActiveState.Equals(AttackWindowState.ATTACKING_DOWNWARD)){
                 this.numTimesChangedDirectionDuringAttack++;}
             this.SetActiveState(AttackWindowState.ATTACKING_DOWNWARD, 100);}
+        else if(Input.IsActionPressed("ui_right") && this.numTimesChangedDirectionDuringAttack < MAX_NUM_TIMES_CHANGED_DIRECTION){
+            if(!this.ActiveState.Equals(AttackWindowState.ATTACKING_FORWARD)){
+                this.numTimesChangedDirectionDuringAttack++;}
+            this.SetActiveState(AttackWindowState.ATTACKING_FORWARD, 100);}
+        else if(Input.IsActionPressed("ui_left") && this.numTimesChangedDirectionDuringAttack < MAX_NUM_TIMES_CHANGED_DIRECTION ){
+            if(!this.ActiveState.Equals(AttackWindowState.ATTACKING_BACKWARD)){
+                this.numTimesChangedDirectionDuringAttack++;}
+            this.SetActiveState(AttackWindowState.ATTACKING_BACKWARD, 100);}
         else {
             this.SetActiveState(AttackWindowState.ATTACKING_DIRECTIONLESS_DEFAULT, 50);
             if(this.numTimesChangedDirectionDuringAttack == 0){
@@ -118,10 +120,15 @@ public class AttackWindow : FSMKinematicBody2D<AttackWindowState>
         this.Polygon2D.Visible = true;
         var collision = this.MoveAndCollide(new Vector2(0,0));
         if(collision != null){
-            if(collision.Collider is INPC){
-                ((INPC)collision.Collider).GetHitBy(this);}
             if(collision.Collider is IFood){
-                this.Player.EatFood((IFood)collision.Collider);}}
+                this.Player.EatFood((IFood)collision.Collider);}
+            if(collision.Collider is INPC){
+                ((INPC)collision.Collider).GetHitBy(this);
+                if(((INPC)collision.Collider).ResetPlayerAttackWindowAfterGettingHit){
+                    this.ResetActiveState(AttackWindowState.NOT_ATTACKING);
+                    return;
+                }}
+}
         this.updateStateBasedInputsAndPrevAttacks();
     }
 //    {

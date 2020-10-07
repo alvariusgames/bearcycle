@@ -32,12 +32,37 @@ public static class DbHandler{
         }
     }
 
+    public static SlotSnapshot ReadSnapshotOfSlot(int slotNum){
+        //WARNING: this is a dangerous method that will cause bad behavior if slot doesnt exist
+        //Use `DbHandler.ActiveSlot` instead (This method only used by main screen UI)
+        var slotDbPath = DbHandler.assembleSlotDbPath(slotNum);
+        if(!DbHandler.DoesSlotExist(slotNum)){
+            throw new Exception("Slot doesn't exist and trying to read, exiting...");}
+        using(var db = new LiteDatabase(slotDbPath)){
+            var col = db.GetCollection<Slot>("slot");
+            var slot =  col.Find(x => x.Id == Slot.SINGLETON_GLOBALS_ID).First();
+            var levelStatsRecords = new List<LevelStatsRecord>();
+            for(int levelNum = 1; levelNum <= slot.HighestLevelNumUnlocked; levelNum++){
+                levelStatsRecords.Add(DbHandler.getLevelStatsRecordFor(slotDbPath, levelNum));}
+            return new SlotSnapshot(){Slot = slot,
+                                      LevelStatsRecords = levelStatsRecords.ToArray()};
+            }}
+
+
+    public static Boolean DoesSlotExist(int SlotNum){
+        var dir = new Directory();
+        return dir.FileExists(DbHandler.assembleSlotDbPath(SlotNum));
+    }
+
+    private static String assembleSlotDbPath(int SlotNum){
+        return OS.GetUserDataDir() + "/slot" + SlotNum.ToString() + ".db";
+    }
+
     private static String ActiveSlotDbPath { get {
-        return OS.GetUserDataDir() + "/slot" + DbHandler.Globals.ActiveGameSlotNum + ".db"; }}
+        return DbHandler.assembleSlotDbPath(DbHandler.Globals.ActiveGameSlotNum);}}
  
     private static void ActiveSlotInitializationCheck(){
-        var file = new File();
-        if(!file.FileExists(ActiveSlotDbPath)){
+        if(!System.IO.File.Exists(ActiveSlotDbPath)){
             GD.Print("Slot database does not exist, making one...");
             using(var db = new LiteDatabase(ActiveSlotDbPath)){
                 var col = db.GetCollection<Slot>("slot");
@@ -78,12 +103,16 @@ public static class DbHandler{
     }
 
     public static LevelStatsRecord GetLevelStatsRecordFor(int levelNum){
+        ActiveSlotInitializationCheck();
+        return DbHandler.getLevelStatsRecordFor(ActiveSlotDbPath, levelNum);
+    }
+
+    private static LevelStatsRecord getLevelStatsRecordFor(String slotDbPath, int levelNum){
         if(levelNum == 0){
             // You can't store id of 0 in database, and we don't really care about storing
             // stats for the tutorial level -- so bypass the Db and return Default
             return LevelStatsRecord.Default;}
-        ActiveSlotInitializationCheck();
-        using(var db = new LiteDatabase(ActiveSlotDbPath)){
+        using(var db = new LiteDatabase(slotDbPath)){
                 var col = db.GetCollection<LevelStatsRecord>("levelstatsrecord");
                 var output = col.FindById(levelNum);
                 if(output == null){
@@ -168,17 +197,13 @@ public static class DbHandler{
             col.Delete(x => true);}
     }
 
-    public static void DeleteGlobalsAndActiveGameSlotDbs(){
-        DeleteActiveGameSlotDatabase();
-        DeleteGlobalsDatabase();
-    }
 
-    private static void DeleteActiveGameSlotDatabase(){
+    public static void DeleteActiveGameSlotDatabase(){
         var dir = new Directory();
         dir.Remove(ActiveSlotDbPath);
     }
 
-    private static void DeleteGlobalsDatabase(){
+    public static void DeleteGlobalsDatabase(){
         var dir = new Directory();
         dir.Remove(GlobalsDbPath);
     }

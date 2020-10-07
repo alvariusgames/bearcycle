@@ -1,53 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Godot.NET.Sdk/3.2.3">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{ABD7E83B-2C74-4EE5-AEE6-A13837EFEBCC}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <OutputPath>.mono/temp/bin/$(Configuration)</OutputPath>
     <RootNamespace>BearsOnATVs</RootNamespace>
     <AssemblyName>BearsOnATVs</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <BaseIntermediateOutputPath>.mono/temp/obj</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)/$(Configuration)</IntermediateOutputPath>
-    <ApiConfiguration Condition=" '$(Configuration)' != 'Release' ">Debug</ApiConfiguration>
-    <ApiConfiguration Condition=" '$(Configuration)' == 'Release' ">Release</ApiConfiguration>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Tools|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <DefineConstants>DEBUG;TOOLS;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+    <GodotProjectGeneratorVersion>1.0.7432.10785</GodotProjectGeneratorVersion>
+    <TargetFramework>net472</TargetFramework>
+    <!--The following properties were overriden during migration to prevent errors.
+    Enabling them may require other manual changes to the project and its files.-->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Deterministic>false</Deterministic>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GodotSharp">
-      <Private>False</Private>
-      <HintPath>$(ProjectDir)/.mono/assemblies/$(ApiConfiguration)/GodotSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="GodotSharpEditor" Condition=" '$(Configuration)' == 'Tools' ">
-      <Private>False</Private>
-      <HintPath>$(ProjectDir)/.mono/assemblies/$(ApiConfiguration)/GodotSharpEditor.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="LiteDb">
       <HintPath>$(ProjectDir)/LiteDB.4.1.4/lib/net40/LiteDB.dll</HintPath>
@@ -66,8 +31,9 @@
     <Compile Include="scenes\levels\level5.cs" />
     <Compile Include="scenes\levels\level6.cs" />
     <Compile Include="scenes\levels\level7.cs" />
-    <Compile Include="scenes\main.cs" />
+    <Compile Include="src\main.cs" />
     <Compile Include="scenes\misc\exit_black.cs" />
+    <Compile Include="scenes\misc\PlayArbitraryLevel.cs" />
     <Compile Include="scenes\misc\ReloadLocalesWorkaround.cs" />
     <Compile Include="scenes\title_screen\buttons\Play.cs" />
     <Compile Include="scenes\title_screen\CompanyLogo.cs" />
@@ -77,17 +43,21 @@
     <Compile Include="src\DbHandler\LevelStatsRecord.cs" />
     <Compile Include="src\DbHandler\NonRefreshable.cs" />
     <Compile Include="src\DbHandler\Slot.cs" />
+    <Compile Include="src\DisplayHandlers\DialogueHandler.cs" />
     <Compile Include="src\DisplayHandlers\InteractiveLoader.cs" />
     <Compile Include="src\DisplayHandlers\LevelFrame.cs" />
     <Compile Include="src\DisplayHandlers\PlayerStatsDisplayHandler.cs" />
     <Compile Include="src\DisplayHandlers\SceneTransitioner.cs" />
     <Compile Include="src\DisplayHandlers\TransitionEffectRunner.cs" />
+    <Compile Include="src\FSMComponents\FSMKinematicBody2DBasicPhysics.cs" />
     <Compile Include="src\FSMComponents\ManualEvocableFSMNode2D.cs" />
     <Compile Include="src\Items\BounceParentsOpacity.cs" />
     <Compile Include="src\Items\Collectables\SpaceRock.cs" />
+    <Compile Include="src\Items\DropItemZone.cs" />
     <Compile Include="src\Items\Food.cs" />
     <Compile Include="src\Items\Holdables\ClawAttack.cs" />
     <Compile Include="src\Items\Holdables\IHoldable.cs" />
+    <Compile Include="src\Items\Holdables\MonitorHoldable.cs" />
     <Compile Include="src\Items\Holdables\RocketBooster.cs" />
     <Compile Include="src\Items\Holdables\Spring.cs" />
     <Compile Include="src\Items\IConsumeable.cs" />
@@ -101,24 +71,46 @@
     <Compile Include="src\Items\Misc\OneUp.cs" />
     <Compile Include="src\Items\SafetyCheckPoint.cs" />
     <Compile Include="src\Items\SpeedBoost.cs" />
+    <Compile Include="src\Level\AdvancedPathFollow2D.cs" />
     <Compile Include="src\Level\CollisionPolygonParentOfBorderedPolygon.cs" />
     <Compile Include="src\Level\ILevel.cs" />
+    <Compile Include="src\Level\IPlatform.cs" />
+    <Compile Include="src\Level\KinematicPlatform.cs" />
     <Compile Include="src\Level\Level.cs" />
     <Compile Include="src\Level\LevelNode2D.cs" />
-    <Compile Include="src\Level\Platforms.cs" />
+    <Compile Include="src\Level\Spawner.cs" />
+    <Compile Include="src\Level\StaticPlatform.cs" />
     <Compile Include="src\Level\VisiblePath2D.cs" />
     <Compile Include="src\Level\ZoneCollider.cs" />
+    <Compile Include="src\NPC\Boss\BossFightManager.cs" />
+    <Compile Include="src\NPC\Boss\Fights\Level1RangerFight.cs" />
+    <Compile Include="src\NPC\Boss\Fights\RangerSpawner.cs" />
+    <Compile Include="src\NPC\Boss\IBoss.cs" />
+    <Compile Include="src\NPC\Boss\PursuingEnemy.cs" />
+    <Compile Include="src\NPC\Boss\TriggerBossFight.cs" />
+    <Compile Include="src\NPC\Character.cs" />
     <Compile Include="src\NPC\DefaultPathFollow2D.cs" />
     <Compile Include="src\NPC\FlyingEnemy.cs" />
+    <Compile Include="src\NPC\humans\PursuingHuman.cs" />
+    <Compile Include="src\NPC\humans\Ranger.cs" />
     <Compile Include="src\NPC\INPC.cs" />
+    <Compile Include="src\NPC\ISpawnable.cs" />
+    <Compile Include="src\NPC\ITrackable.cs" />
+    <Compile Include="src\NPC\IVisibilityTrackable.cs" />
     <Compile Include="src\NPC\LeapingEnemy.cs" />
     <Compile Include="src\NPC\NPC.cs" />
+    <Compile Include="src\NPC\NPCAttackWindow.cs" />
+    <Compile Include="src\NPC\NPCCollisionZone.cs" />
+    <Compile Include="src\NPC\NPCNonPhysicsCollider.cs" />
+    <Compile Include="src\NPC\PlayerTracker.cs" />
+    <Compile Include="src\NPC\TurnaroundZone.cs" />
     <Compile Include="src\Player\AboveHeadManager.cs" />
-    <Compile Include="src\Player\AttackWindow.cs" />
+    <Compile Include="src\Player\PlayerAttackWindow.cs" />
     <Compile Include="src\Player\ATV.cs" />
     <Compile Include="src\Player\Bear.cs" />
     <Compile Include="src\Player\BearAnimationPlayer.cs" />
     <Compile Include="src\Player\CameraManager.cs" />
+    <Compile Include="src\Player\CutOut.cs" />
     <Compile Include="src\Player\EvokeMyParentNow.cs" />
     <Compile Include="src\Player\FallThroughManager.cs" />
     <Compile Include="src\Player\Player.cs" />
@@ -127,12 +119,16 @@
     <Compile Include="src\FSMComponents\IFSMObject.cs" />
     <Compile Include="src\FSMComponents\FSMNode2D.cs" />
     <Compile Include="src\FSMComponents\FSMKinematicBody2D.cs" />
+    <Compile Include="src\FSMComponents\FSMPathFollow2D.cs" />
+    <Compile Include="src\FSMComponents\FSMRigidBody2D.cs" />
     <Compile Include="src\Player\WholeBodyKinBody.cs" />
+    <Compile Include="src\ProceduralGeneration\PCComplianceFactory.cs" />
     <Compile Include="src\SoundHandlers\AudioPlayerWatcher.cs" />
     <Compile Include="src\SoundHandlers\IAudioStreamPlayer.cs" />
     <Compile Include="src\SoundHandlers\MyAudioStreamPlayer.cs" />
     <Compile Include="src\SoundHandlers\MyAudioStreamPlayer2D.cs" />
     <Compile Include="src\SoundHandlers\SoundHandler.cs" />
+    <Compile Include="src\UI\BossFightLevelFrameHandler.cs" />
     <Compile Include="src\UI\Controllers.cs" />
     <Compile Include="src\UI\FourDirectJoystick.cs" />
     <Compile Include="src\UI\HoverableTouchScreenButton.cs" />
@@ -148,15 +144,21 @@
     <Compile Include="src\UI\LevelSelectView.cs" />
     <Compile Include="src\UI\PauseMenu.cs" />
     <Compile Include="src\UI\PlatformDepButton.cs" />
+    <Compile Include="src\UI\Popup1.cs" />
     <Compile Include="src\UI\RemapActionHoverableTouchScreenButton.cs" />
     <Compile Include="src\UI\ScrollableOptionButton.cs" />
+    <Compile Include="src\UI\SlotArea.cs" />
     <Compile Include="src\UI\ToggleSpaceViewCollider.cs" />
+    <Compile Include="src\UI\TrackingArrowHandler.cs" />
+    <Compile Include="src\Utils\Consts.cs" />
+    <Compile Include="src\Utils\Dialogues.cs" />
     <Compile Include="src\Utils\Extensions.cs" />
     <Compile Include="src\Utils\MakePlatformSpecificChildrenVisible.cs" />
     <Compile Include="src\Utils\Misc\CancelHorizMomentum.cs" />
     <Compile Include="src\Utils\Misc\RemoveWallWhenHealthIs100.cs" />
     <Compile Include="src\Utils\Misc\TutorialRotationThrowaway.cs" />
     <Compile Include="src\Utils\PlatformSpecificChildren.cs" />
+    <Compile Include="src\Utils\Priorities.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup />
 </Project>

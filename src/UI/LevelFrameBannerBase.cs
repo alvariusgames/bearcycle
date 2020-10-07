@@ -5,8 +5,8 @@ public class LevelFrameBannerBase : Sprite {
     public Boolean BlinkRed = true;
     public Boolean PlaySoundWhenBlinking = true;
     private int i;
-    private Color InitialModulate;
-    private Color InitialSelfModulate;
+    public Color InitialModulate;
+    public Color InitialSelfModulate;
 
     public override void _Ready(){
         this.InitialModulate = this.Modulate;
@@ -36,6 +36,6 @@ public class LevelFrameBannerBase : Sprite {
                 this.Modulate = mod;}
             else if(i>512){
                 i = 0;}
-            this.SelfModulate = new Color(0.5f + mod.r, 0.5f + mod.r, 0.5f + mod.r);
+            this.SelfModulate = new Color(0.5f + mod.r, 0.5f + mod.r, 0.5f + mod.r, this.InitialModulate.a);
         } else {
             i=0;}}}

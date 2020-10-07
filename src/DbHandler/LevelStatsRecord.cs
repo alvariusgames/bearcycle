@@ -15,7 +15,7 @@ public class LevelStatsRecord
     public static LevelStatsRecord Default { get {
         return new LevelStatsRecord{
             Id = -1,
-            TotalCalories = -1,
+            TotalCalories = 0,
             IsCompleted = false,
             SpaceRock1Collected = false,
             SpaceRock2Collected = false,

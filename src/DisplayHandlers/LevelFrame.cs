@@ -6,9 +6,12 @@ public class LevelFrame : Node{
     private PauseMenu PauseMenu;
     public Viewport Viewport;
     public Player Player;
+    public ILevel Level { get {
+        return this.Player.ActiveLevel;}}
     public Label TitleLabel;
     public Label ZoneLabel;
     public PlayerStatsDisplayHandler PlayerStatsDisplayHandler;
+    public DialogueHandler DialogueHandler;
 
     public override void _Ready(){
         foreach(Node child in this.GetChildren()){
@@ -19,6 +22,8 @@ public class LevelFrame : Node{
                 this.Player = this._recursGetPlayer(this.Viewport);}
             if(child is PlayerStatsDisplayHandler){
                 this.PlayerStatsDisplayHandler = (PlayerStatsDisplayHandler)child;}
+            if(child is DialogueHandler){
+                this.DialogueHandler = (DialogueHandler)child;}
             if(child.Name.ToLower().Contains("levelenter")){
                 foreach(Node subchild in child.GetChildren()){
                     if(subchild.Name.ToLower().Contains("background")){
@@ -47,5 +52,10 @@ public class LevelFrame : Node{
     }
 
     public override void _Process(float delta){
-        if(Input.IsActionJustPressed("ui_pause") && this.Player.ActiveState.Equals(PlayerState.ALIVE)){
-            this.PauseMenu.OpenPauseMenu(this);}}}
+        if(Input.IsActionJustPressed("ui_pause") && 
+           this.Player.ActiveState.Equals(PlayerState.ALIVE)){
+           this.PauseMenu.OpenPauseMenu(this);}    
+    }
+
+
+}

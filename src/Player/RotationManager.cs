@@ -7,7 +7,7 @@ public enum RotationManagerState{ROTATE_SLOW_FORWARD, ROTATE_FAST_FORWARD,
 
 public class RotationManager : FSMNode2D<RotationManagerState>{
     public override RotationManagerState InitialState {
-        get {return RotationManagerState.NOT_ROTATING;}}
+        get {return RotationManagerState.NOT_ROTATING;}set{}}
     
     public ATV ATV;
     private float phiRotationToApply = 0f;

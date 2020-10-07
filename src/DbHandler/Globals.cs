@@ -9,7 +9,7 @@ public class Globals{
 
     public String GameVersion { get {return main.VERSION;} set {}}
     public String Locale {get; set;}
-    public String ActiveGameSlotNum {get; set;}
+    public int ActiveGameSlotNum {get; set;}
     public Boolean PerformanceMode {get; set;}
     public float StreamVolumeLinearUnits {get; set;}
     public float SampleVolumeLinearUnits {get; set;}
@@ -27,7 +27,7 @@ public class Globals{
     public static Globals Default { get {
         return new Globals(){
             Locale = NO_LOCALE_SET_ARBITRARY_STRING,
-            ActiveGameSlotNum = "1",
+            ActiveGameSlotNum = 1,
             PerformanceMode = false,
             StreamVolumeLinearUnits = SoundHandler.DEFAULT_STREAM_VOLUME_LINEAR,
             SampleVolumeLinearUnits = SoundHandler.DEFAULT_SAMPLE_VOLUME_LINEAR,

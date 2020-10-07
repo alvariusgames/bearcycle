@@ -46,9 +46,7 @@ public class Food : KinematicBody2D, IConsumeable, IFood{
             else if(child is CollisionShape2D){
                 this.CollisionShape2D = (CollisionShape2D)child;}}}
 
-    public void consume(Node2D collider){
-        if(collider is WholeBodyKinBody){
-            var player = ((WholeBodyKinBody)collider).Player;
-            player.EatFood(this);
-            this.CollisionShape2D.Disabled = true;
-            this.FoodDisplaySprite.Visible = false;}}}
+    public void Consume(Player player){
+        player.EatFood(this);
+        this.CollisionShape2D.Disabled = true;
+        this.FoodDisplaySprite.Visible = false;}}

@@ -90,6 +90,7 @@ public static class SceneTransitioner{
                 runner.elapsedSeconds = 0f;
                 runner.FadeOutAudio = FadeOutAudio;
                 runner.ResetActiveState(effect);
+                runner.InitialState = effect; //DONT DO THIS IN ANY OTHER SCENARIO...
                 runner.ResetActiveStateAfter(SceneTransitionEffect.DIRECT_CUT, numSeconds);
             }
         }

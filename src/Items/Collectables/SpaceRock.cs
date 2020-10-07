@@ -12,6 +12,7 @@ public class SpaceRock : KinematicBody2D, IConsumeable, IFood
     private CollisionShape2D CollisionShape2D;
     private Sprite ShadowSprite;
     private AnimatedSprite AnimatedSprite;
+    public const int NUM_SPACE_ROCKS_IN_WHOLE_GAME = 18;
     [Export]
     public int RockNum = 0; 
 
@@ -58,18 +59,19 @@ public class SpaceRock : KinematicBody2D, IConsumeable, IFood
         return "???";
     }
 
-    public void consume(Node2D collider){
-        if(collider is WholeBodyKinBody){
-            var player = ((WholeBodyKinBody)collider).Player;
-            player.EatFood(this); //TODO: make this Absorb() or something
-            if(this.RockNum == 1){
-                player.ActiveLevel.SpaceRock1Collected = true;}
-            if(this.RockNum == 2){
-                player.ActiveLevel.SpaceRock2Collected = true;}
-            if(this.RockNum == 3){
-                player.ActiveLevel.SpaceRock3Collected = true;}
-            this.CollisionShape2D.Disabled = true;
-            this.Visible = false;}}
+    public void Consume(Player player){
+        player.EatFood(this, false, false, false); //TODO: make this Absorb() or something
+        SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                                                     "res://media/samples/items/special_sparkle1.wav",
+                                                     PauseAllOtherSoundWhilePlaying: true);
+        if(this.RockNum == 1){
+            player.ActiveLevel.SpaceRock1Collected = true;}
+        if(this.RockNum == 2){
+            player.ActiveLevel.SpaceRock2Collected = true;}
+        if(this.RockNum == 3){
+             player.ActiveLevel.SpaceRock3Collected = true;}
+        this.CollisionShape2D.Disabled = true;
+        this.Visible = false;}
 
 //  // Called every frame. 'delta' is the elapsed time since the previous frame.
 //  public override void _Process(float delta)

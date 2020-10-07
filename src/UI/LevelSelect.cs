@@ -18,7 +18,7 @@ public class LevelSelect : FSMNode2D<LevelSelectState>
     public LevelSelectBanner LevelSelectBanner;
     public HoverableTouchScreenButton HomeButton;
     public HoverableTouchScreenButton AdvanceButton;
-    public override LevelSelectState InitialState { get { return LevelSelectState.WAITING_FOR_PLAYER_INPUT;}}
+    public override LevelSelectState InitialState { get { return LevelSelectState.WAITING_FOR_PLAYER_INPUT;}set{}}
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready(){
@@ -88,7 +88,6 @@ public class LevelSelect : FSMNode2D<LevelSelectState>
     public override void UpdateState(float delta){}
 
     public void UnlockLevelsUpTo(int levelNum){
-        GD.Print("unlocking up to " + levelNum);
         this.LevelPortalChain.UnlockLevelPortalsUpTo(levelNum);
         for(int i=0; i<this.LevelPortalChain.LevelPortals.Count; i++){
             var levelPortal = this.LevelPortalChain.LevelPortals[i];

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/luddite_games_logo_1080.png-4d10ba1653f0209a3939a09be882d564.stex"
+path="res://.import/company_logo_1080.png-8b25d27d50d8315515da44fe3f1ae2ec.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://media/UI/title_screen/luddite_games_logo_1080.png"
-dest_files=[ "res://.import/luddite_games_logo_1080.png-4d10ba1653f0209a3939a09be882d564.stex" ]
+source_file="res://media/UI/title_screen/company_logo_1080.png"
+dest_files=[ "res://.import/company_logo_1080.png-8b25d27d50d8315515da44fe3f1ae2ec.stex" ]
 
 [params]
 

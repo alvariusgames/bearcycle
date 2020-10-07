@@ -166,7 +166,8 @@ public class LevelPortal : KinematicBody2D
             if(this.TouchScreenButton.IsPressed()){
                 SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
                     new string[]{"res://media/samples/ui/click_1.wav"},
-                    SkipIfAlreadyPlaying: true);
+                    SkipIfAlreadyPlaying: true,
+                    MaxNumberTimesPlayPerSecond: 1f);
                 var levelSelectPlayer = this.LevelPortalChain.LevelSelect.LevelSelectPlayer;
                 levelSelectPlayer.MoveTo(this);}}}
 
@@ -174,13 +175,15 @@ public class LevelPortal : KinematicBody2D
         if(this.ToForwardLevelPortalTouchScreenButton != null &&
            this.ToForwardLevelPortalTouchScreenButton.IsPressed()){
                 SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
-                    new string[]{"res://media/samples/ui/click_1.wav"});
+                    new string[]{"res://media/samples/ui/click_1.wav"},
+                    MaxNumberTimesPlayPerSecond: 1f);
                 var levelPortalToMoveTo = this.LevelPortalChain.LevelPortals[this.GetLevel().LevelNum + 1];
                 this.LevelPortalChain.LevelSelect.LevelSelectPlayer.MoveTo(levelPortalToMoveTo);}
         if(this.ToBackwardLevelPortalTouchScreenButton != null &&
            this.ToBackwardLevelPortalTouchScreenButton.IsPressed()){
                 SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
-                    new string[]{"res://media/samples/ui/click_1.wav"});
+                    new string[]{"res://media/samples/ui/click_1.wav"},
+                    MaxNumberTimesPlayPerSecond: 1f);
                 var levelPortalToMoveTo = this.LevelPortalChain.LevelPortals[this.GetLevel().LevelNum - 1];
                 this.LevelPortalChain.LevelSelect.LevelSelectPlayer.MoveTo(levelPortalToMoveTo);}}
 

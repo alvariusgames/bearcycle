@@ -13,7 +13,6 @@ public class PlatformSpecificChildren : Node2D
         foreach(Node2D child in this.GetChildren()){
             if(child.Name.ToLower().Contains("mobile") && main.PlatformType == PlatformType.MOBILE){
                 child.Visible = true;
-
                 return child.GetChildren();}
             if(child.Name.ToLower().Contains("desktop") && main.PlatformType == PlatformType.DESKTOP){
                 child.Visible = true;

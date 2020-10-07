@@ -5,7 +5,7 @@ public enum LevelSelectViewState { EARTH_VIEW, SPACE_VIEW, TRANSITIONING_TO_EART
 
 public class LevelSelectView : FSMNode2D<LevelSelectViewState>{
 
-    public override LevelSelectViewState InitialState { get { return LevelSelectViewState.EARTH_VIEW;}}
+    public override LevelSelectViewState InitialState { get { return LevelSelectViewState.EARTH_VIEW;}set{}}
     private float targetMultiplier = 1f;
     private float ongoingMultipler = 1f;
 

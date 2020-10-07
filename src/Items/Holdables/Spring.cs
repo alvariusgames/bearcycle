@@ -1,14 +1,33 @@
 using Godot;
 using System;
 
+public class Spring : MonitorHoldable {
+    public override Texture UIDisplayIcon { get { 
+        return (Texture)GD.Load("res://media/sprites/items/holdables/icons/spring_icon.png");} set {}}
+    public const String BOING_SAMPLE = "res://media/samples/items/spring.wav";
+    [Export]
+    public int JumpVelocity {get; set;} = 2000;
+    public override Boolean DisplayInProgressBar {get {return false;}}
+    public override int NumActionCallsToDepleted { get {return 1;} set{}}
 
-public enum SpringState { NOT_HELD, HELD };
-public class Spring : FSMKinematicBody2D<SpringState>, IHoldable, IInteractable{
+    public override void ReactToActionPress(float delta){
+        if(!this.Player.ATV.IsInAirNormalized()){
+            this.Player.ATV.SetVelocityOfTwoWheels((this.Player.ATV.CurrentNormal * this.JumpVelocity) + this.Player.ATV.GetVelocityOfTwoWheels());
+            this.IsDepleted = true;
+            this.CurrentNumActionCalls++;
+            SoundHandler.PlaySample<MyAudioStreamPlayer2D>(this.Player.ATV.Bear,
+                new string[] {BOING_SAMPLE});}}
+    public override void ReactToActionHold(float delta){}
+    public override void ReactToActionRelease(float delta){}
+
+}
+
+/*
     // Declare member variables here. Examples:
     // private int a = 2;
     // private string b = "text";
     public int InteractPriority { get { return 200;}}
-    public override SpringState InitialState { get { return SpringState.NOT_HELD;}}
+    public override SpringState InitialState { get { return SpringState.NOT_HELD;}set{}}
     private Vector2 StartingPosition;
     private Player player;
     public Player Player { get { return this.player; } set {this.player = value;}}
@@ -40,6 +59,7 @@ public class Spring : FSMKinematicBody2D<SpringState>, IHoldable, IInteractable{
     [Export]
     public int JumpVelocity {get; set;} = 2000;
     private Node OriginalParent;
+    public Boolean DisplayInProgressBar {get;} = false;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready(){
@@ -90,7 +110,7 @@ public class Spring : FSMKinematicBody2D<SpringState>, IHoldable, IInteractable{
         this.Player.AboveHeadManager.MakeInteractablePromptTempInvisible();
         this.Player.AboveHeadManager.AddAboveHead(this);}
 
-    public void PostDepletionAction(float delta){
+    public void PostDepletionAction(){
         this.Player.AboveHeadManager.RemoveAboveHead(this);
         this.OriginalParent.AddChild(this);
         this.IsBeingHeld = false;
@@ -135,3 +155,4 @@ public class Spring : FSMKinematicBody2D<SpringState>, IHoldable, IInteractable{
 //      
 //  }
 }
+*/

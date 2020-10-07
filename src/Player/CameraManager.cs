@@ -6,7 +6,7 @@ public enum CameraManagerState {MOVING_NODE_CAMERA_FOLLOWS, MOVE_TO_ARBITRARY_NO
 
 public class CameraManager : FSMNode2D<CameraManagerState>{
     public override CameraManagerState InitialState {
-        get { return CameraManagerState.MOVING_NODE_CAMERA_FOLLOWS;}}
+        get { return CameraManagerState.MOVING_NODE_CAMERA_FOLLOWS;}set{}}
     public Bear Bear;
     public Node2D NodeCameraFollows;
     public Camera2D Camera2D;
@@ -65,6 +65,13 @@ public class CameraManager : FSMNode2D<CameraManagerState>{
 
         this.ResetActiveState(CameraManagerState.MOVE_TO_ARBITRARY_NODE);
         this.ResetActiveStateAfter(CameraManagerState.STAY_STATIONARY, numSecondsToTransition);
+    }
+
+    public void ResetToDefaultFollowPlayerBehavior(){
+        this.MoveCameraToArbitraryNode(this, new Vector2(0,0), 1f);
+        this.prevXPosToApply = 0;
+        this.prevYPosToApply = 0 ;
+        this.ResetActiveStateAfter(CameraManagerState.MOVING_NODE_CAMERA_FOLLOWS, 1f);
     }
 
     private const float HORIZONTAL_VELOCITY_MULTIPLIER = 1f;

@@ -10,9 +10,7 @@ public class SafetyCheckPoint : KinematicBody2D, IConsumeable{
         foreach(var child in this.GetChildren()){
             this.CollisionShape2D = (CollisionShape2D)child;}}
 
-    public void consume(Node2D collider){
-        if(collider is WholeBodyKinBody){
-            var player = ((WholeBodyKinBody)collider).Player;
-            player.SetMostRecentSafetyCheckPoint(this);
-            this.BeenActivated = true;
-            this.CollisionShape2D.Disabled = true;}}}
+    public void Consume(Player player){
+        player.SetMostRecentSafetyCheckPoint(this);
+        this.BeenActivated = true;
+        this.CollisionShape2D.Disabled = true;}}

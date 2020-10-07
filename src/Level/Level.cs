@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public class Level : ILevel{
     private int levelNum;
@@ -20,6 +21,13 @@ public class Level : ILevel{
     public Boolean SpaceRock2Collected { get { return this.spaceRock2Collected;} set{ this.spaceRock2Collected = value;}}
     private Boolean spaceRock3Collected = false;
     public Boolean SpaceRock3Collected { get { return this.spaceRock3Collected;} set{ this.spaceRock3Collected = value;}}
+    public String MusicPath {get; set;}
+    public String AmbiencePath {get; set;}
+    public NodePath BossFightManagerPath {get; set;}
+    public BossFightManager BossFightManager {get; set;}
+    public Godot.Collections.Array<NodePath> TrackablePaths {get; set;}
+    public List<ITrackable> Trackables {get; set;}
+    public EndLevel EndLevel {get; set;}
 
     public static Level AssembleLevelFrom(String title, int zone, int levelNum, float unitOffset, String nodePath, LevelStatsRecord levelStatsRecord){
         if(levelStatsRecord != null){

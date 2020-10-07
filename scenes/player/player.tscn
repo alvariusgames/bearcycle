@@ -1,7 +1,7 @@
 [gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://src/Player/Player.cs" type="Script" id=1]
-[ext_resource path="res://src/Player/AttackWindow.cs" type="Script" id=2]
+[ext_resource path="res://src/Player/PlayerAttackWindow.cs" type="Script" id=2]
 [ext_resource path="res://src/Player/ATV.cs" type="Script" id=3]
 [ext_resource path="res://src/Player/Wheel.cs" type="Script" id=4]
 [ext_resource path="res://media/sprites/player/wheel/wheel_500_private.png" type="Texture" id=5]
@@ -37,7 +37,6 @@ collision_mask = 2080
 script = ExtResource( 2 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AttackWindow"]
-visible = false
 position = Vector2( -2.73413, -4.17928 )
 polygon = PoolVector2Array( -8.87393, -24.748, 62.4531, -80.9451, 106.222, -99.3172, 163.5, -93.9136, 204.027, -76.0819, 220.237, -33.9341, 214.293, 23.8841, 168.903, 55.7651, 108.924, 64.9512, 10.0385, 39.0141, -18.06, 7.67339 )
 

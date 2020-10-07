@@ -3,15 +3,13 @@ using System;
 
 public enum EndLevelState {NOT_ACTIVATED, SPINNING, ACTIVATED, EXIT_TO_MAIN_MENU, TRIGGER_TRANSITION_TO_NEXT_ZONE}
 
-public class EndLevel : FSMKinematicBody2D<EndLevelState>
-{
-    public override EndLevelState InitialState { get { return EndLevelState.NOT_ACTIVATED;}}
+public class EndLevel : FSMKinematicBody2D<EndLevelState>, IConsumeable, IVisibilityTrackable {
+    public override EndLevelState InitialState { get { return EndLevelState.NOT_ACTIVATED;}set{}}
     // Declare member variables here. Examples:
     // private int a = 2;
     // private string b = "text";
 
     // Called when the node enters the scene tree for the first time.
-
     public AnimatedSprite AnimatedSprite;
     public Sprite UnactivatedSprite;
     public Sprite ActivatedSprite;
@@ -21,6 +19,18 @@ public class EndLevel : FSMKinematicBody2D<EndLevelState>
     private const float NUM_SEC_SPIN = 2f;
     private const int NUM_UNITS_CAMERA_ABOVE = 300;
 
+    [Export]
+    NodePath VisibilityNotifierPath {get; set;}
+    private VisibilityNotifier2D visibilityNotifier;
+    public VisibilityNotifier2D VisibilityNotifier {get {
+        if(this.visibilityNotifier is null){
+            this.visibilityNotifier = this.GetNode<VisibilityNotifier2D>(this.VisibilityNotifierPath);}
+        return this.visibilityNotifier;
+    }}
+
+    public bool IsOnScreen(){
+        return this.VisibilityNotifier.IsOnScreen();
+    }
     public override void _Ready(){
         foreach(Node2D child in this.GetChildren()){
             if(child is AnimatedSprite){
@@ -33,10 +43,10 @@ public class EndLevel : FSMKinematicBody2D<EndLevelState>
             if(child is CollisionShape2D){
                 this.CollisionShape2D = (CollisionShape2D)child;}}}
 
-    public void EndLevel_(Player player){
+    public void Consume(Player player){
         this.player = player;
         this.currentLevel = this.player.ActiveLevel;
-        player.CurrentHealth = Player.MAX_HEALTH;
+        player.Health = Player.MAX_HEALTH;
         player.MoveCameraTo(this, new Vector2(0, -NUM_UNITS_CAMERA_ABOVE), 2f);
         this.CollisionShape2D.Disabled = true;
         this.ResetActiveState(EndLevelState.SPINNING);
@@ -45,22 +55,22 @@ public class EndLevel : FSMKinematicBody2D<EndLevelState>
         SoundHandler.PlayStream<MyAudioStreamPlayer>(this,
             new String[] {"res://media/music/short/end_level_classic.ogg"});
         SoundHandler.StopAllSample(); //???
-        //SoundHandler.SetSampleVolumeLinearUnits(SoundHandler.GetSampleVolumeLinearUnits() * 0f);
         if(this.levelIsLastZone(this.currentLevel)){
             this.ResetActiveStateAfter(EndLevelState.EXIT_TO_MAIN_MENU, 10f);
             DbHandler.SaveLevelStatsRecord(this.currentLevel.LevelNum, (int)this.player.TotalCalories, true, 
                                            player.ActiveLevel.SpaceRock1Collected,
                                            player.ActiveLevel.SpaceRock2Collected,
-                                           player.ActiveLevel.SpaceRock3Collected);}
+                                           player.ActiveLevel.SpaceRock3Collected);
+            DbHandler.SetHighestLevelUnlocked(this.currentLevel.LevelNum + 1);}
         else{
             this.ResetActiveStateAfter(EndLevelState.TRIGGER_TRANSITION_TO_NEXT_ZONE, 10f);
     }}
 
     private Boolean levelIsLastZone(ILevel level){
-        return this.getNextZoneNodePath(level) == null;
+        return EndLevel.GetNextZoneNodePath(level) == null;
     }
 
-    private String getNextZoneNodePath(ILevel level){
+    public static String GetNextZoneNodePath(ILevel level){
         var nextZoneNumber = LevelNode2D.GetZoneNumFromNodePath(level.NodePath) + 1;
         var nextZoneNodePath = String.Format("res://scenes/levels/level{0}z{1}.tscn",
                                              level.LevelNum, nextZoneNumber);
@@ -100,7 +110,7 @@ public class EndLevel : FSMKinematicBody2D<EndLevelState>
                 FourDirectJoystick.SendButtonReleaseToAllDirections();
                 SceneTransitioner.TransitionToNextLevelZone(FromScene: this.GetTree().Root.GetChild(0),
                                                             CurrentLevel: this.currentLevel,
-                                                            NextLevelZoneSceneStr: this.getNextZoneNodePath(this.currentLevel),
+                                                            NextLevelZoneSceneStr: EndLevel.GetNextZoneNodePath(this.currentLevel),
                                                             NextLevelZoneNum: LevelNode2D.GetZoneNumFromNodePath(this.currentLevel.NodePath) + 1,
                                                             onLoadPlayerCalories: this.player.TotalCalories,
                                                             effect: SceneTransitionEffect.FADE_BLACK,

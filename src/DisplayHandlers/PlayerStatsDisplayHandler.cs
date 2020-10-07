@@ -9,17 +9,18 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
     // private int a = 2;
     // private string b = "textvar";
     public override PlayerStatsDisplayHandlerState InitialState {
-        get { return PlayerStatsDisplayHandlerState.DEFAULT;}}
+        get { return PlayerStatsDisplayHandlerState.DEFAULT;}set{}}
     private Player activePlayer;
     public LevelFrameBannerBase LevelFrameBannerBase;
     private Sprite speedometerMeter;
     private TextureProgress healthProgressBar;
-    private Label totalCaloriesLabel;
+    private TextureProgress holdableProgressBar;
+    public Label totalCaloriesLabel;
     private Label accellLabel;
     private Label livesLabel;
     private IFood lastFoodDisplayed;
     private Label lastFoodEatenDisplayLabel;
-    private Container lastFoodEatenContainer;
+    public Container lastFoodEatenContainer;
     private Sprite lastFoodEatenDisplaySprite;
     private AnimatedSprite HealthWarningFlashPrompt;
     private AnimatedSprite LastFoodEatenBorder;
@@ -34,7 +35,6 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
             ((PlatformSpecificChildren)this.GetChild(0)).PopulateChildrenWithPlatformSpecificNodes(this);}
         this.ResetActiveState(this.InitialState);
         this.setPlayerAndCameraMembers();
-        this.makeTransparentOnMobile();
         foreach(Node child in this.GetChildren()){
             if(child is Sprite && child.Name.ToLower().Contains("speedometermeter")){
                 this.speedometerMeter = (Sprite)child;}
@@ -46,7 +46,10 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
                 if(child.Name.Contains("1To6")){
                     this.NumActionCallsGraphic1To6 = (Sprite)child;}}
             if(child is TextureProgress){
-                this.healthProgressBar = (TextureProgress)child;}
+                if(child.Name.ToLower().Contains("health")){
+                    this.healthProgressBar = (TextureProgress)child;}
+                if(child.Name.ToLower().Contains("holdable")){
+                    this.holdableProgressBar = (TextureProgress)child;}}
             if((child is Label) && (child.GetName().ToLower().Contains("total"))){
                 this.totalCaloriesLabel= (Label)child;}
             if((child is Label) && (child.GetName().ToLower().Contains("accell"))){
@@ -70,11 +73,16 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
                         this.lastFoodEatenDisplaySprite = (Sprite)subChild;}
                     if(subChild is AnimatedSprite && subChild.Name.ToLower().Contains("foodeatenborder")){
                         this.LastFoodEatenBorder = (AnimatedSprite)subChild;}}
-            }}}
+            }}
+            this.makeTransparentOnMobile();}
 
     private void makeTransparentOnMobile(){
         if(main.PlatformType.Equals(PlatformType.MOBILE)){
-            this.Modulate = new Color(this.Modulate.r, this.Modulate.g, this.Modulate.b, 0.75f);}}
+            foreach(CanvasItem child in this.GetChildren()){
+                if(child != this.lastFoodEatenContainer){
+                    child.Modulate = new Color(child.Modulate.r, child.Modulate.g, child.Modulate.b, 0.75f);
+                    if(child is LevelFrameBannerBase){
+                        ((LevelFrameBannerBase)child).InitialModulate = child.Modulate;}}}}}
 
     private void setPlayerAndCameraMembers(){                                   
            var player = this.tryGetPlayerFrom(this.GetTree().GetRoot());        
@@ -90,8 +98,8 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
         return null;}  
 
 
-    public override void ReactStateless(float delta){
-        this.healthProgressBar.Value = this.activePlayer.CurrentHealth;
+    public override void ReactStateless(float delta){/*
+        this.healthProgressBar.Value = this.activePlayer.Health;
         this.totalCaloriesLabel.Text = this.Tr("UI_CALORIES") + ": " + this.activePlayer.TotalCalories.ToString();
         this.accellLabel.Text = "FPS: " + (1 / delta).ToString("0");
         this.livesLabel.Text = "x " + this.activePlayer.NumLives;
@@ -99,10 +107,10 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
         this.handleHealthWarningFlashPrompt(delta);
         this.handleHoldableIcon(delta);
         if(this.TouchScreenButtons != null){
-            if(this.activePlayer.ActiveHoldable is ClawAttack){
+            if(this.activePlayer.ActiveHoldable == null){
                 this.UiUseItemTouchScreenButton.Visible = false;}
             else{
-                this.UiUseItemTouchScreenButton.Visible = true;}}
+                this.UiUseItemTouchScreenButton.Visible = true;}}*/
     }
     private void rotateSpeedometer(){
         var lowerBoundDeg = 160;
@@ -125,15 +133,24 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
            this.LevelFrameBannerBase.ResetToDefaultColor();}}
 
     private void handleHoldableIcon(float delta){
-        this.HoldableIcon.Texture = this.activePlayer.ActiveHoldable.UIDisplayIcon;
-        if(this.activePlayer.ActiveHoldable.NumActionCallsToDepleted <= 6){
-            this.draw1To6ActionCallLeftGraphic(this.activePlayer.ActiveHoldable.NumActionCallsLeft);
-        } else {
-            this.draw1To6ActionCallLeftGraphic(0);
-        }
+        this.HoldableIcon.Texture = this.activePlayer.HoldableOrClawAttackUIDisplayTexture;
+        var numActionCallsToDraw = 0;
+        foreach(var holdable in this.activePlayer.AllHoldibles){
+            numActionCallsToDraw += holdable.NumActionCallsLeft;}
+        this.NumActionCallsGraphic1To6.Visible = false;
+        this.holdableProgressBar.Visible = false;
+        if(this.activePlayer.ActiveHoldable != null && this.activePlayer.ActiveHoldable.DisplayInProgressBar){
+            this.drawActionCallsInProgressBar((float)numActionCallsToDraw / (float)this.activePlayer.ActiveHoldable.NumActionCallsToDepleted);}
+        else{
+            this.draw1To6ActionCallLeftGraphic(numActionCallsToDraw);}}
+
+    private void drawActionCallsInProgressBar(float percentFull){
+        this.holdableProgressBar.Visible = true;
+        this.holdableProgressBar.Value = percentFull * this.holdableProgressBar.MaxValue;
     }
 
     private void draw1To6ActionCallLeftGraphic(int NumActionCallsLeft){
+        this.NumActionCallsGraphic1To6.Visible = true;
         const int ICON_PIXEL_WIDTH = 130;
         const int ICON_PIXEL_HEIGHT = 100;
         const int MAX_ICON_WIDTH = ICON_PIXEL_WIDTH * 6;
@@ -177,7 +194,7 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
         }
     }
 
-    private Rect2 GetDefactoRect(Sprite sprite){
+    public static Rect2 GetDefactoRect(Sprite sprite){
         foreach(Node child in sprite.GetChildren()){
             if(child is CollisionShape2D && ((CollisionShape2D)child).Shape is RectangleShape2D && child.Name.ToLower().Contains("boundingbox")){
                 return new Rect2(sprite.GetPosition(), ((RectangleShape2D)((CollisionShape2D)child).Shape).Extents);
@@ -186,7 +203,7 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
         return _GetDefactoRect(sprite, sprite.GetRect());
     }
 
-    private Rect2 _GetDefactoRect(Sprite sprite, Rect2 ongoingRect){
+    private static Rect2 _GetDefactoRect(Sprite sprite, Rect2 ongoingRect){
         var rect = sprite.GetRect();
         var xmin = rect.Position.x;
         var ymin = rect.Position.y;
@@ -225,9 +242,9 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
         //Get the size of the parent display container, scale sprite to ti
         var targetSize = this.lastFoodEatenContainer.GetRect().Size;
         var foodDisplaySprite = this.activePlayer.lastFoodEaten.FoodDisplaySprite;
-        var defactorRect = this.GetDefactoRect(foodDisplaySprite);
-        var widthScale = targetSize.x / this.GetDefactoRect(foodDisplaySprite).Size.x;
-        var heightScale = targetSize.y / this.GetDefactoRect(foodDisplaySprite).Size.y;
+        var defactorRect = PlayerStatsDisplayHandler.GetDefactoRect(foodDisplaySprite);
+        var widthScale = targetSize.x / PlayerStatsDisplayHandler.GetDefactoRect(foodDisplaySprite).Size.x;
+        var heightScale = targetSize.y / PlayerStatsDisplayHandler.GetDefactoRect(foodDisplaySprite).Size.y;
         //For oblong non-square sizes, always pick the smaller scale
         var targetScale = widthScale < heightScale ? widthScale : heightScale;
         this.lastFoodEatenDisplaySprite.Scale = new Vector2(targetScale, targetScale);

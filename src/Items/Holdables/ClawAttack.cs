@@ -3,18 +3,11 @@ using System;
 
 public enum ClawAttackState { NORMAL, TRIGGER_ACTION, TRIGGER_ATTACK, ATTACK, TRIGGER_END_ATTACK, LOCKED}
 
-public class ClawAttack : FSMNode2D<ClawAttackState>, IHoldable {
+public class ClawAttack : FSMNode2D<ClawAttackState> {
 
-    public override ClawAttackState InitialState { get { return ClawAttackState.NORMAL;}}
+    public override ClawAttackState InitialState { get { return ClawAttackState.NORMAL;}set{}}
     private Player player;
     public Player Player { get { return this.player; } set {this.player = value;}}
-
-    public bool IsDepleted { get { return false;} set {}}
-
-    public int NumActionCallsToDepleted { get {return 2048;}}
-
-    public int CurrentNumActionCalls { get { return 0;} set {}}
-    public int NumActionCallsLeft { get { return 0; }}
 
     private bool isBeingHeld = false;
     public bool IsBeingHeld { get { return this.isBeingHeld;} set {this.isBeingHeld = value;}}
@@ -33,17 +26,8 @@ public class ClawAttack : FSMNode2D<ClawAttackState>, IHoldable {
     public override void _Ready(){}
 
     public void ReactToActionPress(float delta){
-        this.SetActiveState(ClawAttackState.TRIGGER_ATTACK, 100);
-        if(this.Player.ATV.Bear.ActiveState != BearState.ON_ATV){
-            this.Player.ATV.Bear.ResetActiveState(BearState.ON_ATV);
-        }
+        this.SetActiveState(ClawAttackState.TRIGGER_ATTACK, Priorities.TriggerClawAttack);
     }
-
-    public void ReactToActionHold(float delta){}
-
-    public void PickupPreAction(){}
-
-    public void PostDepletionAction(float delta){}
 
     public override void UpdateState(float delta){
     }
@@ -78,8 +62,8 @@ public class ClawAttack : FSMNode2D<ClawAttackState>, IHoldable {
                 animation = "attack_up1";}
         else if(this.Player.AttackWindow.ActiveState.Equals(AttackWindowState.ATTACKING_DOWNWARD)){
                 animation = "attack_down1";}
-        if(animation != null){
-            this.Player.ATV.Bear.AnimationPlayer.AdvancedPlay(animation, skipIfAlreadyPlaying: true);}}
+        if(animation != null){}}
+            //this.Player.ATV.Bear.AnimationPlayer.AdvancedPlay(animation, skipIfAlreadyPlaying: true);}}
 
     public override void ReactToState(float delta){
         switch(this.ActiveState){
@@ -91,7 +75,7 @@ public class ClawAttack : FSMNode2D<ClawAttackState>, IHoldable {
                 this.PlayRoarSound();
                 this.SetActiveState(ClawAttackState.ATTACK, 200);
                 this.Player.AttackWindow.TriggerAttack();
-                this.Player.ATV.Bear.AnimationPlayer.Stop();
+                //this.Player.ATV.Bear.AnimationPlayer.Stop();
                 this.updateBearAttackAnimationFromDirection();
                 this.SetActiveStateAfter(ClawAttackState.TRIGGER_END_ATTACK, 400, attackDurationS);
                 break;
@@ -99,7 +83,7 @@ public class ClawAttack : FSMNode2D<ClawAttackState>, IHoldable {
                 this.updateBearAttackAnimationFromDirection();
                 break;
             case ClawAttackState.TRIGGER_END_ATTACK:
-                this.Player.ATV.Bear.AnimationPlayer.AdvancedPlay("idleBounce1");
+                //this.Player.ATV.Bear.AnimationPlayer.AdvancedPlay("idleBounce1");
                 this.ResetActiveState(ClawAttackState.NORMAL);
                 break;
             case ClawAttackState.LOCKED:

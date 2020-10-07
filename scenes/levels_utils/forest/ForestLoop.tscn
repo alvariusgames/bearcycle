@@ -8,7 +8,8 @@
 [ext_resource path="res://media/tilesets/app_forest_1/tiles/tile_middle.png" type="Texture" id=6]
 [ext_resource path="res://media/tilesets/app_forest_1/tiles/tile_side.png" type="Texture" id=7]
 [ext_resource path="res://media/tilesets/app_forest_1/tiles/empty.png" type="Texture" id=8]
-[ext_resource path="res://src/Level/Platforms.cs" type="Script" id=9]
+[ext_resource path="res://src/Level/StaticPlatform.cs" type="Script" id=9]
+
 
 [node name="ForestLoop" type="Node2D"]
 

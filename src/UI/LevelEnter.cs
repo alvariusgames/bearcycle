@@ -29,7 +29,10 @@ public class LevelEnter : Node2D
                     if(subChild is Label && subChild.Name.ToLower().Contains("zone")){
                         this.ZoneLabel = (Label)subChild;}}}
             if(child is Sprite && child.Name.ToLower().Contains("leftbar")){
-                this.LeftBar = (Sprite)child;}}}
+                this.LeftBar = (Sprite)child;}}
+        if(this.LevelLabel.Text == ""){
+            this.Visible = false;
+        }}
 
   public override void _Process(float delta)  {
     this.timeAlive += delta;

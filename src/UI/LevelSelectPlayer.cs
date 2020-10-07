@@ -7,7 +7,7 @@ public enum LevelSelectPlayerState { WAITING_FOR_INPUT, MOVING_FORWARD, MOVING_B
 
 public class LevelSelectPlayer : FSMKinematicBody2D<LevelSelectPlayerState>
 {
-    public override LevelSelectPlayerState InitialState { get { return LevelSelectPlayerState.WAITING_FOR_INPUT;}}
+    public override LevelSelectPlayerState InitialState { get { return LevelSelectPlayerState.WAITING_FOR_INPUT;} set{}}
 
     private LevelPortal MovingTarget;
     public LevelSelect LevelSelect;

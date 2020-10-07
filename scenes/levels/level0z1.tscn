@@ -1,10 +1,10 @@
-[gd_scene load_steps=50 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://scenes/levels/level0.cs" type="Script" id=1]
 [ext_resource path="res://media/levels/level1_forest/cloud1.png" type="Texture" id=2]
 [ext_resource path="res://media/levels/level1_forest/sky1.png" type="Texture" id=3]
 [ext_resource path="res://media/tilesets/sonic_like_ground/platform.tscn" type="PackedScene" id=4]
-[ext_resource path="res://src/Level/Platforms.cs" type="Script" id=5]
+[ext_resource path="res://src/Level/StaticPlatform.cs" type="Script" id=5]
 [ext_resource path="res://src/Level/CollisionPolygonParentOfBorderedPolygon.cs" type="Script" id=6]
 [ext_resource path="res://scenes/player/player.tscn" type="PackedScene" id=7]
 [ext_resource path="res://media/tilesets/app_forest_1/tiles/tile_middle.png" type="Texture" id=8]
@@ -27,9 +27,7 @@
 [ext_resource path="res://scenes/items/food/forest/Smore.tscn" type="PackedScene" id=25]
 [ext_resource path="res://scenes/items/food/forest/BerryBush.tscn" type="PackedScene" id=26]
 [ext_resource path="res://scenes/items/stage/SafetyCheckpoint.tscn" type="PackedScene" id=27]
-[ext_resource path="res://src/Utils/Misc/TutorialRotationThrowaway.cs" type="Script" id=28]
 [ext_resource path="res://scenes/items/holdables/Spring.tscn" type="PackedScene" id=29]
-[ext_resource path="res://src/Utils/Misc/RemoveWallWhenHealthIs100.cs" type="Script" id=30]
 [ext_resource path="res://media/fonts/en_US.ttf" type="DynamicFontData" id=31]
 [ext_resource path="res://media/UI/tutorial/left_key.png" type="Texture" id=32]
 [ext_resource path="res://media/UI/tutorial/right_key.png" type="Texture" id=33]
@@ -38,7 +36,6 @@
 [ext_resource path="res://scenes/npc/bird1/Bird.tscn" type="PackedScene" id=36]
 [ext_resource path="res://scenes/npc/deer1/Deer.tscn" type="PackedScene" id=37]
 [ext_resource path="res://media/UI/tutorial/down_key.png" type="Texture" id=38]
-[ext_resource path="res://src/Utils/Misc/CancelHorizMomentum.cs" type="Script" id=42]
 [ext_resource path="res://src/Items/MakeMyParentHover.cs" type="Script" id=46]
 [ext_resource path="res://media/empty.png" type="Texture" id=54]
 [ext_resource path="res://media/UI/tutorial/up_key.png" type="Texture" id=55]
@@ -54,19 +51,13 @@ _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 15480.4, 936.921, -195.137, -75.0347, 195.137, 75.0347, 16192.8, 1022.6, 0, 0, 0, 0, 16848.1, 1152.71 )
 }
 
-[sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 391.654, 36.766 )
-
-[sub_resource type="RectangleShape2D" id=4]
-extents = Vector2( 119.166, 314.834 )
-
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=3]
 size = 72
 outline_size = 5
 outline_color = Color( 0.133333, 0.133333, 0.133333, 1 )
 font_data = ExtResource( 31 )
 
-[sub_resource type="SpriteFrames" id=6]
+[sub_resource type="SpriteFrames" id=4]
 animations = [ {
 "frames": [ ExtResource( 55 ), ExtResource( 54 ), ExtResource( 33 ), ExtResource( 54 ), ExtResource( 38 ), ExtResource( 54 ), ExtResource( 32 ), ExtResource( 54 ) ],
 "loop": true,
@@ -175,8 +166,16 @@ __meta__ = {
 }
 border_size = -60
 border_overlap = -16
+border_color = Color( 0, 0, 0, 1 )
+border_textures = null
+border_clockwise_shift = 0
 border_texture = ExtResource( 13 )
+border_material = null
 border_texture_scale = Vector2( 0.5, 0.5 )
+border_texture_offset = Vector2( 0, 0 )
+border_texture_rotation = 0.0
+smooth_level = 0.0
+smooth_max_angle = 90
 
 [node name="PlatformZoneThree" type="StaticBody2D" parent="Platforms"]
 collision_layer = 1024
@@ -197,8 +196,16 @@ __meta__ = {
 }
 border_size = -64
 border_overlap = -16
+border_color = Color( 0, 0, 0, 1 )
+border_textures = null
+border_clockwise_shift = 0
 border_texture = ExtResource( 13 )
+border_material = null
 border_texture_scale = Vector2( 0.5, 0.5 )
+border_texture_offset = Vector2( 0, 0 )
+border_texture_rotation = 0.0
+smooth_level = 0.0
+smooth_max_angle = 90
 
 [node name="Colliders" type="Node2D" parent="Platforms"]
 
@@ -564,9 +571,16 @@ __meta__ = {
 }
 border_size = -48
 border_overlap = -16
+border_color = Color( 0, 0, 0, 1 )
 border_textures = ExtResource( 24 )
+border_clockwise_shift = 0
+border_texture = null
+border_material = null
 border_texture_scale = Vector2( 0.5, 0.5 )
+border_texture_offset = Vector2( 0, 0 )
+border_texture_rotation = 0.0
 smooth_level = 0.3
+smooth_max_angle = 90
 
 [node name="Polygon2D" type="Polygon2D" parent="Platforms/Garnishes/PlatformFillIn"]
 position = Vector2( 10671.4, 163.281 )
@@ -656,58 +670,6 @@ position = Vector2( 21131.7, 1158.34 )
 [node name="StageSpring" parent="Items/Springs" instance=ExtResource( 15 )]
 position = Vector2( 7641.26, 997.18 )
 
-[node name="Misc" type="Node2D" parent="Items"]
-
-[node name="TutorialRotationThrowaway" type="KinematicBody2D" parent="Items/Misc"]
-position = Vector2( 8164.32, 536.523 )
-scale = Vector2( 2, 2 )
-collision_layer = 2048
-collision_mask = 256
-script = ExtResource( 28 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Misc/TutorialRotationThrowaway"]
-position = Vector2( 321.445, 66.1645 )
-shape = SubResource( 3 )
-
-[node name="RemoveableWall" type="StaticBody2D" parent="Items/Misc"]
-position = Vector2( -21.2651, -4.17389 )
-scale = Vector2( 2, 2 )
-
-[node name="RemoveWallWhenHealthIs100" type="KinematicBody2D" parent="Items/Misc/RemoveableWall"]
-position = Vector2( 3138.76, 500.544 )
-z_index = -5
-collision_layer = 2048
-collision_mask = 256
-script = ExtResource( 30 )
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Items/Misc/RemoveableWall/RemoveWallWhenHealthIs100"]
-position = Vector2( -86.9792, 0.925323 )
-polygon = PoolVector2Array( 46.4885, -69.3973, -347.338, -199.563, -444.728, -173.904, -413.82, -119.085, -379.412, -145.911, -307.098, -117.919, -245.865, -89.9264, -244.699, -42.106, -219.641, -18.977, -184.972, -80.0241, -118.649, -98.8658, -55.3408, -58.9214, -27.4551, -3.90359, 47.2046, 14.3731 )
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Items/Misc/RemoveableWall"]
-z_index = -2
-script = ExtResource( 6 )
-
-[node name="Platform" parent="Items/Misc/RemoveableWall/CollisionPolygon2D" instance=ExtResource( 4 )]
-texture = ExtResource( 8 )
-polygon = PoolVector2Array( 3095.72, 528.303, 3098.89, 68.9605, 3114.95, 57.7968, 3151.41, 58.8172, 3161.72, 82.8495, 3160.77, 520.369, 3148.53, 548.573, 3120.1, 549.866 )
-border_size = -32
-border_overlap = -8
-border_textures = ExtResource( 12 )
-border_texture_scale = Vector2( 0.25, 0.25 )
-border_texture_offset = Vector2( 80, -1 )
-
-[node name="CancelHorizMomentum" type="KinematicBody2D" parent="Items/Misc"]
-position = Vector2( 14765.7, 415.61 )
-scale = Vector2( 2, 2 )
-collision_layer = 2048
-collision_mask = 256
-script = ExtResource( 42 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Items/Misc/CancelHorizMomentum"]
-position = Vector2( 115.098, -171.615 )
-shape = SubResource( 4 )
-
 [node name="Texts" type="Node2D" parent="."]
 position = Vector2( 10.585, 11.3684 )
 
@@ -720,7 +682,7 @@ margin_left = 483.0
 margin_top = -163.0
 margin_right = 1028.0
 margin_bottom = 179.0
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "TUT_NAV"
 valign = 1
@@ -751,7 +713,7 @@ margin_left = 267.0
 margin_top = 53.0
 margin_right = 801.0
 margin_bottom = 333.0
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "TUT_EAT1"
 align = 1
@@ -773,7 +735,7 @@ margin_left = 874.069
 margin_top = 112.789
 margin_right = 1417.07
 margin_bottom = 361.789
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "TUT_EAT2"
 valign = 1
@@ -803,7 +765,7 @@ margin_left = 857.413
 margin_top = -94.48
 margin_right = 1400.41
 margin_bottom = 154.52
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "TUT_ITEM1"
 valign = 1
@@ -832,7 +794,7 @@ margin_left = -257.0
 margin_top = -288.0
 margin_right = 362.0
 margin_bottom = -51.0
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "TUT_FLOOR1"
 align = 2
@@ -847,7 +809,7 @@ margin_left = -264.0
 margin_top = -27.0
 margin_right = 501.0
 margin_bottom = 313.0
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "TUT_FLOOR2"
 align = 2
@@ -868,7 +830,7 @@ margin_left = 173.368
 margin_top = 87.4955
 margin_right = 718.368
 margin_bottom = 429.495
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "TUT_ROTATE"
 autowrap = true
@@ -898,7 +860,7 @@ margin_left = 553.499
 margin_top = -25.427
 margin_right = 669.499
 margin_bottom = 73.573
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "+"
 align = 1
@@ -928,7 +890,7 @@ margin_left = 990.253
 margin_top = -149.171
 margin_right = 1533.25
 margin_bottom = 99.8295
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "TUT_ITEM2"
 valign = 1
@@ -958,7 +920,7 @@ margin_left = 640.0
 margin_top = 4.0
 margin_right = 1267.0
 margin_bottom = 495.0
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "TUT_ITEM3"
 valign = 1
@@ -988,7 +950,7 @@ margin_left = 528.092
 margin_top = -116.107
 margin_right = 644.092
 margin_bottom = -17.1071
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "+"
 align = 1
@@ -1004,8 +966,8 @@ script = ExtResource( 46 )
 [node name="AllArrows" type="AnimatedSprite" parent="Texts/Attack"]
 position = Vector2( 459.027, -68.988 )
 scale = Vector2( 0.5, 0.5 )
-frames = SubResource( 6 )
-frame = 2
+frames = SubResource( 4 )
+frame = 1
 playing = true
 
 [node name="TUT_ATTACK1" type="Label" parent="Texts/Attack"]
@@ -1013,7 +975,7 @@ margin_left = 359.597
 margin_top = 16.2194
 margin_right = 902.597
 margin_bottom = 265.219
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 text = "TUT_ATTACK1"
 align = 1

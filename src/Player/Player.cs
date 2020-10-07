@@ -5,16 +5,31 @@ using System.Collections.Generic;
 using System.Linq;
 
 public enum PlayerState {ALIVE, TRIGGER_DIEING, DIEING_TEMP_FREEZE, TRIGGER_DIEING_FLIP, DIEING_FLIP_OFF_SCREEN, END_DIEING}
-public class Player : FSMNode2D<PlayerState>{
+public class Player : FSMNode2D<PlayerState>, ICharacter{
+    public int Id {get;set;} = CharacterIds.Player; 
+    public String DialogueName {get { return this.ATV.Bear.CutOut.DialogueName; } set{}}
+    public Texture DialogueAvatar{get {return this.ATV.Bear.CutOut.DialogueAvatar;} set{}}
+    public String[] ShortDialogueSamples{get; set;} = Dialogues.DefaultShortDialogueSamples;
+    public String[] MidDialogueSamples{get; set;} = Dialogues.DefaultMidDialogueSamples;
+    public String[] LongDialogueSamples{get; set;} = Dialogues.DefaultLongDialogueSamples;
+
     public ILevel ActiveLevel;
-    public LevelFrame LevelFrame;
-    public override PlayerState InitialState {get { return PlayerState.ALIVE;}}
-    public AttackWindow AttackWindow;
+    private LevelFrame levelFrame;
+    public LevelFrame LevelFrame { get {
+        if(this.levelFrame is null){
+            this.levelFrame = ((LevelNode2D)this.ActiveLevel).TryGetLevelFrame();}
+        return this.levelFrame;}}
+    public override PlayerState InitialState {get { return PlayerState.ALIVE;}set{}}
+    public PlayerAttackWindow AttackWindow;
 
     public ClawAttack ClawAttack;
     public List<IHoldable> AllHoldibles = new List<IHoldable>(); //TODO: Make me a LIFO Stack
     public IHoldable ActiveHoldable;
-
+    public Texture HoldableOrClawAttackUIDisplayTexture{ get {
+        if(this.ActiveHoldable == null){
+            return this.ClawAttack.UIDisplayIcon;
+        } else {
+            return this.ActiveHoldable.UIDisplayIcon;}}}
     public ATV ATV;
     public AboveHeadManager AboveHeadManager;
     public const float MAX_HEALTH = 100;
@@ -22,17 +37,23 @@ public class Player : FSMNode2D<PlayerState>{
     private const float HEALTH_LOSS_DIVISOR = 1.5f;
     public const float DEFAULT_HIT_UNIT = -6f;
     public const int DEFAULT_NUM_LIVES = 2; //0 based index
-    public float CurrentHealth {get; set;} = MAX_HEALTH;
+    private float health = MAX_HEALTH;
+    public float Health { 
+        get{
+            return this.health;}
+        set{
+            this.health = value;
+            if(this.health >= MAX_HEALTH){
+                this.health = MAX_HEALTH;}
+        }
+    }
     private const float HEALTH_DANGER_PERC = 0.25f;
-    public Boolean IsInHealthDanger{ get { return this.CurrentHealth <= MAX_HEALTH * HEALTH_DANGER_PERC;}}
+    public Boolean IsInHealthDanger{ get { return this.Health <= MAX_HEALTH * HEALTH_DANGER_PERC;}}
     public int TotalCalories = 0;
     private List<IFood> foodEaten = new List<IFood>();
     public IFood lastFoodEaten;
-    private SafetyCheckPoint LastSafetyCheckPoint;
+    public SafetyCheckPoint LastSafetyCheckPoint;
     public WholeBodyKinBody WholeBodyKinBody;
-    private float animationTimer = 0f;
-    private string animationToPlayAfterTimer;
-    private float animationToPlayAfterThreshold = 0f;
     public int NumLives;
     public int NumContinues;
     private float transitionToDeathModCounter = 0f;
@@ -47,15 +68,15 @@ public class Player : FSMNode2D<PlayerState>{
                 this.ATV = (ATV)child;}
             else if(child is AboveHeadManager){
                 this.AboveHeadManager = (AboveHeadManager)child;}
-            else if(child is AttackWindow){
-                this.AttackWindow = (AttackWindow)child;}
+            else if(child is PlayerAttackWindow){
+                this.AttackWindow = (PlayerAttackWindow)child;}
             else if(child is WholeBodyKinBody){
                 this.WholeBodyKinBody = (WholeBodyKinBody)child;}
             else if(child is ClawAttack){
                 this.ClawAttack = (ClawAttack)child;
-                this.PickupHoldable(this.ClawAttack);
-            }}
-        this.ATV.Bear.AnimationPlayer.AdvancedPlay(new String[]{"idleBounce1"});}
+                this.ClawAttack.Player = this;
+            }}}
+        //this.ATV.Bear.AnimationPlayer.AdvancedPlay(new String[]{"idleBounce1"});}
 
     private void setInitialSafetyCheckPoint(){
        this.LastSafetyCheckPoint = new SafetyCheckPoint();
@@ -63,33 +84,24 @@ public class Player : FSMNode2D<PlayerState>{
        this.LastSafetyCheckPoint.BeenActivated = true;
     }
 
-    public override void ReactStateless(float delta){
-        this.checkAnimationTimer(delta);
-    }
-
-    private void checkAnimationTimer(float delta){
-        if(this.animationToPlayAfterTimer != null){
-            this.animationTimer += delta;
-            if(this.animationTimer >= this.animationToPlayAfterThreshold){
-                this.ATV.Bear.AnimationPlayer.AdvancedPlay(this.animationToPlayAfterTimer);
-                this.animationTimer = 0f;
-                this.animationToPlayAfterTimer = null;}}
-    }
-
+    public override void ReactStateless(float delta){}
     private void updateHealthCheckDeath(float delta){
-        this.CurrentHealth -= delta / HEALTH_LOSS_DIVISOR;
-        if(this.ActiveHoldable != null && this.ActiveHoldable.IsDepleted){
-            this.DropActiveHoldable(delta);
-        }
-        if(this.CurrentHealth <= 5f){
-            //TODO: MAKE ME MORE ELEGANT AND SHOW THE BEAR DIE ANIMATION
-            //TODO: FIND OUT WHY BAR IS EMPTY at 5 HEALTH AND NOT 0
+        this.Health -= delta / HEALTH_LOSS_DIVISOR;
+        if(this.Health <= 0f){
             this.Die();
         }
     }
 
+    public void updateHoldibles(float delta){
+        foreach(var holdable in this.AllHoldibles.ToArray()){
+            if(holdable.IsDepleted){
+                this.DropHoldable(holdable);
+            }
+        }
+    }
+
     public void Die(){
-        this.CurrentHealth = 0f;
+        this.Health = 0f;
         this.ResetActiveState(PlayerState.TRIGGER_DIEING);
     }
 
@@ -97,10 +109,11 @@ public class Player : FSMNode2D<PlayerState>{
         switch(this.ActiveState){
             case PlayerState.ALIVE:
                 this.updateHealthCheckDeath(delta);
+                this.updateHoldibles(delta);
                 break;
             case PlayerState.TRIGGER_DIEING:
                 this.ATV.ReattachBear();
-                this.ATV.Bear.AnimationPlayer.AdvancedPlay(new String[]{"idleBounce1"});
+                //this.ATV.Bear.AnimationPlayer.AdvancedPlay(new String[]{"idleBounce1"});
                 this.AboveHeadManager.HackyClearAllAboveHead();
                 // Make everything non-collideable
 
@@ -121,7 +134,6 @@ public class Player : FSMNode2D<PlayerState>{
                 this.ATV.SetAccellOfTwoWheels(0f);
                 this.ATV.SetVelocityOfTwoWheels(new Vector2(0,0));
                 this.ATV.RotationManager.SetActiveState(RotationManagerState.NOT_ROTATING, 999);
-                this.LevelFrame = ((LevelNode2D)this.ActiveLevel).TryGetLevelFrame();
                 this.LevelFrame.PlayerStatsDisplayHandler.LevelFrameBannerBase.PlaySoundWhenBlinking = false;
                 SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
                                                             new String[]{"res://media/samples/player/die1.wav"});
@@ -203,10 +215,13 @@ public class Player : FSMNode2D<PlayerState>{
     }
 
     public void GoToMostRecentSafetyCheckPoint(){
+        GD.Print("Going to most recent safety checkpoint at ");
+        GD.Print(this.LastSafetyCheckPoint.GlobalPositionToResetTo);
         this.ATV.SetGlobalCenterOfTwoWheels(this.LastSafetyCheckPoint.GlobalPositionToResetTo);
     }
 
     public void EatFood(IFood food, bool playAnimation = true, bool playNomSound = true, bool updateTotalCalories = true){
+        /*
         if(!food.isConsumed){
             if(!this.ATV.Bear.AnimationPlayer.CurrentAnimation.ToLower().Contains("eat")  && 
                !this.ATV.Bear.AnimationPlayer.CurrentAnimation.ToLower().Contains("attack") && 
@@ -214,26 +229,22 @@ public class Player : FSMNode2D<PlayerState>{
                 this.ATV.Bear.AnimationPlayer.AdvancedPlay("eat1");}
             if(playNomSound){
                 this.ATV.Bear.PlayRandomNomSound();}
-            this.UpdateHealth(food.Calories * HEALTH_TO_CALORIES_RATIO);
+            this.Health += food.Calories * HEALTH_TO_CALORIES_RATIO;
             if(updateTotalCalories){
                 this.TotalCalories += food.Calories;}
             this.foodEaten.Add(food);
             this.lastFoodEaten = food;
-            food.isConsumed = true;}}
-    public void UpdateHealth(float signedHealthUnits){
-        var tentativeHealth = this.CurrentHealth + signedHealthUnits;
-        if(tentativeHealth >= MAX_HEALTH){
-            this.CurrentHealth = MAX_HEALTH;}
-        else {
-            this.CurrentHealth = tentativeHealth;}}
-
+            food.isConsumed = true;}}*/}
     public void GetHitBy(object node){
-        if(node is INPC && this.ActiveState.Equals(PlayerState.ALIVE)){
-            this.ATV.Bear.TriggerHitSequence();
-            //TODO: evaluate if this is needed or not
+        if((node is INPC || node is NPCAttackWindow) && this.ActiveState.Equals(PlayerState.ALIVE)){
+            this.ATV.Bear.TriggerHitSequence(BearHitSequence.SWIPED_OFF);
     }}
 
     public void PickupHoldable(IHoldable Holdable){
+        if(this.ActiveHoldable != null && 
+           this.ActiveHoldable.GetType() != Holdable.GetType()){
+               foreach(var holdable in this.AllHoldibles.ToArray()){
+                   this.DropHoldable(holdable);}}
         Holdable.Player = this;
         Holdable.IsBeingHeld = true;
         this.ActiveHoldable = Holdable;
@@ -245,13 +256,16 @@ public class Player : FSMNode2D<PlayerState>{
                 new string[] {"res://media/samples/items/equip1.wav",});}
     }
 
-    public void DropActiveHoldable(float delta){
-        if(this.ActiveHoldable != ClawAttack){
-            // Don't ever drop the ClawAttack, our default attack
-            this.ActiveHoldable.PostDepletionAction(delta);
-            this.AllHoldibles.Remove(this.ActiveHoldable);
-            if(this.AllHoldibles.Count>=0){
-                this.ActiveHoldable = this.AllHoldibles[this.AllHoldibles.Count-1];}}
+
+
+    public void DropHoldable(IHoldable holdable){
+        holdable.PostDepletionAction();
+        this.AllHoldibles.Remove(holdable);
+        if(holdable == this.ActiveHoldable){
+            if(this.AllHoldibles.Count > 0){
+                this.ActiveHoldable = this.AllHoldibles[this.AllHoldibles.Count-1];}
+            else{
+                this.ActiveHoldable = null;}}
     }
 
 
@@ -262,6 +276,10 @@ public class Player : FSMNode2D<PlayerState>{
 
     public void MoveCameraTo(Node2D node, Vector2 offset, float numSecondsToTransition = 1f){
         this.ATV.Bear.CameraManager.MoveCameraToArbitraryNode(node, offset, numSecondsToTransition);
+    }
+
+    public void ResetCameraToDefaultFollowPlayerBehavior(){
+        this.ATV.Bear.CameraManager.ResetToDefaultFollowPlayerBehavior();
     }
 
 //    public override void _Process(float delta)

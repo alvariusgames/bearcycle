@@ -1,11 +1,14 @@
-keys,en,fr,ja,hi,zh,ko,de,Unnamed: 8
-TUT_NAV,to move,déplacer,ugokasu,हिलाना,移动,감동을 주다,so konnte ich,
-TUT_EAT1,Eat food to gain health,Mangez de la nourriture pour gagner en santé,健康のために食べ物を食べる,स्वास्थ्य हासिल करने के लिए भोजन करें,多吃食物以增进健康,건강을 위해 음식을 먹는다,"Iss Essen, um gesund zu werden",
-TUT_EAT2,to forage for food,chercher de la nourriture,食べ物を探す,भोजन के लिए चारा,觅食,음식을 먹다,nach Nahrung suchen,
-TUT_ITEM1,to interact with an item,pour interagir avec un élément,アイテムと対話する,एक आइटम के साथ बातचीत करने के लिए,与物品互动,항목과 상호 작용,mit einem Gegenstand interagieren,
-TUT_FLOOR1,hold,ne renferment,つかむ,ruk jao,具有,소유하다,Halten,
-TUT_FLOOR2,to fall through platforms,tomber à travers les plateformes,プラットフォームを通過する,प्लेटफार्मों के माध्यम से गिर करने के लिए,跌落平台,플랫폼을 넘어서 다,durch Plattformen fallen,
-TUT_ROTATE,to rotate in the air,tourner en l'air,空中で回転する,हवा में घूमना,在空中旋转,공중에서 회전,in der Luft drehen,in der Luft drehen
-TUT_ITEM2,to pick up certain items,ramasser certains articles,特定のアイテムをピックアップする,कुछ वस्तुओं को लेने के लिए,拿起某些物品,특정 품목을 픽업,bestimmte Gegenstände abholen,
-TUT_ITEM3,to use your active item,utiliser votre élément actif,アクティブなアイテムを使用するには,अपने सक्रिय आइटम का उपयोग करने के लिए,使用您的活动物品,활성 아이템을 사용하기 위해,um Ihren aktiven Gegenstand zu benutzen,
-TUT_ATTACK1,to attack (4 directions),attaquer (4 directions),攻撃する（4方向）,हमला करने के लिए (4 दिशाएँ),攻击（4个方向）,공격 (4 방향),angreifen (4 Richtungen),
+keys,en,fr,ja,hi,zh,ko,de
+TUT_NAV,to move,déplacer,ugokasu,हिलाना,移动,감동을 주다,so konnte ich
+TUT_EAT1,Eat food to gain health,Mangez de la nourriture pour gagner en santé,健康のために食べ物を食べる,स्वास्थ्य हासिल करने के लिए भोजन करें,多吃食物以增进健康,건강을 위해 음식을 먹는다,"Iss Essen, um gesund zu werden"
+TUT_EAT3,Health decreases automatically,,,,,,
+TUT_EAT2,to forage for food,chercher de la nourriture,食べ物を探す,भोजन के लिए चारा,觅食,음식을 먹다,nach Nahrung suchen
+TUT_EAT4,Notice the,,,,,,
+TUT_EAT5,icon,,,,,,
+TUT_ITEM1,to interact with an item,pour interagir avec un élément,アイテムと対話する,एक आइटम के साथ बातचीत करने के लिए,与物品互动,항목과 상호 작용,mit einem Gegenstand interagieren
+TUT_FLOOR1,hold,ne renferment,つかむ,ruk jao,具有,소유하다,Halten
+TUT_FLOOR2,to fall through platforms,tomber à travers les plateformes,プラットフォームを通過する,प्लेटफार्मों के माध्यम से गिर करने के लिए,跌落平台,플랫폼을 넘어서 다,durch Plattformen fallen
+TUT_ROTATE,to rotate in the air,tourner en l'air,空中で回転する,हवा में घूमना,在空中旋转,공중에서 회전,in der Luft drehen
+TUT_ITEM2,to pick up certain items,ramasser certains articles,特定のアイテムをピックアップする,कुछ वस्तुओं को लेने के लिए,拿起某些物品,특정 품목을 픽업,bestimmte Gegenstände abholen
+TUT_ITEM3,to use your active item,utiliser votre élément actif,アクティブなアイテムを使用するには,अपने सक्रिय आइटम का उपयोग करने के लिए,使用您的活动物品,활성 아이템을 사용하기 위해,um Ihren aktiven Gegenstand zu benutzen
+TUT_ATTACK1,to attack (4 directions),attaquer (4 directions),攻撃する（4方向）,हमला करने के लिए (4 दिशाएँ),攻击（4个方向）,공격 (4 방향),angreifen (4 Richtungen)

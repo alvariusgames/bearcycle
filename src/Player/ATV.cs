@@ -11,7 +11,7 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
     // Member variables here, example:
     // private int a = 2;
     // private string b = "textvar";
-    public override ATVState InitialState { get { return ATVState.WITH_BEAR; }}
+    public override ATVState InitialState { get { return ATVState.WITH_BEAR;}set{}}
     public ATVDirection Direction { get; private set;}
     public Wheel FrontWheel;
     public Wheel BackWheel;
@@ -30,7 +30,10 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
     private float numSecOfInAir = 0f;
     private Queue<Vector2> OngoingVelocitiesOfTwoWheels = new Queue<Vector2>();
     private Vector2 initialOffsetFromWheelsToBear;
-
+    private Particles2D RocketExhaustLocal;
+    private Particles2D RocketExhaustGlobal;
+    private Vector2 InitialLocalRocketExhaustPosition = new Vector2(0,0);
+    private Vector2 InitialGlobalRocketExhaustPosition = new Vector2(0,0);
        public override void _Ready(){
         this.ResetActiveState(this.InitialState);
         foreach(Node2D child in this.GetChildren()){
@@ -45,7 +48,14 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
             else if(child is FallThroughManager){
                 this.FallThroughManager = (FallThroughManager)child;}
             else if(child is RotationManager){
-                this.RotationManager = (RotationManager)child;}}
+                this.RotationManager = (RotationManager)child;}
+            else if(child is Particles2D && child.Name.ToLower().Contains("rocket")){
+                if(child.Name.ToLower().Contains("local")){
+                    this.RocketExhaustLocal = (Particles2D)child;
+                    this.InitialLocalRocketExhaustPosition = this.RocketExhaustLocal.Position;}
+                if(child.Name.ToLower().Contains("global")){
+                    this.RocketExhaustGlobal = (Particles2D)child;
+                    this.InitialGlobalRocketExhaustPosition = this.RocketExhaustGlobal.Position;}}}
         this.Player = (Player)this.GetParent();
         this.BodyLength = this.FrontWheel.Position.DistanceTo(
             this.BackWheel.Position);
@@ -54,7 +64,7 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
         }
         for(int i=0; i<this.LastVelocitiesOfTwoWheelsLength; i++){
             this.OngoingVelocitiesOfTwoWheels.Enqueue(new Vector2(0,0));}
-        this.initialOffsetFromWheelsToBear = this.Bear.GetGlobalPosition() - this.GetGlobalCenterOfTwoWheels();
+        this.initialOffsetFromWheelsToBear = this.Bear.GlobalPosition - this.GetGlobalCenterOfTwoWheels();
         }
 
     public Vector2 GetDeFactoGlobalPosition(){
@@ -70,13 +80,23 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
         return (this.FrontWheel.GetGlobalPosition() + this.BackWheel.GetGlobalPosition()) / 2f;}
 
     public Vector2 GetGlobalCenterOfATV(){
-        return this.GetGlobalCenterOfTwoWheels() + this.initialOffsetFromWheelsToBear;
+        var t = this.initialOffsetFromWheelsToBear.Rotated(this.CurrentNormal.Angle() + ((float)Math.PI / 2f));
+        return this.GetGlobalCenterOfTwoWheels() + t;//this.initialOffsetFromWheelsToBear * this.CurrentNormal.Rotated((float)Math.PI);
     }
     
     public Vector2 GetNormalizedBackToFront(){
         return (this.FrontWheel.GetGlobalPosition() - this.BackWheel.GetGlobalPosition()).Normalized();
     }
-    
+
+    public Vector2 GetNormalizedForwardDirection(){
+        if(this.Direction.Equals(ATVDirection.FORWARD)){
+            return this.GetNormalizedBackToFront();}
+        else if(this.Direction.Equals(ATVDirection.BACKWARD)){
+            return this.GetNormalizedBackToFront().Rotated((float)Math.PI);}
+        else{
+            return new Vector2(0,0);}
+    }
+
     public void SetGlobalCenterOfTwoWheels(Vector2 globalCenter, float verticalOffset=30){
         this.BackWheel.SetGlobalPosition(new Vector2(globalCenter.x, 
                                                      globalCenter.y - verticalOffset));
@@ -116,16 +136,10 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
         return this.FrontWheel.IsInAir() && this.BackWheel.IsInAir();
     }
 
-    public Boolean IsInAirNormalized(){
-        var num60FPSNormalizedFramesInAir = (int)(this.numSecOfInAir * main.DELTA_NORMALIZER);
-        if(num60FPSNormalizedFramesInAir > this.LastInAirsLength || num60FPSNormalizedFramesInAir == 0f){
-            num60FPSNormalizedFramesInAir = this.LastInAirsLength;}
-        var numInAirsTheshold = num60FPSNormalizedFramesInAir;
-        return this.numSecOfInAir >= (1 / main.DELTA_NORMALIZER) * (float)this.LastInAirsLength;}
-        //return this.OngoingIsInAirs.All(x => x == true);}
-        //var output = this.OngoingIsInAirs.ToArray().Count(x => x == true) >= numInAirsTheshold;
-        //GD.Print(numInAirsTheshold);
-        //return output;}
+    public Boolean IsInAirNormalized(float numSecondsToCheckInAir = -1){
+        if(numSecondsToCheckInAir == -1){
+            numSecondsToCheckInAir = (1 / main.DELTA_NORMALIZER) * (float)this.LastInAirsLength;}
+        return this.numSecOfInAir >= numSecondsToCheckInAir;}
 
     public void RotateTwoWheels(float phi, float delta){
         phi *= delta * main.DELTA_NORMALIZER;
@@ -162,7 +176,7 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
 
     public bool IsBearSmushedUnderATV(){
         var collision = this.Bear.MoveAndCollide(new Vector2(0,0));
-        return (collision != null) && (collision.Collider is Platforms);
+        return (collision != null) && (collision.Collider is IPlatform);
     }
 
     public void FlipUpsideDown(){
@@ -173,9 +187,7 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
             this.moveBearToCenter(-1);
     }
 
-    public void ThrowBearOffATV(float throwSpeed = 500
-    
-    ){
+    public void ThrowBearOffATV(float throwSpeed = 500){
         this.SetActiveState(ATVState.WITHOUT_BEAR, 100);
         if(this.FrontWheel.velocity.x >= 0f){
             this.Bear.velocity += (new Vector2(throwSpeed,0)).Rotated(1.25f * (float)Math.PI);
@@ -262,15 +274,17 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
    
     private void holdWheelsTogether(float delta){
         //Do physics for a joint between frontwheel and backwheel
-        var fcenter = this.FrontWheel.GetGlobalPosition();
-        var bcenter = this.BackWheel.GetGlobalPosition();
-        var actualBodyLength =  this.FrontWheel.GetGlobalPosition().DistanceTo(this.BackWheel.GetGlobalPosition());
+        var fcenter = this.FrontWheel.GlobalPosition;
+        var bcenter = this.BackWheel.GlobalPosition;
+        var actualBodyLength =  this.FrontWheel.GlobalPosition.DistanceTo(this.BackWheel.GlobalPosition);
 
         var fBodyEndCoord = fcenter - ((fcenter - bcenter).Normalized()) * (this.BodyLength + actualBodyLength) / 2f;
         var bBodyEndCoor = bcenter - ((bcenter - fcenter).Normalized()) * (this.BodyLength + actualBodyLength) / 2f;
-        this.FrontWheel.SetGlobalPosition(bBodyEndCoor);
-        this.BackWheel.SetGlobalPosition(fBodyEndCoord);
+        this.FrontWheel.GlobalPosition = bBodyEndCoor;
+        this.BackWheel.GlobalPosition = fBodyEndCoord;
     }
+
+
     private void moveBearToCenter(float delta){
         var fcenter = this.FrontWheel.GetGlobalPosition();
         var bcenter = this.BackWheel.GetGlobalPosition();
@@ -280,7 +294,7 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
         //var bearCenter = center + angleUpCenter * distAbove;
         
         //this.Bear.SetGlobalPosition(bearCenter / 90);
-        this.Bear.SetGlobalPosition(this.Sprite.GetGlobalPosition());
+        this.Bear.GlobalPosition = this.GetGlobalCenterOfATV();
         this.Bear.SetGlobalRotation((fcenter - bcenter).Angle());
         //this.Bear.CollisionShape2D.SetGlobalRotation(this.Bear.CutOut.GetGlobalRotation());
         //this.Sprite.SetGlobalRotation((fcenter - bcenter).Angle());
@@ -299,7 +313,7 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
         var atvPos = center + distAbove * angleUpCenter;
         this.Sprite.SetGlobalPosition(atvPos);
         this.Sprite.SetGlobalRotation((fwcenter - bwcenter).Angle());
-        
+
         var spriteScale = this.Sprite.GetScale();
         if(this.Direction == ATVDirection.FORWARD){
             this.Sprite.SetScale(new Vector2(Math.Abs(spriteScale[0]),
@@ -307,7 +321,40 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
         } else if(this.Direction == ATVDirection.BACKWARD){
             this.Sprite.SetScale(new Vector2(-Math.Abs(spriteScale[0]),
                                              spriteScale[1]));
-        }}
+        }
+        this.drawRocketExhaust(atvPos);
+    }
+
+    private void drawRocketExhaust(Vector2 atvPos){/*
+        RocketBooster rocketBooster = null;
+        if(this.Player.ActiveHoldable is RocketBooster){
+            rocketBooster = ((RocketBooster)this.Player.ActiveHoldable);}
+        if(rocketBooster != null && rocketBooster.IsEmitting){
+            this.RocketExhaustLocal.Emitting = true;
+            this.RocketExhaustGlobal.Emitting = true;}
+        else{
+            this.RocketExhaustLocal.Emitting = false;
+            this.RocketExhaustGlobal.Emitting = false;}
+        if(!this.IsInAirNormalized()){
+            this.RocketExhaustGlobal.Emitting = false;
+        }
+        var vel2WheelNorm = this.GetVelocityOfTwoWheels().Normalized();    
+        var normalizedForwardDir = this.GetNormalizedForwardDirection();
+        var normalizedBackwardDir = normalizedForwardDir.Rotated((float)Math.PI);
+        var globalPosShift = 20f;
+        if(rocketBooster != null){
+            globalPosShift += (rocketBooster.numSecondsBeingHeld / rocketBooster.PseudoImpulseEffectSec) * 20;}
+        this.RocketExhaustLocal.GlobalPosition = atvPos + this.InitialLocalRocketExhaustPosition.Length() * normalizedBackwardDir;
+        this.RocketExhaustGlobal.GlobalPosition = atvPos + (this.InitialGlobalRocketExhaustPosition.Length() + globalPosShift) * normalizedBackwardDir ;
+        var localDir = new Vector3(normalizedBackwardDir.x, normalizedBackwardDir.y, 0);
+        var globalDir = new Vector3(vel2WheelNorm.x, vel2WheelNorm.y, 0);
+        ((ParticlesMaterial)this.RocketExhaustLocal.ProcessMaterial).Direction = localDir;
+        ((ParticlesMaterial)this.RocketExhaustGlobal.ProcessMaterial).Direction = globalDir;
+        ((ParticlesMaterial)this.RocketExhaustLocal.ProcessMaterial).InitialVelocity = 0.1f * this.GetVelocityOfTwoWheels().Length();
+        ((ParticlesMaterial)this.RocketExhaustGlobal.ProcessMaterial).InitialVelocity = 1f * this.GetVelocityOfTwoWheels().Length();
+*/
+
+    }
 
     public void tempStopAllMovement(Boolean exceptGravity = false){
         this.FrontWheel.tempStopAllMovement(exceptGravity);

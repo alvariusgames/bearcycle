@@ -14,8 +14,7 @@ public class OneUp : KinematicBody2D, IConsumeable, INonRefreshable{
         else{
             return this.GetParentLevel(node.GetParent());}}
 
-    public void consume(Node2D node){
-        var player = ((WholeBodyKinBody)node).Player;
+    public void Consume(Player player){
         //Increment number of lives in memory and in the Db..
         player.NumLives++;
         var activeSlot = DbHandler.ActiveSlot;

@@ -105,7 +105,7 @@ margin_bottom = 1094.35
 custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.866667, 0.866667, 0.866667, 1 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
-text = "Luddite Games, 2020"
+text = "Alvarius Games, 2020"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false

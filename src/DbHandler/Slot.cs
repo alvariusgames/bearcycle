@@ -15,3 +15,8 @@ public class Slot {
             HighestLevelNumUnlocked = 1,
             currentLevelNumHoveringOver = 0,
         };}}}
+
+public class SlotSnapshot{
+    public Slot Slot;
+    public LevelStatsRecord[] LevelStatsRecords; 
+}

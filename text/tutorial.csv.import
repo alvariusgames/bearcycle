@@ -2,11 +2,14 @@
 
 importer="csv_translation"
 type="Translation"
-valid=false
 
 [deps]
 
+files=[ "res://text/tutorial.en.translation", "res://text/tutorial.fr.translation", "res://text/tutorial.ja.translation", "res://text/tutorial.hi.translation", "res://text/tutorial.zh.translation", "res://text/tutorial.ko.translation", "res://text/tutorial.de.translation" ]
+
 source_file="res://text/tutorial.csv"
+dest_files=[ "res://text/tutorial.en.translation", "res://text/tutorial.fr.translation", "res://text/tutorial.ja.translation", "res://text/tutorial.hi.translation", "res://text/tutorial.zh.translation", "res://text/tutorial.ko.translation", "res://text/tutorial.de.translation" ]
+
 [params]
 
 compress=true

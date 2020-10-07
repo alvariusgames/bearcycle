@@ -4,7 +4,7 @@ using System;
 public enum StageSpringState { READY_TO_BE_HIT, NOT_READY_TO_BE_HIT, TRIGGER_HIT, HIT_STAGE_1, HIT_STAGE_2, }
 public class StageSpring : FSMKinematicBody2D<StageSpringState>, IInteractable{
 
-    public override StageSpringState InitialState{ get { return StageSpringState.READY_TO_BE_HIT;}}
+    public override StageSpringState InitialState{ get { return StageSpringState.READY_TO_BE_HIT;}set{}}
 
     public int InteractPriority { get { return 500;}}
     [Export]

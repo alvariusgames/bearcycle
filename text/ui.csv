@@ -1,4 +1,6 @@
 keys,en,fr,ja,hi,zh,ko,de
+UI_YES,Yes,,,,,,
+UI_NO,No,,,,,,
 UI_PRESS_START,Press Start,Press Start,「開始」を押す,स्टार्ट दबाएँ,按下“开始”,보도 시작,Drücken Sie auf Start
 UI_PLAY,Play,Lire,再生,चालू करें,开始,자동 재생 속도 (in ms),Spielen
 UI_SHOP,Shop,Boutique,ショップ,दुकान,当前位置,상점,Shop
@@ -24,8 +26,14 @@ TUTORIAL,Tutorial,Tutoriel,チュートリアル,शिक्षण पाठ,�
 FOREST,Forest,Forêts,森,वन,森林,포레스트,Wald
 SUBURBIA,Suburbia,Banlieue,郊外,Suburbia,郊區,교외,Stadtrand
 GOVERNMENT,Government,Gouvernement,公務員,सरकार,政府事务,정부,Staatsanleihen
-MOON,Moon,Lune,月,चन्द्रमा,"<ph id=""mtc_1"" equiv-text=""base64:Jmx0O3N0cm9uZyZndDs=""/>1010大道的月亮<ph id=""mtc_2"" equiv-text=""base64:Jmx0Oy9zdHJvbmcmZ3Q7""/>
-<ph id=""mtc_3"" equiv-text=""base64:Jmx0O3NwYW4mZ3Q7""/>纽约，NY 10018美国。<ph id=""mtc_4"" equiv-text=""base64:Jmx0Oy9zcGFuJmd0Ow==""/>",달,Mond
+MOON,Moon,Lune,月,चन्द्रमा,大道的月亮,달,Mond
 SPACE_SHIP,Space Ship,Vaisseau spatial,宇宙船,जगह,空格,공백,Raumschiff
 FINAL,Final,Final,最終,अंतिम,期末,마지막,Final
 BONUS,Bonus,Prime,ボーナス,पारितोषिक,分红,보너스,Bonus
+UI_DELETE_1,Are you sure that you want to delete this slot? You can NOT undo this!,,,,,,
+UI_DELETE_2,Are you sure?,,,,,,
+UI_NEW,New,,,,,,
+UI_RANGER_DNAME,Ranger,,,,,,
+UI_GRIZZLY_DNAME,Bear,,,,,,
+UI_BLACK_DNAME,Bear,,,,,,
+UI_SKIP,Skip,,,,,,

@@ -3,13 +3,12 @@ using System;
 using System.Collections.Generic;
 
 public enum TitleScreenState { AWAITING_PRESS_START, TRANSITIONING_TO_MAIN_MENU, 
-                               IN_MAIN_MENU, TRANSITIONING_TO_SETTINGS, IN_SETTINGS,
-                               IN_CHANGE_LANGUAGE, IN_CONTROL_SETTINGS}
+                               IN_MAIN_MENU, IN_SLOTS, SLOT_DELETE_1_PROMPT, SLOT_DELETE_2_PROMPT,
+                               IN_SETTINGS, IN_CHANGE_LANGUAGE, IN_CONTROL_SETTINGS}
 public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
 {
 
-    public override TitleScreenState InitialState { get { return TitleScreenState.AWAITING_PRESS_START; }}
-
+    public override TitleScreenState InitialState { get { return TitleScreenState.AWAITING_PRESS_START;}set{}}
     private const int BUTTON_GRID_WIDTH = 1;
     private const int BUTTON_GRID_HEIGHT = 3;
     TouchScreenButton[,] ButtonGrid = new TouchScreenButton[BUTTON_GRID_WIDTH, BUTTON_GRID_HEIGHT];
@@ -23,6 +22,15 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
     private HoverableTouchScreenButton PlayButton;
     private HoverableTouchScreenButton ExitButton;
     private HoverableTouchScreenButton SettingsButton;
+
+    private VBoxContainer SlotsVBoxContainer;
+    private SlotArea SlotArea1;
+    private SlotArea SlotArea2;
+    private SlotArea SlotArea3;
+    private HoverableTouchScreenButton BackToMainMenuButton2;
+    private Sprite TranslucentPopupBackground;
+    private Popup1 SlotDelete1Prompt;
+    private Popup1 SlotDelete2Prompt;
 
     private VBoxContainer SettingsVboxContainer;
     private HoverableTouchScreenButton ManageGameDataButton;
@@ -52,7 +60,7 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
     private float transitionDurationS = 0.75f;
 
     private const float logoRightSideOfScreenPercentagePos = 0.3f;
-    private float numPixelsToMoveRight = (OS.GetWindowSize().x * (0.5f - logoRightSideOfScreenPercentagePos));
+    private float numPixelsToMoveRight = (OS.GetScreenSize().x * (0.5f - logoRightSideOfScreenPercentagePos));
 
 
     public override void _Ready(){
@@ -67,7 +75,18 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
                 else if(child.Name.ToLower().Contains("two")){
                     this.Background2 = (Sprite)child;}
                 else if(child.Name.ToLower().Contains("logo")){
-                    this.Logo = (Sprite)child;}}
+                    this.Logo = (Sprite)child;}
+                else if(child.Name.ToLower().Contains("translucentpopupbackground")){
+                    this.TranslucentPopupBackground = (Sprite)child;
+                    this.TranslucentPopupBackground.Visible = false;
+                    foreach(Node child2 in child.GetChildren()){
+                        if(child2 is Popup1 && child2.Name.ToLower().Contains("1")){
+                            this.SlotDelete1Prompt = (Popup1)child2;
+                            this.SlotDelete1Prompt.Visible = false;}
+                        if(child2 is Popup1 && child2.Name.ToLower().Contains("2")){
+                            this.SlotDelete2Prompt = (Popup1)child2;
+                            this.SlotDelete2Prompt.Visible = false;}}
+                }}
             if(child is Label){
                 if(child.Name.ToLower().Contains("start")){
                     this.PressStartLabel = (Label)child;}
@@ -87,6 +106,18 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
                         var settingsLabel = (Label)child2;
                         this.SettingsButton = (HoverableTouchScreenButton)settingsLabel.GetChild(0);}
                     }}
+            if(child is VBoxContainer && child.Name.ToLower().Contains("slot")){
+                this.SlotsVBoxContainer = (VBoxContainer)child;
+                foreach(Node child2 in child.GetChildren()){
+                    if(child2.Name.ToLower().Contains("mainmenu")){
+                        this.BackToMainMenuButton2 = (HoverableTouchScreenButton)child2.GetChild(0);}
+                    if(child2.GetChild(0) is SlotArea && child2.Name.Contains("1")){
+                        this.SlotArea1 = (SlotArea)child2.GetChild(0);}
+                    if(child2.GetChild(0) is SlotArea && child2.Name.Contains("2")){
+                        this.SlotArea2 = (SlotArea)child2.GetChild(0);}
+                    if(child2.GetChild(0) is SlotArea && child2.Name.Contains("3")){
+                        this.SlotArea3 = (SlotArea)child2.GetChild(0);}
+                }}
             if(child is VBoxContainer && child.Name.ToLower().Contains("settings")){
                 this.SettingsVboxContainer = (VBoxContainer)child;
                 foreach(Node child2 in child.GetChildren()){
@@ -170,7 +201,7 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
                 this.transitionCounter += delta;
                 if(this.transitionCounter > this.transitionDurationS){
                     this.Background1.Visible = false;
-                   this.PressStartLabel.Visible = false;
+                    this.PressStartLabel.Visible = false;
                     this.ResetActiveState(TitleScreenState.IN_MAIN_MENU);
                     this.transitionCounter = 0f;
                     }
@@ -178,26 +209,124 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
             case TitleScreenState.IN_MAIN_MENU:
                 this.hideAllContainers(but: MainMenuVBoxContainer);
                 if(this.PlayButton.UserHasJustSelected()){
-                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
-                        new string[]{"res://media/samples/ui/accept_1.wav"});
-                    SceneTransitioner.Transition(FromScene: this.GetTree().GetRoot().GetChild(0), 
-                                        ToSceneStr: "res://scenes/level_select/level_select.tscn",
-                                        effect: SceneTransitionEffect.FADE_BLACK,
-                                        numSeconds: 2f,
-                                        FadeOutAudio: true);}
+                    this.SlotArea1.SetToUnhovered();
+                    this.SlotArea2.SetToUnhovered();
+                    this.SlotArea3.SetToUnhovered();
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this, "res://media/samples/ui/accept_1.wav");
+                    this.ResetActiveState(TitleScreenState.IN_SLOTS);}
                 if(this.ExitButton.UserHasJustSelected()){
                     SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
                         new string[]{"res://media/samples/ui/decline_1.wav"});
                     SceneTransitioner.Transition(FromScene: this.GetTree().GetRoot().GetChild(0),
-                                        ToSceneStr: "res://scenes/misc/exit_black.tscn",
-                                        effect: SceneTransitionEffect.FADE_INTO,
-                                        numSeconds: 2f,
-                                        FadeOutAudio: true);}
+                                                 ToSceneStr: "res://scenes/misc/exit_black.tscn",
+                                                 effect: SceneTransitionEffect.FADE_INTO,
+                                                 numSeconds: 2f,
+                                                 FadeOutAudio: true);}
                 if(this.SettingsButton.UserHasJustSelected()){
                     SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
                         new string[]{"res://media/samples/ui/accept_1.wav"});
                     this.ResetActiveState(TitleScreenState.IN_SETTINGS);
                 }
+                break;
+            case TitleScreenState.IN_SLOTS:
+                this.hideAllContainers(but: SlotsVBoxContainer);
+                var anyPlaySelected = false;
+                var anyDeleteSelected = false;
+                if(this.SlotArea1.PlaySlotButton.UserHasJustSelected()){
+                    var globals = DbHandler.Globals;
+                    globals.ActiveGameSlotNum = 1;
+                    DbHandler.Globals = globals;
+                    anyPlaySelected = true;}
+                if(this.SlotArea1.DeleteSlotButton.UserHasJustSelected()){
+                    var globals = DbHandler.Globals;
+                    globals.ActiveGameSlotNum = 1;
+                    DbHandler.Globals = globals; 
+                    anyDeleteSelected = true;}
+                if(this.SlotArea2.PlaySlotButton.UserHasJustSelected()){
+                    var globals = DbHandler.Globals;
+                    globals.ActiveGameSlotNum = 2;
+                    DbHandler.Globals = globals; 
+                    anyPlaySelected = true;}
+                if(this.SlotArea2.DeleteSlotButton.UserHasJustSelected()){
+                    var globals = DbHandler.Globals;
+                    globals.ActiveGameSlotNum = 2;
+                    DbHandler.Globals = globals; 
+                    anyDeleteSelected = true;}
+                if(this.SlotArea3.PlaySlotButton.UserHasJustSelected()){
+                    var globals = DbHandler.Globals;
+                    globals.ActiveGameSlotNum = 3;
+                    DbHandler.Globals = globals; 
+                    anyPlaySelected = true;}
+                if(this.SlotArea3.DeleteSlotButton.UserHasJustSelected()){
+                    var globals = DbHandler.Globals;
+                    globals.ActiveGameSlotNum = 3;
+                    DbHandler.Globals = globals; 
+                    anyDeleteSelected = true;}
+
+                if(anyPlaySelected){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this, "res://media/samples/ui/accept_1.wav");
+                    SceneTransitioner.Transition(FromScene: this.GetTree().GetRoot().GetChild(0), 
+                                                 ToSceneStr: "res://scenes/level_select/level_select.tscn",
+                                                 effect: SceneTransitionEffect.FADE_BLACK,
+                                                 numSeconds: 2f,
+                                                 FadeOutAudio: true);}
+                if(anyDeleteSelected){
+                    this.SlotArea1.SetToUnhovered();
+                    this.SlotArea2.SetToUnhovered();
+                    this.SlotArea3.SetToUnhovered();
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this, "res://media/samples/ui/accept_1.wav");
+                    this.ResetActiveState(TitleScreenState.SLOT_DELETE_1_PROMPT);}
+                if(this.BackToMainMenuButton2.UserHasJustSelected()){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
+                        "res://media/samples/ui/decline_1.wav");
+                    this.ResetActiveState(TitleScreenState.IN_MAIN_MENU);} 
+                break;
+            case TitleScreenState.SLOT_DELETE_1_PROMPT:
+                this.hideAllContainers();
+                this.SlotArea1.SetToUnhovered();
+                this.SlotArea2.SetToUnhovered();
+                this.SlotArea3.SetToUnhovered();
+                this.TranslucentPopupBackground.Visible = true;
+                this.SlotDelete1Prompt.Visible = true;
+                this.SlotDelete2Prompt.Visible = false;
+                if(this.SlotDelete1Prompt.YesButton.UserHasJustSelected()){
+                    this.SlotDelete1Prompt.Visible = false;
+                    this.SlotDelete2Prompt.Visible = true;
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this, "res://media/samples/ui/accept_1.wav");
+                    this.ResetActiveState(TitleScreenState.SLOT_DELETE_2_PROMPT);}
+                if(this.SlotDelete1Prompt.NoButton.UserHasJustSelected()){
+                    this.TranslucentPopupBackground.Visible = false;
+                    this.SlotDelete1Prompt.Visible = false;
+                    this.SlotDelete2Prompt.Visible = false; 
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this, "res://media/samples/ui/decline_1.wav");
+                    this.ResetActiveState(TitleScreenState.IN_SLOTS);}
+                break;
+            case TitleScreenState.SLOT_DELETE_2_PROMPT:
+                this.hideAllContainers();
+                this.SlotArea1.SetToUnhovered();
+                this.SlotArea2.SetToUnhovered();
+                this.SlotArea3.SetToUnhovered();
+                this.TranslucentPopupBackground.Visible = true;
+                this.SlotDelete1Prompt.Visible = false;
+                this.SlotDelete2Prompt.Visible = true;
+                if(this.SlotDelete2Prompt.YesButton.UserHasJustSelected()){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this, "res://media/samples/ui/accept_1.wav");
+                    this.TranslucentPopupBackground.Visible = false;
+                    this.SlotDelete1Prompt.Visible = false;
+                    this.SlotDelete2Prompt.Visible = false;
+                    DbHandler.DeleteActiveGameSlotDatabase();
+                    this.SlotArea1._Ready();
+                    this.SlotArea2._Ready();
+                    this.SlotArea3._Ready();
+                    this.ResetActiveState(TitleScreenState.IN_MAIN_MENU);}
+                if(this.SlotDelete2Prompt.NoButton.UserHasJustSelected()){
+                    SoundHandler.PlaySample<MyAudioStreamPlayer>(this, "res://media/samples/ui/decline_1.wav");
+                    this.TranslucentPopupBackground.Visible = false;
+                    this.SlotDelete1Prompt.Visible = false;
+                    this.SlotDelete2Prompt.Visible = false; 
+                    this.ResetActiveState(TitleScreenState.IN_SLOTS);}
+                break;
+ 
                 break;
             case TitleScreenState.IN_SETTINGS:
                 this.hideAllContainers(but: this.SettingsVboxContainer);
@@ -261,6 +390,7 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
     private void hideAllContainers(VBoxContainer but = null){
         var containers = new VBoxContainer[]{
             this.MainMenuVBoxContainer,
+            this.SlotsVBoxContainer,
             this.SettingsVboxContainer,
             this.ChangeLanguageContainer,
             this.ControlVboxContainer

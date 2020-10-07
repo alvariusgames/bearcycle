@@ -4,16 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-
-/// <summary>
-/// from https://stackoverflow.com/questions/18986129/c-splitting-an-array-into-n-parts
-/// Splits an array into several smaller arrays.
-/// </summary>
-/// <typeparam name="T">The type of the array.</typeparam>
-/// <param name="array">The array to split.</param>
-/// <param name="size">The size of the smaller arrays.</param>
-/// <returns>An array containing smaller arrays.</returns>
-
 public static class Extensions{
     public static IEnumerable<IEnumerable<T>> Split<T>(this T[] array, int size){
         for (var i = 0; i < (float)array.Length / size; i++){
@@ -23,15 +13,25 @@ public static class Extensions{
         string pattern = @"\d+$"; //find numbers at end of string
         string replacement = "";
         Regex rgx = new Regex(pattern);
-        return rgx.Replace(s, replacement);
-    }
+        return rgx.Replace(s, replacement);}
 
     public static String RemoveNumbersAndTranslateNodeName(this Node n){
         string pattern = @"\d+$"; //find numbers at end of string
         string replacement = "";
         Regex rgx = new Regex(pattern);
         var noNumbersName = rgx.Replace(n.Name, replacement);
-        return n.Tr(noNumbersName.ToUpper());
-    }
+        noNumbersName = noNumbersName.Replace("@", "");
+        return n.Tr(noNumbersName.ToUpper());}
+
+    public static bool NextBool(this Random r, int truePercentage = 50){
+        return r.NextDouble() < truePercentage / 100.0;}
+
+
+    private static Random rnd;
+    public static T PickRandom<T>(this IEnumerable<T> source){
+        if(Extensions.rnd is null){
+            Extensions.rnd = new Random();}
+        var index = Extensions.rnd.Next(source.Count());
+        return source.ElementAt(index);}
 
 }

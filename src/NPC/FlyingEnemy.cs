@@ -6,12 +6,12 @@ public enum FlyingEnemyState { FLYING_DEFAULT, HOVERING_STILL }
 
 public class FlyingEnemy : NPC<FlyingEnemyState>, INPC, IFood
 {
-    public override FlyingEnemyState InitialState { get { return FlyingEnemyState.FLYING_DEFAULT;}}
+    public override FlyingEnemyState InitialState { get { return FlyingEnemyState.FLYING_DEFAULT;}set{}}
 
     [Export]
-    public int Calories { get; set; } = Food.FALLBACK_CALORIES;
+    public override int Calories { get; set; } = Food.FALLBACK_CALORIES;
 
-    public bool isConsumed { get; set; }
+    public override bool isConsumed { get; set; }
     public Sprite foodDisplaySprite;
     public void setUpFoodDisplaySprite() { 
         var cutOutScenePath = this.CutOut.Filename;      
@@ -24,7 +24,7 @@ public class FlyingEnemy : NPC<FlyingEnemyState>, INPC, IFood
         }
     }
 
-    public Sprite FoodDisplaySprite { get { return this.foodDisplaySprite;} set{}}
+    public override Sprite FoodDisplaySprite { get { return this.foodDisplaySprite;} set{}}
 
     private int flySpeed = 350;
     public PathFollow2D PathFollow2D;
@@ -75,22 +75,16 @@ public class FlyingEnemy : NPC<FlyingEnemyState>, INPC, IFood
         }
     }
 
-    public override void GetHitBy(object node){
-        if(node is AttackWindow){
+    public override void GetHitBy(Node node){
+        if(node is PlayerAttackWindow){
             GD.Print("Hit an attack window");
             this.CollisionShape2D.Disabled = true;
             this.CutOut.Visible = false;
             this.ResetActiveState(FlyingEnemyState.HOVERING_STILL);
-            base.DisplayExplosion();
-            base.PlayGetEatenSound();}}
-    public override void ReactStateless(float delta){
+            this.DisplayExplosion();
+            this.PlayGetEatenSound();}}
+    public override void ReactStateless(float delta){}
 
-    }
-
-    public override void UpdateState(float delta){
-
-    }
-
-
+    public override void UpdateState(float delta){}
 
 }

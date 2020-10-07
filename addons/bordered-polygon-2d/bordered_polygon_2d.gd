@@ -157,7 +157,8 @@ func smooth_shape_points(shape_points, max_angle):
 		var current_shape_size = shape_points.size()
 
 		var round_new_points_count = 0
-		for i in range(shape_points.size()):
+		for j in range(shape_points.size()):
+			i = j
 			# b is the point to be smoothen
 			# a and c are adyacent points
 			var a = shape_points[(i + current_shape_size - 1) % current_shape_size]

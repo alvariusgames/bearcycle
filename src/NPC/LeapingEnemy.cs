@@ -6,21 +6,21 @@ public enum LeapingEnemyState { LEAPING_FORWARD, LEAPING_BACKWARD, TRIGGER_GRAZI
 
 public class LeapingEnemy : NPC<LeapingEnemyState>, INPC, IFood
 {
-    public override LeapingEnemyState InitialState { get { return LeapingEnemyState.LEAPING_FORWARD;}}
+    public override LeapingEnemyState InitialState { get { return LeapingEnemyState.LEAPING_FORWARD;}set{}}
 
     [Export]
-    public int Calories { get; set; } = Food.FALLBACK_CALORIES;
+    public override int Calories { get; set; } = Food.FALLBACK_CALORIES;
 
-    public bool isConsumed { get; set; }
+    public override bool isConsumed { get; set; }
 
     private String cutOutScenePath = "res://scenes/npc/deer1/deer1_cutout.tscn";
 
-    public Sprite FoodDisplaySprite { get { 
+    public override Sprite FoodDisplaySprite { get { 
+        //TODO: implement logic from Ranger FoodDisplaySprite class so this is less hacky and works with other scenes etc
         var copyOfCutOut = ((PackedScene)GD.Load(this.cutOutScenePath)).Instance();
         foreach(Node child in copyOfCutOut.GetChildren()){
             if(child.Name.ToLower().Contains("root") && child is Sprite){
                 var copyOfRootSprite = (Sprite)child;
-                //copyOfRootSprite.SetScale(new Vector2(0.00075f, 0.00075f));
                 return copyOfRootSprite;
             }
         }
@@ -72,14 +72,13 @@ public class LeapingEnemy : NPC<LeapingEnemyState>, INPC, IFood
         }
     }
 
-    public override void GetHitBy(object node){
-        if(node is AttackWindow){
-            GD.Print("Hit an attack window");
+    public override void GetHitBy(Node node){
+        if(node is PlayerAttackWindow){
             this.CollisionShape2D.Disabled = true;
             this.CutOut.Visible = false;
             this.ResetActiveState(LeapingEnemyState.STANDING_STILL);
-            base.DisplayExplosion();
-            base.PlayGetEatenSound();
+            this.DisplayExplosion();
+            this.PlayGetEatenSound();
             }}
     public override void ReactStateless(float delta){
 

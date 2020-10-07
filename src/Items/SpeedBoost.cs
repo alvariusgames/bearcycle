@@ -7,7 +7,7 @@ public class SpeedBoost : FSMKinematicBody2D<SpeedBoostState>, IInteractable
     // Member variables here, example:
     // private int a = 2;
     // private string b = "textvar";
-    public override SpeedBoostState InitialState { get { return SpeedBoostState.READY_TO_BE_HIT;}}
+    public override SpeedBoostState InitialState { get { return SpeedBoostState.READY_TO_BE_HIT;}set{}}
     public int InteractPriority { get { return 500;}}
     public Sprite Sprite;
     public Vector2 Direction;

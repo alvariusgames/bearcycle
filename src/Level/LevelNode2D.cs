@@ -26,7 +26,32 @@ public abstract class LevelNode2D : Node2D, ILevel
     private Boolean playerUnlocked = false;
     private const float TIME_TO_UNLOCK_PLAYER_SEC = 2.5f;
     public ParallaxBackground ParallaxBackground;
-
+    [Export]
+    public NodePath BossFightManagerPath {get; set;}
+    private BossFightManager bossFightManager;
+    public BossFightManager BossFightManager {get {
+        if(this.bossFightManager is null && !(this.BossFightManagerPath is null)){
+            this.bossFightManager = (BossFightManager)this.GetNode(BossFightManagerPath);}
+        return this.bossFightManager;}}
+    [Export]
+    public Godot.Collections.Array<NodePath> TrackablesPaths {get; set;}
+    private List<ITrackable> trackables = new List<ITrackable>();
+    public List<ITrackable> Trackables { get {
+        if(this.TrackablesPaths != null &&
+           this.TrackablesPaths.Count != 0 && 
+           this.trackables.Count == 0){
+            foreach(var trackablePath in this.TrackablesPaths){
+                this.trackables.Add(this.GetNode<ITrackable>(trackablePath));}}
+        return this.trackables;
+    }}
+    [Export]
+    public NodePath EndLevelPath {get; set;}
+    private EndLevel endLevel;
+    public EndLevel EndLevel { get {
+        if(this.endLevel is null){
+            this.endLevel = this.GetNode<EndLevel>(this.EndLevelPath);}
+        return this.endLevel;
+    }}
     public override void _Ready(){
         this.RemoveAllNonRefreshables();
         this.HydrateSpaceRocks();
@@ -42,7 +67,10 @@ public abstract class LevelNode2D : Node2D, ILevel
                 if(this.onLoadPlayerCalories != -1){
                     this.Player.TotalCalories = this.onLoadPlayerCalories;}}
             if(child is ParallaxBackground){
-                this.ParallaxBackground = (ParallaxBackground)child;}}
+                this.ParallaxBackground = (ParallaxBackground)child;
+                foreach(Node2D subChild in this.ParallaxBackground.GetChildren()){
+                    subChild.Visible = true;}
+                }}
     }
 
     public void RemoveAllNonRefreshables(){
@@ -110,12 +138,43 @@ public abstract class LevelNode2D : Node2D, ILevel
         this.onLoadPlayerCalories = Calories;
     }
 
+    private int _debugLastCheckpointI = 0;
+    private List<SafetyCheckPoint> _debugSafetyCheckpoints = new List<SafetyCheckPoint>();
+    private void _populateSafetyCheckpointsDebug(Node n){
+        if(n is SafetyCheckPoint){
+            this._debugSafetyCheckpoints.Add((SafetyCheckPoint)n);}
+        foreach(Node child in n.GetChildren()){
+            this._populateSafetyCheckpointsDebug(child);}
+    }
+    private void _goToNextSafetyCheckpointDebug(){
+        if(this._debugSafetyCheckpoints.Count == 0){
+            this._populateSafetyCheckpointsDebug(this);}
+        this._debugLastCheckpointI = (this._debugLastCheckpointI + 1 ) % 
+                                     this._debugSafetyCheckpoints.Count;
+        this.Player.SetMostRecentSafetyCheckPoint(
+            this._debugSafetyCheckpoints[this._debugLastCheckpointI]);
+        this.Player.GoToMostRecentSafetyCheckPoint();
+    }
     // Declare member variables here. Examples:
     // private int a = 2;
     // private string b = "text";
 
     // Called when the node enters the scene tree for the first time.
     public override void _Process(float delta){
+        if(main.IsDebug && 
+           Input.IsKeyPressed((int)Godot.KeyList.I) &&
+           Input.IsKeyPressed((int)Godot.KeyList.O) &&
+           Input.IsKeyPressed((int)Godot.KeyList.P)){
+               this.Player.ATV.SetGlobalCenterOfTwoWheels(this.EndLevel.GlobalPosition); 
+           }
+        if(main.IsDebug && 
+           Input.IsKeyPressed((int)Godot.KeyList.Q) &&
+           Input.IsKeyPressed((int)Godot.KeyList.W) &&
+           Input.IsKeyPressed((int)Godot.KeyList.E) &&
+           Input.IsActionJustPressed("ui_attack")){
+               this._goToNextSafetyCheckpointDebug();
+           }
+ 
         this.timeElapsedInLevel += delta;
         if(!this.calledOnce){
             //SoundHandler.SetStreamVolume(0f); Why is this here?

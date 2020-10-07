@@ -14,10 +14,10 @@ public class level0 : LevelNode2D{
     public override void _Process(float delta){
         base._Process(delta);
         if(callOnce){
-            this.Player.CurrentHealth = 0.67f;
+            this.Player.Health = 0.67f * Player.MAX_HEALTH;
             this.callOnce = false;}
-        if(this.Player.CurrentHealth < 0.5f * Player.MAX_HEALTH){
-            this.Player.CurrentHealth = 0.5f * Player.MAX_HEALTH;} //Ya can't die in a tutorial!
+        if(this.Player.Health < 0.3f * Player.MAX_HEALTH){
+            this.Player.Health = 0.3f * Player.MAX_HEALTH;} //Ya can't die in a tutorial!
     }
 
 }

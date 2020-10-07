@@ -57,11 +57,16 @@ public static class SoundHandler {
         }
     }
     public static void TempSetAllStreamAndSample(float linearUnits){
+        SoundHandler.TempSetAllStream(linearUnits);
+        SoundHandler.TempSetAllSample(linearUnits);}
+
+    public static void TempSetAllStream(float linearUnits){
         foreach(var audioStreamPlayer in activeAudioStreamPlayers){
             try{
                 audioStreamPlayer.VolumeDb = GD.Linear2Db(SoundHandler.GetStreamVolumeLinearUnits() * linearUnits);}
-            catch{}}
+            catch{}}}
 
+    public static void TempSetAllSample(float linearUnits){
         foreach(var audioSamplePlayer in activeAudioSamplePlayers){
             try{
                 audioSamplePlayer.VolumeDb = GD.Linear2Db(SoundHandler.GetSampleVolumeLinearUnits() * linearUnits);}
@@ -76,12 +81,24 @@ public static class SoundHandler {
             try{audioSamplePlayer.VolumeDb = GetSampleVolumeDbUnits();}
             catch{}}}
 
-
+    public static void PlayStream<StreamPlayerType>(Node caller,
+                                                    String StreamPath,
+                                                    float VolumeMultiplier = 1f,
+                                                    Boolean Loop = false,
+                                                    Boolean SkipIfAlreadyPlaying = false,
+                                                    float fromPosition = 0f) where StreamPlayerType : IAudioStreamPlayer, new(){
+        SoundHandler.PlayStream<StreamPlayerType>(caller,
+                                                  new String[]{StreamPath},
+                                                  VolumeMultiplier: VolumeMultiplier,
+                                                  Loop: Loop,
+                                                  SkipIfAlreadyPlaying: SkipIfAlreadyPlaying,
+                                                  fromPosition: fromPosition);}
     public static void PlayStream<StreamPlayerType>(Node caller, 
                                                     String[] StreamPaths, 
                                                     float VolumeMultiplier = 1f,
                                                     Boolean Loop = false,
-                                                    Boolean SkipIfAlreadyPlaying = false) where StreamPlayerType : IAudioStreamPlayer, new() {
+                                                    Boolean SkipIfAlreadyPlaying = false,
+                                                    float fromPosition = 0f) where StreamPlayerType : IAudioStreamPlayer, new() {
         GarbageCollect();
         var rnd = new Random();
         var index = rnd.Next(StreamPaths.Length);
@@ -108,10 +125,20 @@ public static class SoundHandler {
         audioStreamPlayer.PauseMode = Node.PauseModeEnum.Process;
         caller.AddChild(audioStreamPlayer.SelfNode);
         audioStreamPlayer.VolumeDb = GetStreamVolumeDbUnits(VolumeMultiplier);
-        audioStreamPlayer.Play();
+        audioStreamPlayer.Play(fromPosition: fromPosition);
         activeAudioStreamPlayers.Add(audioStreamPlayer);}
 
     public static void StopStream(Node caller, String StreamPath){
+        if(audioStreams.ContainsKey(StreamPath)){
+            var audioStream = audioStreams[StreamPath];
+            foreach(var player in activeAudioStreamPlayers){
+                try{
+                    if(player.Stream == audioStream){
+                        player.Stop();}}
+                catch(Exception e){}}}
+        GarbageCollect();
+
+
         if(audioStreams.ContainsKey(StreamPath)){
             var audioStream = audioStreams[StreamPath];
             foreach(var player in activeAudioStreamPlayers){
@@ -128,6 +155,15 @@ public static class SoundHandler {
             catch{}}
         GarbageCollect();}
 
+    public static void PauseStream(Node caller, String StreamPath){
+         if(audioStreams.ContainsKey(StreamPath)){
+            var audioStream = audioStreams[StreamPath];
+            foreach(var player in activeAudioStreamPlayers){
+                try{
+                    if(player.Stream == audioStream){
+                        player.StreamPaused = true;}}
+                catch(Exception e){}}}}
+
     public static void PauseAllStream(){
         foreach(var player in activeAudioStreamPlayers){
             try{
@@ -142,6 +178,17 @@ public static class SoundHandler {
             catch{}}
         GarbageCollect();}
 
+    public static void UnpauseStream(Node caller, String StreamPath){
+         if(audioStreams.ContainsKey(StreamPath)){
+            var audioStream = audioStreams[StreamPath];
+            foreach(var player in activeAudioStreamPlayers){
+                try{
+                    if(player.Stream == audioStream){
+                        player.StreamPaused = false;}}
+                catch(Exception e){}}}}
+
+
+
     public static void UnpauseAllStream(){
         foreach(var player in activeAudioStreamPlayers){
             try{
@@ -155,20 +202,24 @@ public static class SoundHandler {
             catch{}}
         GarbageCollect();}
 
+    private static Dictionary<string, ulong> lastSysTimeSampleWasPlayed = new Dictionary<string, ulong>();
+
     public static void PlaySample<StreamPlayerType>(Node caller,
                                                     String StreamPath,
                                                     float VolumeMultiplier = 1f,
                                                     Boolean Loop = false,
                                                     Boolean SkipIfAlreadyPlaying = false,
                                                     float PitchScale = 1.0f,
-                                                    Boolean PauseAllOtherSoundWhilePlaying = false) where StreamPlayerType : IAudioStreamPlayer, new(){
+                                                    Boolean PauseAllOtherSoundWhilePlaying = false,
+                                                    float MaxNumberTimesPlayPerSecond = -1) where StreamPlayerType : IAudioStreamPlayer, new(){
         SoundHandler.PlaySample<StreamPlayerType>(caller,
                                                   new String[]{StreamPath},
                                                   VolumeMultiplier,
                                                   Loop,
                                                   SkipIfAlreadyPlaying,
                                                   PitchScale,
-                                                  PauseAllOtherSoundWhilePlaying);}
+                                                  PauseAllOtherSoundWhilePlaying,
+                                                  MaxNumberTimesPlayPerSecond);}
 
     public static void PlaySample<StreamPlayerType>(Node caller, 
                                                     String[] StreamPaths, 
@@ -176,11 +227,22 @@ public static class SoundHandler {
                                                     Boolean Loop = false,
                                                     Boolean SkipIfAlreadyPlaying = false,
                                                     float PitchScale = 1.0f,
-                                                    Boolean PauseAllOtherSoundWhilePlaying = false) where StreamPlayerType : IAudioStreamPlayer, new() {
+                                                    Boolean PauseAllOtherSoundWhilePlaying = false,
+                                                    float MaxNumberTimesPlayPerSecond = -1) where StreamPlayerType : IAudioStreamPlayer, new() {
         GarbageCollect();
         var rnd = new Random();
         var index = rnd.Next(StreamPaths.Length);
         var StreamPath = StreamPaths[index];
+
+        //Do record keeping for time frequency check, return if playing too often
+        var elapsedTimeSecSinceLastPlay = MaxNumberTimesPlayPerSecond + 1;
+        if(SoundHandler.lastSysTimeSampleWasPlayed.ContainsKey(StreamPath)){
+            var lastSysTimeMs = SoundHandler.lastSysTimeSampleWasPlayed[StreamPath];
+            var curSysTimeMs = OS.GetSystemTimeMsecs();
+            elapsedTimeSecSinceLastPlay = (curSysTimeMs - lastSysTimeMs) / 1000f;}
+        if(elapsedTimeSecSinceLastPlay < MaxNumberTimesPlayPerSecond){
+            return;}
+        SoundHandler.lastSysTimeSampleWasPlayed[StreamPath] = OS.GetSystemTimeMsecs();
 
         AudioStreamSample audioStream = default(AudioStreamSample);
         if(audioStreams.ContainsKey(StreamPath)){
