@@ -2,6 +2,7 @@ using Godot;
 using System;
 
 public class RemoveWallWhenHealthIs100 : KinematicBody2D{
+    //The title is a lie but I'm too lazy to change it
     private Player PlayerInst;
     [Export]
     public NodePath PlayerNodePath {get; set;}
@@ -19,7 +20,7 @@ public class RemoveWallWhenHealthIs100 : KinematicBody2D{
 
     public override void _Process(float delta){
         this.GlobalPosition = this.InitialPos;
-        if(this.PlayerInst.Health >= 0.93f * Player.MAX_HEALTH){
+        if(this.PlayerInst.Health >= 0.89f * Player.MAX_HEALTH){
             if(this.StaticBody2D != null){
                 this.StaticBody2D.GetParent().RemoveChild(this.StaticBody2D);
                 this.StaticBody2D = null;}

@@ -12,7 +12,6 @@ public class Player : FSMNode2D<PlayerState>, ICharacter{
     public String[] ShortDialogueSamples{get; set;} = Dialogues.DefaultShortDialogueSamples;
     public String[] MidDialogueSamples{get; set;} = Dialogues.DefaultMidDialogueSamples;
     public String[] LongDialogueSamples{get; set;} = Dialogues.DefaultLongDialogueSamples;
-
     public ILevel ActiveLevel;
     private LevelFrame levelFrame;
     public LevelFrame LevelFrame { get {
@@ -21,10 +20,14 @@ public class Player : FSMNode2D<PlayerState>, ICharacter{
         return this.levelFrame;}}
     public override PlayerState InitialState {get { return PlayerState.ALIVE;}set{}}
     public PlayerAttackWindow AttackWindow;
-
     public ClawAttack ClawAttack;
     public List<IHoldable> AllHoldibles = new List<IHoldable>(); //TODO: Make me a LIFO Stack
+    private IHoldable PrevActiveHoldable;
     public IHoldable ActiveHoldable;
+    public Boolean JustPickedUpHoldable{ get {
+        return (this.ActiveHoldable != null) &&
+               (this.PrevActiveHoldable != this.ActiveHoldable);
+    }}
     public Texture HoldableOrClawAttackUIDisplayTexture{ get {
         if(this.ActiveHoldable == null){
             return this.ClawAttack.UIDisplayIcon;
@@ -33,10 +36,10 @@ public class Player : FSMNode2D<PlayerState>, ICharacter{
     public ATV ATV;
     public AboveHeadManager AboveHeadManager;
     public const float MAX_HEALTH = 100;
-    private const float HEALTH_TO_CALORIES_RATIO = 1f/100f;
-    private const float HEALTH_LOSS_DIVISOR = 1.5f;
-    public const float DEFAULT_HIT_UNIT = -6f;
+    private const float HEALTH_TO_CALORIES_RATIO = 1f/50f;
+    public const float DEFAULT_HIT_UNIT = 15f;
     public const int DEFAULT_NUM_LIVES = 2; //0 based index
+    public const float HEALTH_UNIT_DIVISOR = 1f;
     private float health = MAX_HEALTH;
     public float Health { 
         get{
@@ -49,6 +52,21 @@ public class Player : FSMNode2D<PlayerState>, ICharacter{
     }
     private const float HEALTH_DANGER_PERC = 0.25f;
     public Boolean IsInHealthDanger{ get { return this.Health <= MAX_HEALTH * HEALTH_DANGER_PERC;}}
+    private const float STRENGTH_LOSS_DIVISOR = 1f;
+    public const float MAX_STRENGTH = 100;
+    public const float STRENGTH_DECREASE_BOUNDARY = 0.25f;
+    public const float STRENGTH_INCREASE_BOUNDARY = 0.75f;
+    private float strength = 0.65f * MAX_STRENGTH;
+    public float Strength { 
+        get {
+            return this.strength;}
+        set {
+            this.strength = value;
+            if(this.strength >= MAX_STRENGTH){
+                this.Health += 0.5f * (this.strength - MAX_STRENGTH); //Give overflow strength to Health directly
+                this.strength = MAX_STRENGTH;}
+            if(this.strength <= 0f){
+                this.strength = 0f;}}}
     public int TotalCalories = 0;
     private List<IFood> foodEaten = new List<IFood>();
     public IFood lastFoodEaten;
@@ -57,7 +75,6 @@ public class Player : FSMNode2D<PlayerState>, ICharacter{
     public int NumLives;
     public int NumContinues;
     private float transitionToDeathModCounter = 0f;
-
     public override void _Ready(){
         this.ResetActiveState(this.InitialState);
         this.setInitialSafetyCheckPoint();
@@ -75,18 +92,19 @@ public class Player : FSMNode2D<PlayerState>, ICharacter{
             else if(child is ClawAttack){
                 this.ClawAttack = (ClawAttack)child;
                 this.ClawAttack.Player = this;
-            }}}
+            }}
         //this.ATV.Bear.AnimationPlayer.AdvancedPlay(new String[]{"idleBounce1"});}
-
+    }
     private void setInitialSafetyCheckPoint(){
        this.LastSafetyCheckPoint = new SafetyCheckPoint();
        this.LastSafetyCheckPoint.GlobalPositionToResetTo = this.GetGlobalPosition();
        this.LastSafetyCheckPoint.BeenActivated = true;
     }
 
-    public override void ReactStateless(float delta){}
-    private void updateHealthCheckDeath(float delta){
-        this.Health -= delta / HEALTH_LOSS_DIVISOR;
+    public override void ReactStateless(float delta){
+        this.PrevActiveHoldable = this.ActiveHoldable;
+    }
+    private void checkIfDead(float delta){
         if(this.Health <= 0f){
             this.Die();
         }
@@ -105,15 +123,28 @@ public class Player : FSMNode2D<PlayerState>, ICharacter{
         this.ResetActiveState(PlayerState.TRIGGER_DIEING);
     }
 
+    private void strengthUpdatingProcess(float delta){
+        var strengthLoss = delta / STRENGTH_LOSS_DIVISOR;
+        var healthLoss = delta / HEALTH_UNIT_DIVISOR;
+        this.Strength -= strengthLoss;
+        if(this.Strength <= MAX_STRENGTH * STRENGTH_DECREASE_BOUNDARY){
+            this.Health -= healthLoss;} 
+        if(this.Strength >= MAX_STRENGTH * STRENGTH_INCREASE_BOUNDARY){
+            this.Health += healthLoss;
+            this.Strength -= strengthLoss;
+            }
+    }
+
     public override void ReactToState(float delta){
         switch(this.ActiveState){
             case PlayerState.ALIVE:
-                this.updateHealthCheckDeath(delta);
+                this.checkIfDead(delta);
+                this.strengthUpdatingProcess(delta);
                 this.updateHoldibles(delta);
                 break;
             case PlayerState.TRIGGER_DIEING:
                 this.ATV.ReattachBear();
-                //this.ATV.Bear.AnimationPlayer.AdvancedPlay(new String[]{"idleBounce1"});
+                this.ATV.Bear.AnimationPlayer.AdvancedPlay(new String[]{"idleBounce1"});
                 this.AboveHeadManager.HackyClearAllAboveHead();
                 // Make everything non-collideable
 
@@ -171,10 +202,10 @@ public class Player : FSMNode2D<PlayerState>, ICharacter{
                                                                     BgModTransThresh: this.transitionToDeathModCounter,
                                                                     EverythingElseModulate: new Color(0f,0f,0f),
                                                                     EvElseTransThresh: this.transitionToDeathModCounter / 5f);
-                this.LevelFrame.PlayerStatsDisplayHandler.Modulate = 
-                    this.LevelFrame.PlayerStatsDisplayHandler.Modulate * (1-this.transitionToDeathModCounter) + 
-                    ((new Color(0f,0f,0f) * this.transitionToDeathModCounter));
-                break;
+               this.NodeModulateTransitionToDeathHelper(this.LevelFrame.PlayerStatsDisplayHandler);
+               this.NodeModulateTransitionToDeathHelper(this.LevelFrame.BossFightLevelFrameHandler);
+               this.NodeModulateTransitionToDeathHelper(this.LevelFrame.TrackingArrowHandler);
+               break;
             case PlayerState.END_DIEING:
                 if(this.NumLives <= 0){
                     //TODO: have a 'continue' screen or something
@@ -197,16 +228,19 @@ public class Player : FSMNode2D<PlayerState>, ICharacter{
                                                    onLoadPlayerCalories: ((LevelNode2D)this.ActiveLevel.NodeInst).onLoadPlayerCalories,
                                                    SafetyCheckPoint: this.LastSafetyCheckPoint,
                                                    effect: SceneTransitionEffect.FADE_BLACK,
-                                                   numSeconds: 2f,
+                                                   numSeconds: 1f,
                                                    FadeOutAudio: true);}
                 break;
             default:
                 throw new Exception("Invalid Player State");
         }
-
     }
 
-
+    private void NodeModulateTransitionToDeathHelper(Node2D node2D){
+        node2D.Modulate = 
+            node2D.Modulate * (1-this.transitionToDeathModCounter) + 
+            ((new Color(0f,0f,0f) * this.transitionToDeathModCounter));
+    }
 
     public override void UpdateState(float delta){}
 
@@ -215,13 +249,11 @@ public class Player : FSMNode2D<PlayerState>, ICharacter{
     }
 
     public void GoToMostRecentSafetyCheckPoint(){
-        GD.Print("Going to most recent safety checkpoint at ");
-        GD.Print(this.LastSafetyCheckPoint.GlobalPositionToResetTo);
         this.ATV.SetGlobalCenterOfTwoWheels(this.LastSafetyCheckPoint.GlobalPositionToResetTo);
     }
 
     public void EatFood(IFood food, bool playAnimation = true, bool playNomSound = true, bool updateTotalCalories = true){
-        /*
+        return;
         if(!food.isConsumed){
             if(!this.ATV.Bear.AnimationPlayer.CurrentAnimation.ToLower().Contains("eat")  && 
                !this.ATV.Bear.AnimationPlayer.CurrentAnimation.ToLower().Contains("attack") && 
@@ -229,16 +261,21 @@ public class Player : FSMNode2D<PlayerState>, ICharacter{
                 this.ATV.Bear.AnimationPlayer.AdvancedPlay("eat1");}
             if(playNomSound){
                 this.ATV.Bear.PlayRandomNomSound();}
-            this.Health += food.Calories * HEALTH_TO_CALORIES_RATIO;
+            this.Strength += food.Calories * HEALTH_TO_CALORIES_RATIO;
             if(updateTotalCalories){
                 this.TotalCalories += food.Calories;}
             this.foodEaten.Add(food);
             this.lastFoodEaten = food;
-            food.isConsumed = true;}}*/}
+            food.isConsumed = true;}}
     public void GetHitBy(object node){
-        if((node is INPC || node is NPCAttackWindow) && this.ActiveState.Equals(PlayerState.ALIVE)){
-            this.ATV.Bear.TriggerHitSequence(BearHitSequence.SWIPED_OFF);
-    }}
+        if(node is INPC && this.ActiveState.Equals(PlayerState.ALIVE)){
+            var npc = (INPC)node;
+            var hitUnits = npc.PlayerHitUnits;
+            var hitSeq = npc.ThrowBearOffATV ? BearHitSequence.SPIN_THEN_SPLAT : BearHitSequence.STAY_ON_ATV_1;
+            this.ATV.Bear.TriggerHitSequence(hitSeq, hitUnits: hitUnits);
+            ((LevelNode2D)this.ActiveLevel).TriggerHitFlash();
+       }
+    }
 
     public void PickupHoldable(IHoldable Holdable){
         if(this.ActiveHoldable != null && 

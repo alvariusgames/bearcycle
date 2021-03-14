@@ -46,6 +46,35 @@ public class BossFightLevelFrameHandler : Node2D {
                 item.Modulate = new Color(item.Modulate.r, item.Modulate.g, item.Modulate.b, 0.75f);}}
     }
 
+    private void modulateHealthBar(){
+        var lowerHealthBoundary = 0.2f * (float)this.HealthProgressBar.MaxValue;
+        var midHealthBoundary = 0.5f * (float)this.HealthProgressBar.MaxValue;
+        var upperHealthBoundary = 0.8f * (float)this.HealthProgressBar.MaxValue;
+        var green = new Color(PlayerStatsDisplayHandler.HEALTH_BAR_GREEN_HEX);
+        var red = new Color(PlayerStatsDisplayHandler.HEALTH_BAR_RED_HEX);
+        var orange = new Color(PlayerStatsDisplayHandler.HEALTH_BAR_ORANGE_HEX);
+
+        var displayHealth = (float)this.HealthProgressBar.Value;
+
+        if(displayHealth < midHealthBoundary){
+            var mix = (displayHealth - lowerHealthBoundary) / (midHealthBoundary - lowerHealthBoundary);
+            mix = Math.Max(0, mix);
+
+            this.HealthProgressBar.Modulate = this.mixTwoColors(
+                orange,
+                red,
+                mix);
+        } else {
+            var mix = (displayHealth - midHealthBoundary) / (upperHealthBoundary - midHealthBoundary);
+            mix = Math.Min(1, mix);
+            this.HealthProgressBar.Modulate = this.mixTwoColors(
+                green,
+                orange,
+                mix
+            );
+        }
+    }
+
     public override void _Process(float delta){
         if(this.ActiveBossFightManager is null){
             return;}
@@ -62,6 +91,7 @@ public class BossFightLevelFrameHandler : Node2D {
                 this.HealthProgressBar.Value = 
                     this.ActiveBossFightManager.NumFightUnitsTotal -
                     this.ActiveBossFightManager.NumFightUnitsCompleted;
+                this.modulateHealthBar();
                 if(this.ActiveBossFightManager.DisplayDiscreteFightUnits){
                     this.DiscreteUnitCounter.Text = String.Format(
                         "{0} / {1}", 

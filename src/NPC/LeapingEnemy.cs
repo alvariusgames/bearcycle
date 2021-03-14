@@ -78,8 +78,14 @@ public class LeapingEnemy : NPC<LeapingEnemyState>, INPC, IFood
             this.CutOut.Visible = false;
             this.ResetActiveState(LeapingEnemyState.STANDING_STILL);
             this.DisplayExplosion();
-            this.PlayGetEatenSound();
-            }}
+            this.PlayGetEatenSound();}
+        else if(node is WholeBodyKinBody){
+            this.CollisionShape2D.Disabled = true;
+            this.CutOut.Visible = false;
+            this.PlayGetSmushedSound1();
+            this.DisplayExplosion();
+            this.ResetActiveState(LeapingEnemyState.STANDING_STILL);}
+    }
     public override void ReactStateless(float delta){
 
     }

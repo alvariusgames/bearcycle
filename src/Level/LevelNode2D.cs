@@ -98,6 +98,39 @@ public abstract class LevelNode2D : Node2D, ILevel
             this.SpaceRock3Collected = DbHandler.GetLevelStatsRecordFor(this.LevelNum).SpaceRock3Collected;}
     }
 
+    private float hitFlashTimerUp = -10f;
+
+    private float hitFlashTimerDown = -10f;
+
+    public void TriggerHitFlash(){
+        this.hitFlashTimerUp = (0.5f) * DamageShakeHandler.NUM_SEC_TO_SHAKE;
+        this.hitFlashTimerDown = 5f;
+    }
+
+    private void hitFlashTimerBookkeeping(float delta){
+        var modUp = 0f;
+        var modDown = 0f;
+        if(this.hitFlashTimerUp > -5f){
+            this.hitFlashTimerUp -= delta;
+            modUp = this.hitFlashTimerUp / (0.5f * DamageShakeHandler.NUM_SEC_TO_SHAKE);
+            modUp = Math.Max(modUp, 0);
+            this.ChangeLevelModulate(new Color(1f,1f,1f), 1f,
+                                     new Color(0.95f,0.85f,0.85f), 1-modUp,
+                                     new Color(0.95f,0.85f,0.85f), 1-modUp);
+            if(this.hitFlashTimerUp <= 0f){
+                this.hitFlashTimerUp = -10f;}
+        } else if(this.hitFlashTimerDown > -5f){
+            this.hitFlashTimerDown -= delta;
+            modDown = this.hitFlashTimerDown / 5f;
+            modDown = Math.Max(modDown, 0);
+            this.ChangeLevelModulate(new Color(1f,1f,1f), 1f,
+                                     new Color(1f,1f,1f), 1-modDown,
+                                     new Color(1f,1f,1f), 1-modDown);
+            if(this.hitFlashTimerDown <= 0f){
+                this.hitFlashTimerDown = -10f;}
+        }
+    }
+
     public void ChangeLevelModulate(Color PlayerModulate, float PlayerModTransThresh, 
                                     Color BackgroundModulate, float BgModTransThresh,
                                     Color EverythingElseModulate, float EvElseTransThresh){
@@ -174,7 +207,8 @@ public abstract class LevelNode2D : Node2D, ILevel
            Input.IsActionJustPressed("ui_attack")){
                this._goToNextSafetyCheckpointDebug();
            }
- 
+
+        this.hitFlashTimerBookkeeping(delta);
         this.timeElapsedInLevel += delta;
         if(!this.calledOnce){
             //SoundHandler.SetStreamVolume(0f); Why is this here?

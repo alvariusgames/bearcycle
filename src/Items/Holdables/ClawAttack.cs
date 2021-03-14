@@ -50,6 +50,7 @@ public class ClawAttack : FSMNode2D<ClawAttackState> {
             VolumeMultiplier: 0.75f);}
 
     private void updateBearAttackAnimationFromDirection(){
+        return;
         String animation = null;
         if(this.Player.AttackWindow.ActiveState.Equals(AttackWindowState.ATTACKING_FORWARD) ||
            this.Player.AttackWindow.ActiveState.Equals(AttackWindowState.ATTACKING_BACKWARD) || 
@@ -62,8 +63,8 @@ public class ClawAttack : FSMNode2D<ClawAttackState> {
                 animation = "attack_up1";}
         else if(this.Player.AttackWindow.ActiveState.Equals(AttackWindowState.ATTACKING_DOWNWARD)){
                 animation = "attack_down1";}
-        if(animation != null){}}
-            //this.Player.ATV.Bear.AnimationPlayer.AdvancedPlay(animation, skipIfAlreadyPlaying: true);}}
+        if(animation != null){
+            this.Player.ATV.Bear.AnimationPlayer.AdvancedPlay(animation, skipIfAlreadyPlaying: true);}}
 
     public override void ReactToState(float delta){
         switch(this.ActiveState){

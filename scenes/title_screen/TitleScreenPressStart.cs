@@ -209,6 +209,12 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
             case TitleScreenState.IN_MAIN_MENU:
                 this.hideAllContainers(but: MainMenuVBoxContainer);
                 if(this.PlayButton.UserHasJustSelected()){
+                    SceneTransitioner.Transition(FromScene: this.GetTree().GetRoot().GetChild(0), 
+                                ToSceneStr: "res://scenes/level_select/level_select.tscn",
+                                effect: SceneTransitionEffect.FADE_BLACK,
+                                numSeconds: 2f,
+                                FadeOutAudio: true);
+                    return;
                     this.SlotArea1.SetToUnhovered();
                     this.SlotArea2.SetToUnhovered();
                     this.SlotArea3.SetToUnhovered();
@@ -396,11 +402,13 @@ public class TitleScreenPressStart : FSMNode2D<TitleScreenState>
             this.ControlVboxContainer
         };
         foreach(var container in containers){
+            try{
             if(container.Equals(but)){
                 container.Visible = true;
             } else {
                 container.Visible = false;
             }
+            } catch{}
         }
     }
 }

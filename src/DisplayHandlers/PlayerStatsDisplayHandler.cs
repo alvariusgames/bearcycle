@@ -10,71 +10,94 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
     // private string b = "textvar";
     public override PlayerStatsDisplayHandlerState InitialState {
         get { return PlayerStatsDisplayHandlerState.DEFAULT;}set{}}
-    private Player activePlayer;
+    public Player activePlayer;
     public LevelFrameBannerBase LevelFrameBannerBase;
+    [Export]
+    public NodePath LevelFrameBannerBasePath {get; set;}
     private Sprite speedometerMeter;
+    [Export]
+    public NodePath speedometerMeterPath {get; set;}
     private TextureProgress healthProgressBar;
+    [Export]
+    public NodePath healthProgressBarPath {get; set;}
+    public const string HEALTH_BAR_RED_HEX = "ff3d38";
+    public const string HEALTH_BAR_GREEN_HEX = "308122";
+    public const string HEALTH_BAR_ORANGE_HEX = "ffb940";
+    [Export]
+    public NodePath gainHealthParticlesPath {get; set;}
+    private Particles2D gainHealthParticles {get; set;}
+    private TextureProgress strengthProgressBar;
+    [Export]
+    public NodePath strengthProgressBarPath {get; set;}
     private TextureProgress holdableProgressBar;
+    [Export]
+    public NodePath holdableProgressBarPath {get; set;}
     public Label totalCaloriesLabel;
-    private Label accellLabel;
+    [Export]
+    public NodePath totalCaloriesLabelPath {get; set;}
+    private Label fpsLabel;
+    [Export]
+    public NodePath fpsLabelPath {get; set;}
     private Label livesLabel;
+    [Export]
+    public NodePath livesLabelPath {get; set;}
     private IFood lastFoodDisplayed;
     private Label lastFoodEatenDisplayLabel;
+    [Export]
+    public NodePath lastFoodEatenDisplayLabelPath {get; set;}
     public Container lastFoodEatenContainer;
+    [Export]
+    public NodePath lastFoodEatenContainerPath {get; set;}
     private Sprite lastFoodEatenDisplaySprite;
-    private AnimatedSprite HealthWarningFlashPrompt;
+    [Export]
+    public NodePath lastFoodEatenDisplaySpritePath {get; set;}
     private AnimatedSprite LastFoodEatenBorder;
+    [Export]
+    public NodePath LastFoodEatenBorderPath {get; set;}
     private int interactableFlashPromptCounter = 0;
     private Sprite HoldableIcon;
-    private Sprite NumActionCallsGraphic1To6;
+    [Export]
+    public NodePath HoldableIconPath {get; set;}
+    private TextureProgress NumActionCallsGraphic1To6;
+    [Export]
+    public NodePath NumActionCallsGraphic1To6Path {get; set;}
     private Node2D TouchScreenButtons;
+    [Export]
+    public NodePath TouchScreenButtonsPath {get; set;}
     private TouchScreenButton UiUseItemTouchScreenButton;
+    [Export]
+    public NodePath UiUseItemTouchScreenButtonPath {get; set;}
+    [Export]
+    public NodePath RightOfHudLocationPath {get; set;}
+    public Node2D RightOfHudLocation;
 
     public override void _Ready(){
-        if(this.GetChild(0) is PlatformSpecificChildren){
-            ((PlatformSpecificChildren)this.GetChild(0)).PopulateChildrenWithPlatformSpecificNodes(this);}
         this.ResetActiveState(this.InitialState);
         this.setPlayerAndCameraMembers();
-        foreach(Node child in this.GetChildren()){
-            if(child is Sprite && child.Name.ToLower().Contains("speedometermeter")){
-                this.speedometerMeter = (Sprite)child;}
-            if(child is AnimatedSprite && child.Name.ToLower().Contains("healthwarningflashprompt")){
-                this.HealthWarningFlashPrompt = (AnimatedSprite)child;}
-            if(child is Sprite && child.Name.Contains("oldable")){
-                this.HoldableIcon = (Sprite)child;}
-            if(child is Sprite && child.Name.Contains("ActionCalls")){
-                if(child.Name.Contains("1To6")){
-                    this.NumActionCallsGraphic1To6 = (Sprite)child;}}
-            if(child is TextureProgress){
-                if(child.Name.ToLower().Contains("health")){
-                    this.healthProgressBar = (TextureProgress)child;}
-                if(child.Name.ToLower().Contains("holdable")){
-                    this.holdableProgressBar = (TextureProgress)child;}}
-            if((child is Label) && (child.GetName().ToLower().Contains("total"))){
-                this.totalCaloriesLabel= (Label)child;}
-            if((child is Label) && (child.GetName().ToLower().Contains("accell"))){
-                this.accellLabel= (Label)child;}
-            if((child is Label) && (child.GetName().ToLower().Contains("lives"))){
-                this.livesLabel = (Label)child;}
-            if(child is Sprite && child.Name.ToLower().Contains("baseholder")){
-                this.LevelFrameBannerBase = (LevelFrameBannerBase)child;}
-            if(child.Name.ToLower().Contains("touchscreenbuttons")){
-                this.TouchScreenButtons = (Node2D)child;
-                foreach(Node subchild in child.GetChildren()){
-                    if(subchild.Name.ToLower().Contains("item")){
-                        this.UiUseItemTouchScreenButton = (TouchScreenButton)subchild;}}
-            }
-            if(child is Container){
-                this.lastFoodEatenContainer = (Container)child;
-                foreach(Node subChild in child.GetChildren()){
-                    if(subChild is Node && subChild.Name.ToLower().Contains("labelcontainer")){
-                        this.lastFoodEatenDisplayLabel = (Label)subChild.GetChild(0);}
-                    if(subChild is Sprite){
-                        this.lastFoodEatenDisplaySprite = (Sprite)subChild;}
-                    if(subChild is AnimatedSprite && subChild.Name.ToLower().Contains("foodeatenborder")){
-                        this.LastFoodEatenBorder = (AnimatedSprite)subChild;}}
-            }}
-            this.makeTransparentOnMobile();}
+        try{
+        this.speedometerMeter = this.GetNode<Sprite>(this.speedometerMeterPath);
+        this.HoldableIcon = this.GetNode<Sprite>(this.HoldableIconPath);
+        this.NumActionCallsGraphic1To6 = this.GetNode<TextureProgress>(this.NumActionCallsGraphic1To6Path);
+        this.healthProgressBar = this.GetNode<TextureProgress>(this.healthProgressBarPath);
+        this.gainHealthParticles = this.GetNode<Particles2D>(this.gainHealthParticlesPath);
+        this.strengthProgressBar = this.GetNode<TextureProgress>(this.strengthProgressBarPath);
+        this.holdableProgressBar = this.GetNode<TextureProgress>(this.holdableProgressBarPath);
+        this.totalCaloriesLabel = this.GetNode<Label>(this.totalCaloriesLabelPath);
+        this.fpsLabel = this.GetNode<Label>(this.fpsLabelPath);
+        this.livesLabel = this.GetNode<Label>(this.livesLabelPath);
+        this.LevelFrameBannerBase = this.GetNode<LevelFrameBannerBase>(this.LevelFrameBannerBasePath);
+        this.lastFoodEatenContainer = this.GetNode<Container>(this.lastFoodEatenContainerPath);
+        this.lastFoodEatenDisplayLabel = this.GetNode<Label>(this.lastFoodEatenDisplayLabelPath);
+        this.lastFoodEatenDisplaySprite = this.GetNode<Sprite>(this.lastFoodEatenDisplaySpritePath);
+        this.LastFoodEatenBorder = this.GetNode<AnimatedSprite>(this.LastFoodEatenBorderPath);
+        this.RightOfHudLocation = this.GetNode<Node2D>(this.RightOfHudLocationPath);
+        if(this.TouchScreenButtonsPath != null){
+            this.TouchScreenButtons = this.GetNode<Node2D>(this.TouchScreenButtonsPath);}
+        if(this.UiUseItemTouchScreenButtonPath != null){
+            this.UiUseItemTouchScreenButton = this.GetNode<TouchScreenButton>(this.UiUseItemTouchScreenButtonPath);}
+        this.makeTransparentOnMobile();} catch{}
+    }
+
 
     private void makeTransparentOnMobile(){
         if(main.PlatformType.Equals(PlatformType.MOBILE)){
@@ -95,22 +118,37 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
            var player = this.tryGetPlayerFrom(child);                           
            if(player is Player){                                                
                return player;}}                                                 
-        return null;}  
+        return null;}
 
+    public override void _Process(float delta)
+    {
+    }
 
-    public override void ReactStateless(float delta){/*
+    public override void _PhysicsProcess(float delta)
+    {
+    }
+
+    public override void ReactStateless(float delta){
+        var minStrengthToDisplay = 0f * Player.MAX_STRENGTH;
+        this.strengthProgressBar.Value = Math.Max(
+            this.activePlayer.Strength,
+            minStrengthToDisplay);
         this.healthProgressBar.Value = this.activePlayer.Health;
+
         this.totalCaloriesLabel.Text = this.Tr("UI_CALORIES") + ": " + this.activePlayer.TotalCalories.ToString();
-        this.accellLabel.Text = "FPS: " + (1 / delta).ToString("0");
+        if(main.IsDebug){
+            this.fpsLabel.Visible = true;
+            this.fpsLabel.Text = "FPS: " + (1 / delta).ToString("0");}
         this.livesLabel.Text = "x " + this.activePlayer.NumLives;
         this.rotateSpeedometer();
         this.handleHealthWarningFlashPrompt(delta);
         this.handleHoldableIcon(delta);
+        this.handleStrengthModulateAndParticles(delta);
         if(this.TouchScreenButtons != null){
             if(this.activePlayer.ActiveHoldable == null){
                 this.UiUseItemTouchScreenButton.Visible = false;}
             else{
-                this.UiUseItemTouchScreenButton.Visible = true;}}*/
+                this.UiUseItemTouchScreenButton.Visible = true;}}
     }
     private void rotateSpeedometer(){
         var lowerBoundDeg = 160;
@@ -122,15 +160,21 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
         var degrees = (lowerBoundDeg + (percFull * range)) * arbitraryNormalizer;
         this.speedometerMeter.RotationDegrees = (this.speedometerMeter.RotationDegrees + weight * degrees) / (weight + 1);
     }
-
+    private float HitSeqRedTimerSec = 0f;
     private void handleHealthWarningFlashPrompt(float delta){
        if(this.activePlayer.IsInHealthDanger){
-           this.HealthWarningFlashPrompt.Visible = true;
            this.LevelFrameBannerBase.BlinkRed = true;}
+       else if(this.activePlayer.ATV.Bear.HitSeqTriggeredThisFrame ||
+               this.HitSeqRedTimerSec > 0f && this.HitSeqRedTimerSec < DamageShakeHandler.NUM_SEC_TO_SHAKE){
+           this.LevelFrameBannerBase.ModulateToRedNow();
+           this.HitSeqRedTimerSec += delta;
+       }
        else {
-           this.HealthWarningFlashPrompt.Visible = false;
            this.LevelFrameBannerBase.BlinkRed = false;
-           this.LevelFrameBannerBase.ResetToDefaultColor();}}
+           this.LevelFrameBannerBase.ResetToDefaultColor();
+           this.HitSeqRedTimerSec = 0f;}}
+
+    private float holdableIconFlashTimer = -10f;
 
     private void handleHoldableIcon(float delta){
         this.HoldableIcon.Texture = this.activePlayer.HoldableOrClawAttackUIDisplayTexture;
@@ -141,28 +185,99 @@ public class PlayerStatsDisplayHandler : FSMNode2D<PlayerStatsDisplayHandlerStat
         this.holdableProgressBar.Visible = false;
         if(this.activePlayer.ActiveHoldable != null && this.activePlayer.ActiveHoldable.DisplayInProgressBar){
             this.drawActionCallsInProgressBar((float)numActionCallsToDraw / (float)this.activePlayer.ActiveHoldable.NumActionCallsToDepleted);}
-        else{
-            this.draw1To6ActionCallLeftGraphic(numActionCallsToDraw);}}
+        else if(numActionCallsToDraw != 0){
+            this.draw1To6ActionCall(numActionCallsToDraw);}
+        
+        var holdableIconUnder = (Node2D)this.HoldableIcon.GetChild(0);
+        if(this.activePlayer.JustPickedUpHoldable){
+            this.holdableIconFlashTimer = (float)Math.PI;}
+        if(this.holdableIconFlashTimer > -5f){
+            this.holdableIconFlashTimer -= delta;
+
+            var x = 0.5f + 0.5f * (float)Math.Sin(this.holdableIconFlashTimer * 7.5f);
+            holdableIconUnder.Modulate = new Color(1f,1f,1f,x);
+            if(this.holdableIconFlashTimer < 0f){
+                this.holdableIconFlashTimer = -10f;}
+        } 
+
+        if(this.activePlayer.ActiveHoldable == null){
+           holdableIconUnder.Modulate = new Color(1f,1f,1f,0f);}
+        else if(this.holdableIconFlashTimer < 0f){
+            holdableIconUnder.Modulate = new Color(1f,1f,1f,0.5f);}
+    }
 
     private void drawActionCallsInProgressBar(float percentFull){
         this.holdableProgressBar.Visible = true;
         this.holdableProgressBar.Value = percentFull * this.holdableProgressBar.MaxValue;
     }
 
-    private void draw1To6ActionCallLeftGraphic(int NumActionCallsLeft){
+    private void draw1To6ActionCall(int NumActionCallsLeft){
         this.NumActionCallsGraphic1To6.Visible = true;
-        const int ICON_PIXEL_WIDTH = 130;
-        const int ICON_PIXEL_HEIGHT = 100;
-        const int MAX_ICON_WIDTH = ICON_PIXEL_WIDTH * 6;
-        var offsetWidth = 0f - ((MAX_ICON_WIDTH - (NumActionCallsLeft * ICON_PIXEL_WIDTH)) / 2f); 
-        var regionWidth = NumActionCallsLeft * ICON_PIXEL_WIDTH;
-        this.NumActionCallsGraphic1To6.Offset = new Vector2(offsetWidth, 0f);
-        this.NumActionCallsGraphic1To6.RegionRect = new Rect2(
-            new Vector2(0,0), new Vector2(regionWidth, ICON_PIXEL_HEIGHT));
+        this.NumActionCallsGraphic1To6.Value = NumActionCallsLeft;
+    }
+    private float strengthBarModulateCounter = 0.2666667f;
+    private void handleStrengthModulateAndParticles(float delta){
+        var strength = this.activePlayer.Strength;
+
+        var displayHealth = this.activePlayer.Health;
+        var increaseStrengthBoundary = Player.MAX_STRENGTH * Player.STRENGTH_INCREASE_BOUNDARY;
+        var decreaseStrengthBoundary = Player.MAX_STRENGTH * Player.STRENGTH_DECREASE_BOUNDARY;
+        var lowerHealthBoundary = 0.2f * Player.MAX_HEALTH;
+        var midHealthBoundary = 0.5f * Player.MAX_HEALTH;
+        var upperHealthBoundary = 0.8f * Player.MAX_HEALTH;
+        var green = new Color(HEALTH_BAR_GREEN_HEX);
+        var red = new Color(HEALTH_BAR_RED_HEX);
+        var orange = new Color(HEALTH_BAR_ORANGE_HEX);
+       
+        //flash strength meter if in decreasing strength mode
+        var sMod = this.strengthProgressBar.Modulate;
+        if((strength < decreaseStrengthBoundary) && (displayHealth>0f)){
+            this.strengthBarModulateCounter += delta;
+            var sinCounter =  (0.75f + ((float)Math.Sin(this.strengthBarModulateCounter * 6f) * 0.25f));
+            this.strengthProgressBar.Modulate = new Color(
+                sMod.r,sMod.g, sMod.b,
+                sinCounter);
+        } else {
+            this.strengthProgressBar.Modulate = new Color(
+                sMod.r, sMod.g, sMod.g,
+                1f);
+            this.strengthBarModulateCounter = 0.2666667f; //Makes for smooth transitions
+        }
+
+        //Modulate the health bar red for low, orange for mid, green for high
+        if(displayHealth < midHealthBoundary){
+            var mix = (displayHealth - lowerHealthBoundary) / (midHealthBoundary - lowerHealthBoundary);
+            mix = Math.Max(0, mix);
+
+            this.healthProgressBar.Modulate = this.mixTwoColors(
+                orange,
+                red,
+                mix);
+        } else {
+            var mix = (displayHealth - midHealthBoundary) / (upperHealthBoundary - midHealthBoundary);
+            mix = Math.Min(1, mix);
+            this.healthProgressBar.Modulate = this.mixTwoColors(
+                green,
+                orange,
+                mix
+            );
+        }
+
+         //handle the strength transfer particle animations       
+        if((strength > increaseStrengthBoundary) && (displayHealth < Player.MAX_HEALTH)){
+            this.gainHealthParticles.Emitting = true;
+            var partMaterial = (ParticlesMaterial)this.gainHealthParticles.ProcessMaterial;
+            var gradTexture = (GradientTexture)partMaterial.ColorRamp;
+            gradTexture.Gradient.SetColor(1, this.healthProgressBar.Modulate);
+        }else{
+            this.gainHealthParticles.Emitting = false;}
     }
 
+
     public override void UpdateState(float delta){
-        if(this.activePlayer.lastFoodEaten != this.lastFoodDisplayed){
+        if(false && this.activePlayer.lastFoodEaten != this.lastFoodDisplayed){
+            //disabled triggering showing of last food from user feedback
+            //TODO: remove me
             this.ForceClearAllTimers();
             this.ResetActiveState(PlayerStatsDisplayHandlerState.TRIGGER_SHOW_LAST_FOOD);
         }

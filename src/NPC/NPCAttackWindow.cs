@@ -1,7 +1,17 @@
 using Godot;
 using System;
 
-public class NPCAttackWindow : KinematicBody2D{
+public class NPCAttackWindow : KinematicBody2D, INPC{
+
+    [Export]
+    public Boolean ThrowBearOffATV {get; set;} = true;
+
+    [Export]
+    public float PlayerHitUnits {get; set;} = Player.DEFAULT_HIT_UNIT;
+
+    [Export]
+    public Boolean ResetPlayerAttackWindowAfterGettingHit {get; set;} = true;
+
     public uint InitialCollisionMask;
     public uint InitialCollisionLayer;
 

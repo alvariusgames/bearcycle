@@ -14,8 +14,8 @@ public abstract class FSMKinematicBody2DBasicPhysics<T> : FSMKinematicBody2D<T>{
     public virtual float MaxForwardAccel {get; set;} = 130f;
     protected virtual float MaxBackwardAccel {get; set;} = -130f;
     protected virtual float ForwardAccelUnit {get; set;} = 6f;
-    protected const float GRAVITY  = 1400.0f;
-    protected const float MAX_GRAVITY_SPEED = 2200f;
+    public const float GRAVITY  = 1400.0f;
+    public const float MAX_GRAVITY_SPEED = 2200f;
     protected const float MAX_SPEED = 1600f;
     protected const float DEFAULT_FRICTION_EFFECT = 0.90f;
     private const int NUM_GLOBAL_ROTATIONS_TO_STORE = 15;
@@ -59,9 +59,13 @@ public abstract class FSMKinematicBody2DBasicPhysics<T> : FSMKinematicBody2D<T>{
                         this.velocity.y += forwardAngle.y*forwardAccell;}
                 if(collision.Collider is KinematicPlatform){
                     var kinematicPlatform = (KinematicPlatform)collision.Collider;
-                    if(kinematicPlatform.TransferMovementToPlayer){                        
-                       this.MoveAndSlide(this.GetFloorVelocity() * delta);
-                       this.applyGravity(delta);}}
+                    if(kinematicPlatform.TransferMovementToPlayer){
+                        //TODO: remove this transferMovement property since it always transfers movement
+                        var y = kinematicPlatform.velocity.y;
+                        if(y > 0){
+                             this.applyGravity(delta);
+                        }
+                   }}
                 this.velocity *= frictionEffect;}
             else if(this is INPC && !(collision.Collider is PlayerAttackWindow)){
                 ((INPC)this).GetHitBy((Node2D)collision.Collider);}

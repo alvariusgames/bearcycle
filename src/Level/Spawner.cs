@@ -10,9 +10,13 @@ public interface ISpawner {
     Boolean Depleted {get;}
     void Spawn(int count = 1);
     List<Node2D> CurrentlySpawnedEntities {get; set;}
+    Godot.Collections.Array GetChildren();
 }
 
+public enum SpawnStyle { RANDOM_FROM_SPAWN_SPOTS, RANDOM_ON_PATH_2D}
 public abstract class Spawner<T> : FSMNode2D<T>, ISpawner{
+    [Export]
+    public SpawnStyle SpawnStyle {get; set;} = SpawnStyle.RANDOM_FROM_SPAWN_SPOTS;
     public Node2D MasterTemplateEntity {get; set;}
     [Export]
     public NodePath MasterTemplateEntityPath {get; set;}
@@ -32,12 +36,22 @@ public abstract class Spawner<T> : FSMNode2D<T>, ISpawner{
     private float SpawnDelaySec {get; set;} = 0.5f;
     [Export]
     public float BwSpawnDeadSpaceSec {get; set;} = 2f;
+    public EnemyPath2D Path2D;
     public bool Depleted { get { 
         return this.DestroyedEntitiesCount >= this.TotalNumEntities;}}
     public override void _Ready(){
         this.MasterTemplateEntity = (Node2D)this.GetNode(this.MasterTemplateEntityPath);
-        foreach(NodePath npath in this.SpawnSpotsPaths){
-            this.SpawnSpots.Add(this.GetNode<Node2D>(npath));}
+        switch(this.SpawnStyle){
+            case SpawnStyle.RANDOM_FROM_SPAWN_SPOTS:
+                foreach(NodePath npath in this.SpawnSpotsPaths){
+                    this.SpawnSpots.Add(this.GetNode<Node2D>(npath));}
+                break;
+            case SpawnStyle.RANDOM_ON_PATH_2D:
+                this.Path2D = this.GetNode<EnemyPath2D>(this.SpawnSpotsPaths[0]);
+                break;
+            default:
+                break;
+        }
     }
 
     public override void _Process(float delta){
@@ -77,7 +91,7 @@ public abstract class Spawner<T> : FSMNode2D<T>, ISpawner{
             this.toSpawnNowCountdownTimer = this.BwSpawnDeadSpaceSec + 
                                             (2 * this.SpawnDelaySec);
             this.stageThisNumEntitiesToSpawnNow--;
-            this.activeSpawnSpot = this.SpawnSpots.PickRandom();
+            this.activeSpawnSpot = this.pickSpawnSpot();
             this._PreSpawn(this.activeSpawnSpot.GlobalPosition);}
         else if(this.toSpawnNowCountdownTimer > 0f){
             this.toSpawnNowCountdownTimer -= delta;
@@ -88,11 +102,35 @@ public abstract class Spawner<T> : FSMNode2D<T>, ISpawner{
                 // Actually spawn the entity
                 var entity = (Node2D)this.MasterTemplateEntity.Duplicate();
                 this.CurrentlySpawnedEntities.Add(entity);
-                this.AddChild(entity);
-                entity.GlobalPosition = this.activeSpawnSpot.GlobalPosition;
-                //entity._Ready();
+                this.placeEntity(entity);
                 ((ISpawnable)entity).PostDuplicate(this.MasterTemplateEntity);
                 this._PostSpawn(entity);}}}
+
+    private Node2D pickSpawnSpot(){
+        switch(this.SpawnStyle){
+            case SpawnStyle.RANDOM_FROM_SPAWN_SPOTS:
+                return this.SpawnSpots.PickRandom();
+            case SpawnStyle.RANDOM_ON_PATH_2D:
+                return this.Path2D.PlaceEnemyPathFollow2D();
+           default:
+                return null;
+        }
+    }
+
+    private void placeEntity(Node2D entity){
+        switch(this.SpawnStyle){
+            case SpawnStyle.RANDOM_FROM_SPAWN_SPOTS:
+                this.AddChild(entity);
+                entity.GlobalPosition = this.activeSpawnSpot.GlobalPosition;
+                break;
+            case SpawnStyle.RANDOM_ON_PATH_2D:
+                this.activeSpawnSpot.AddChild(entity);
+                entity.GlobalPosition = this.activeSpawnSpot.GlobalPosition;
+                break;
+            default:
+            break;
+        }
+    }
 
     private Dictionary<Node2D, float> swirlAnimationsTimers = new Dictionary<Node2D, float>();
 

@@ -68,7 +68,7 @@ public class FourDirectJoystick : TouchScreenButton{
         //TODO: make this less of a hack, seperate out logic to own class?
         if(but == null){
             but = new String[]{};}
-        foreach(var actionStr in new String[]{"ui_right", "ui_up", "ui_left", "ui_right"}){
+        foreach(var actionStr in new String[]{"ui_right", "ui_up", "ui_left", "ui_down"}){
             if(!but.Contains(actionStr)){
                 var ev = new InputEventAction();
                 ev.Action = actionStr;

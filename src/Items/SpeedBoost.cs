@@ -35,7 +35,7 @@ public class SpeedBoost : FSMKinematicBody2D<SpeedBoostState>, IInteractable
                                                 this.Direction.y * this.SpeedToApply);
         this.AnimationPlayer.Play("default");}
 
-    public void InteractWith(Player player){
+    public void InteractWith(Player player, float delta){
         player.ATV.FrontWheel.PlayEngineRevSound();
         var accellMagnitude = Wheel.MAX_FORWARD_ACCEL * 2;
         if(player.ATV.Direction == ATVDirection.FORWARD){

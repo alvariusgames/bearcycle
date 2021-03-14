@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Ranger : PursuingHuman, INPC, IFood, IVisibilityTrackable {
+public class Ranger : PursuingHuman, INPC, IFood {
     [Export]
     public NodePath PepperSpraySprite {get; set;}
     public Sprite PepperSpraySpriteInst;
@@ -10,22 +10,6 @@ public class Ranger : PursuingHuman, INPC, IFood, IVisibilityTrackable {
     public Particles2D PepperSprayParticlesInst;
     [Export]
     public Boolean PepperSprayParticlesLocal {get; set;} = false;
-
-    [Export]
-    public NodePath VisibilityNotifierPath {get; set;}
-    private VisibilityNotifier2D visibilityNotifier2D;
-    public VisibilityNotifier2D VisibilityNotifier2D { get { 
-        if(this.visibilityNotifier2D is null){
-            this.visibilityNotifier2D = this.GetNode<VisibilityNotifier2D>(this.VisibilityNotifierPath);}
-        return this.visibilityNotifier2D;}}
-
-    private Boolean wasPreviouslyVisible = true;
-    public Boolean IsOnScreen(){
-        var currVisible = this.VisibilityNotifier2D.IsOnScreen();
-        var out_ = this.wasPreviouslyVisible || currVisible; //bias towards visible
-        this.wasPreviouslyVisible = currVisible;
-        return out_; }
-
     public override void _Ready(){
         base._Ready();
         this.PepperSpraySpriteInst = (Sprite)this.GetNode(this.PepperSpraySprite);
@@ -60,11 +44,10 @@ public class Ranger : PursuingHuman, INPC, IFood, IVisibilityTrackable {
     }
 
     public override void PursueAttacking(float delta){
-        this.forwardAccell *= 0.9f;
         this.PepperSpraySpriteInst.Visible = true;
         this.ActiveAnimationString = "attack_stationary_pepper_spray";
         if(this.prevAnimStr != this.currentAnimStr){
-            // We are newly attacking -- do a workaroudn so attack windows werk correctly
+            // We are newly attacking -- do a workaroudn so attack windows work correctly
             return;}
         var percentTimeAnimationPlaying = this.AnimationPlayer.CurrentAnimationPosition / 
                                           this.AnimationPlayer.CurrentAnimationLength;
@@ -85,5 +68,12 @@ public class Ranger : PursuingHuman, INPC, IFood, IVisibilityTrackable {
             this.NPCAttackWindow.Visible = false;
             this.NPCAttackWindow.MakeCollideable(false);}
 
+    }
+
+    public override void GetHitBy(Node node){
+        base.GetHitBy(node);
+        if(node is PlayerAttackWindow){
+            this.NPCAttackWindow.MakeCollideable(false);
+        }
     }
 }

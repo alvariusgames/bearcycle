@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public enum BossFightManagerState{NOT_ACTIVE, 
     TRIGGER_ACTIVATION, ACTIVATION_TRANSITION,
+    PRE_INTRO_LOADING,
     TRIGGER_INTRO_DIALOGUE, INTRO_DIALOGUE,
     TRIGGER_FIGHT, INTRO_DIALOGUE_TO_FIGHT_TRANSITION, FIGHT,
     TRIGGER_END_FIGHT, FIGHT_TO_END_FIGHT_TRANSITION_1, FIGHT_TO_END_FIGHT_TRIGGER_1_TO_2, FIGHT_TO_END_FIGHT_TRANSITION_2, END_FIGHT,
@@ -33,6 +34,14 @@ public abstract class BossFightManager : FSMNode2D<BossFightManagerState>, ITrac
     private ILevel level;
     [Export]
     public bool DisplayDiscreteFightUnits {get; set; } = true;
+    [Export]
+    public NodePath FreeUnreachablePath {get; set;}
+    private FreeUnreachable freeUnreachable;
+    public FreeUnreachable FreeUnreachable { get {
+        if(this.freeUnreachable is null){
+            this.freeUnreachable = this.GetNode<FreeUnreachable>(this.FreeUnreachablePath);}
+        return this.freeUnreachable;}}
+
     public ILevel Level{get{
         if(this.level == null){
             this.level = this.getActiveLevel(this);}
@@ -68,6 +77,8 @@ public abstract class BossFightManager : FSMNode2D<BossFightManagerState>, ITrac
             if(child.Name.ToLower().Contains("introdialoguecamerafocus")){
                 this.IntroDialogueCameraFocus = (Node2D)child;}}}
 
+    public abstract void OnActivation();
+    public abstract Boolean FightIsLoadedProcess();
     public override void ReactStateless(float delta){}
     public override void ReactToState(float delta){
         switch(this.ActiveState){
@@ -82,13 +93,18 @@ public abstract class BossFightManager : FSMNode2D<BossFightManagerState>, ITrac
                 this.Player.ATV.FrontWheel.SetActiveState(WheelState.LOCKED, Priorities.BossFight);
                 this.Player.ATV.BackWheel.SetActiveState(WheelState.LOCKED, Priorities.BossFight);
                 this.ResetActiveState(BossFightManagerState.ACTIVATION_TRANSITION);
-                this.ResetActiveStateAfter(BossFightManagerState.TRIGGER_INTRO_DIALOGUE, 2f);
+                this.ResetActiveStateAfter(BossFightManagerState.PRE_INTRO_LOADING, 1.1f);
                 this.tempFadeoutLinearUnit = 1f;
                 this.Player.MoveCameraTo(this.IntroDialogueCameraFocus, new Vector2(0,0));
                 break;
             case BossFightManagerState.ACTIVATION_TRANSITION:
                 SoundHandler.TempSetAllStream(this.tempFadeoutLinearUnit);
                 this.tempFadeoutLinearUnit -= (delta / 2f);
+                break;
+            case BossFightManagerState.PRE_INTRO_LOADING:
+                if(this.FightIsLoadedProcess()){
+                    this.ResetActiveState(BossFightManagerState.TRIGGER_INTRO_DIALOGUE);
+                }
                 break;
             case BossFightManagerState.TRIGGER_INTRO_DIALOGUE:
                 this.Player.LevelFrame.DialogueHandler.StartDialogueBetween(this.Player, Character.NbsRanger, 
@@ -98,6 +114,7 @@ public abstract class BossFightManager : FSMNode2D<BossFightManagerState>, ITrac
                 SoundHandler.PlayStream<MyAudioStreamPlayer>(this, 
                     this.IntroMusic, Loop: true);
                 this.ResetActiveState(BossFightManagerState.INTRO_DIALOGUE);
+                this.OnActivation();
                 break;
             case BossFightManagerState.INTRO_DIALOGUE:
                 if(this.Player.LevelFrame.DialogueHandler.CurrentDialogueIsFinished()){

@@ -22,20 +22,17 @@ public class Level1RangerFight : BossFightManager{
     public int NumOtherRangersDestroyed = 0;
 
     [Export]
-    public NodePath Spawner1Path {get; set;}
-    private ISpawner spawner1;
-    public ISpawner Spawner1 { get { 
-        if(this.spawner1 is null){
-            this.spawner1 = this.GetNode<ISpawner>(this.Spawner1Path);}
-        return this.spawner1;}}
+    public Godot.Collections.Array<NodePath> SpawnersPaths {get; set;}
 
-    [Export]
-    public NodePath Spawner2Path {get; set;}
-    private ISpawner spawner2;
-    public ISpawner Spawner2 { get {
-        if(this.spawner2 is null){
-            this.spawner2 = this.GetNode<ISpawner>(this.Spawner2Path);}
-        return this.spawner2;}}
+    private List<ISpawner> spawners = null;
+
+    public List<ISpawner> Spawners { get { 
+        if(this.spawners is null){
+            this.spawners = new List<ISpawner>();
+            foreach(var spawnerPath in this.SpawnersPaths){
+                this.spawners.Add(this.GetNode<ISpawner>(spawnerPath));}}
+        return this.spawners;
+    }}
 
     [Export]
     public NodePath LeftBoundaryPath {get; set;}
@@ -78,9 +75,11 @@ public class Level1RangerFight : BossFightManager{
     }}
     public override IEnumerable<Node2D> NodesToTrack { get {
         if(this.ActiveState.Equals(BossFightManagerState.FIGHT)){
-            return this.Spawner1.CurrentlySpawnedEntities.
-                   Concat(this.Spawner2.CurrentlySpawnedEntities).
-                   Concat(this.OtherRangers);}
+            var entities = new List<Node2D>();
+            entities = entities.Concat(this.OtherRangers).ToList();
+            foreach(var spawner in this.Spawners){
+                entities = entities.Concat(spawner.CurrentlySpawnedEntities).ToList();}
+            return entities;}
         if(this.ActiveState.Equals(BossFightManagerState.DEFEATED)){
             return this.EndLevelList;
         } else {
@@ -94,9 +93,9 @@ public class Level1RangerFight : BossFightManager{
 
     public override void _Ready(){
         base._Ready();
-        this.NumFightUnitsTotal = (float)(this.Spawner1.TotalNumEntities + 
-                                          this.Spawner2.TotalNumEntities + 
-                                          this.OtherRangers.Count);
+        this.NumFightUnitsTotal = (float)(this.OtherRangers.Count);
+        foreach(var spawner in this.Spawners){
+            this.NumFightUnitsTotal += spawner.TotalNumEntities;}
         this.NumFightUnitsCompleted = 0f;
         this.InitialLeftRightMask = this.LeftBoundary.CollisionMask;
         this.InitialLeftRightLayer = this.LeftBoundary.CollisionLayer;
@@ -105,10 +104,20 @@ public class Level1RangerFight : BossFightManager{
         this.LeftBoundary.CollisionLayer = 0;
         this.RightBoundary.Visible = true;
         this.FirstRanger = (Ranger)this.GetNode(this.FirstRangerPath);
+        this.FirstRanger.SetActiveState(PursuingEnemyState.LOCKED, 800);
+        this.FirstRanger.SetActiveStateAfter(PursuingEnemyState.LOCKED, 800, 0.1f);
         this.FirstRanger.SetActiveStateAfter(PursuingEnemyState.LOCKED, 800, 2f);}
+
+    public override void OnActivation(){}
+
+    public override Boolean FightIsLoadedProcess(){
+        this.FreeUnreachable.FreeUnreachableNodesProcess();
+        return this.FreeUnreachable.AllAreFree;
+    }
+
     public override Boolean IsFightOver(float delta){
-        return this.Spawner1.Depleted && this.Spawner2.Depleted && 
-               this.OtherRangers.Count() <= 0;
+        return this.OtherRangers.Count() <= 0 &&
+               this.Spawners.All(x => x.Depleted);
     }
 
     public override void StartOfFight(float delta){
@@ -118,21 +127,41 @@ public class Level1RangerFight : BossFightManager{
         this.RightBoundary.Visible = true;
         this.RightBoundary.CollisionMask = this.InitialLeftRightMask;
         this.RightBoundary.CollisionLayer = this.InitialLeftRightLayer;
-        this.Spawner1.Activate();
-        this.Spawner2.Activate();
-        this.FirstRanger.SetActiveState(PursuingEnemyState.MOVING_TOWARD_PLAYER_GROUND, 800);
-        this.FirstRanger.SetActiveStateAfter(PursuingEnemyState.ATTACKING, 800, 2f);
-        this.FirstRanger.ResetActiveStateAfter(PursuingEnemyState.ATTACKING, 4f);
+        this.moveFirstRangerToFirstPath2D();
+        this.startSpawnerReverseTimer = 2f;
+    }
+
+    private void moveFirstRangerToFirstPath2D(){
+        EnemyPath2D firstEnemyPath2D = null;
+        foreach(var child in this.Spawners[0].GetChildren()){
+            if(child is EnemyPath2D){
+                firstEnemyPath2D = (EnemyPath2D)child;}}
+        var enemyPathFollow2D = firstEnemyPath2D.PlaceEnemyPathFollow2D();
+        this.FirstRanger.GetParent().RemoveChild(this.FirstRanger);
+        enemyPathFollow2D.AddChild(this.FirstRanger);
+        enemyPathFollow2D.UnitOffset = 0.6f; //harcoded to ranger 1 starting point
+        this.FirstRanger.PursuitEnemyPattern = PursuitEnemyPattern.FOLLOWING_PATH2D;
+        this.FirstRanger.Position = new Vector2(0,0);
+        this.FirstRanger.ResetActiveState(PursuingEnemyState.ATTACKING);
     }
 
     public override void _FightProcess(float delta){
+        this.startSpawnerBookkeeping(delta);
         this.manageOtherRangersAfterDestroyed(delta);
         this.NumOtherRangersDestroyed = this.InitialOtherRangersCount - 
             this.OtherRangers.Count();
         this.NumFightUnitsCompleted = 
-            (float)(this.spawner1.DestroyedEntitiesCount +
-                    this.spawner2.DestroyedEntitiesCount +
-                    this.NumOtherRangersDestroyed);
+            (float)(this.NumOtherRangersDestroyed);
+        foreach(var spawner in this.Spawners){
+            this.NumFightUnitsCompleted += spawner.DestroyedEntitiesCount;}
+    }
+    private float startSpawnerReverseTimer = -1f;
+    private void startSpawnerBookkeeping(float delta){
+        this.startSpawnerReverseTimer -= delta;
+        if(this.startSpawnerReverseTimer < 0f && this.startSpawnerReverseTimer > -5f){
+            foreach(var spawner in this.Spawners){
+                spawner.Activate();}
+            this.startSpawnerReverseTimer = -10f;} 
     }
 
     private void manageOtherRangersAfterDestroyed(float delta){

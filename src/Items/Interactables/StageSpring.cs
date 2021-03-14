@@ -27,7 +27,7 @@ public class StageSpring : FSMKinematicBody2D<StageSpringState>, IInteractable{
     public override void ReactStateless(float delta){}
     public override void UpdateState(float delta){}
 
-    public void InteractWith(Player player){
+    public void InteractWith(Player player, float delta){
         this.ResetActiveState(StageSpringState.TRIGGER_HIT);
         SoundHandler.PlaySample<MyAudioStreamPlayer2D>(player.ATV.Bear, Spring.BOING_SAMPLE);
         var springNormalRadians = this.Rotation + (1.5f * Math.PI);

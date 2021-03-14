@@ -1,4 +1,4 @@
-﻿<Project Sdk="Godot.NET.Sdk/3.2.3">
+﻿<Project Sdk="Godot.NET.Sdk/3.2.4">
   <PropertyGroup>
     <ProjectGuid>{ABD7E83B-2C74-4EE5-AEE6-A13837EFEBCC}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -22,7 +22,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="scenes\levels\level0.cs" />
     <Compile Include="scenes\levels\level1.cs" />
     <Compile Include="scenes\levels\level2.cs" />
@@ -31,6 +30,8 @@
     <Compile Include="scenes\levels\level5.cs" />
     <Compile Include="scenes\levels\level6.cs" />
     <Compile Include="scenes\levels\level7.cs" />
+    <Compile Include="src\DisplayHandlers\PlayerStatsDisplayHandlerContainer.cs" />
+    <Compile Include="src\FSMComponents\TimestepInterpolator.cs" />
     <Compile Include="src\main.cs" />
     <Compile Include="scenes\misc\exit_black.cs" />
     <Compile Include="scenes\misc\PlayArbitraryLevel.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="src\Level\VisiblePath2D.cs" />
     <Compile Include="src\Level\ZoneCollider.cs" />
     <Compile Include="src\NPC\Boss\BossFightManager.cs" />
+    <Compile Include="src\NPC\Boss\Fights\FreeUnreachable.cs" />
     <Compile Include="src\NPC\Boss\Fights\Level1RangerFight.cs" />
     <Compile Include="src\NPC\Boss\Fights\RangerSpawner.cs" />
     <Compile Include="src\NPC\Boss\IBoss.cs" />
@@ -90,6 +92,8 @@
     <Compile Include="src\NPC\Boss\TriggerBossFight.cs" />
     <Compile Include="src\NPC\Character.cs" />
     <Compile Include="src\NPC\DefaultPathFollow2D.cs" />
+    <Compile Include="src\NPC\EnemyPath2D.cs" />
+    <Compile Include="src\NPC\EnemyPathFollow2D.cs" />
     <Compile Include="src\NPC\FlyingEnemy.cs" />
     <Compile Include="src\NPC\humans\PursuingHuman.cs" />
     <Compile Include="src\NPC\humans\Ranger.cs" />
@@ -115,6 +119,7 @@
     <Compile Include="src\Player\FallThroughManager.cs" />
     <Compile Include="src\Player\Player.cs" />
     <Compile Include="src\Player\RotationManager.cs" />
+    <Compile Include="src\Player\StrengthManager.cs" />
     <Compile Include="src\Player\Wheel.cs" />
     <Compile Include="src\FSMComponents\IFSMObject.cs" />
     <Compile Include="src\FSMComponents\FSMNode2D.cs" />
@@ -130,6 +135,7 @@
     <Compile Include="src\SoundHandlers\SoundHandler.cs" />
     <Compile Include="src\UI\BossFightLevelFrameHandler.cs" />
     <Compile Include="src\UI\Controllers.cs" />
+    <Compile Include="src\UI\DamageShakeHandler.cs" />
     <Compile Include="src\UI\FourDirectJoystick.cs" />
     <Compile Include="src\UI\HoverableTouchScreenButton.cs" />
     <Compile Include="src\UI\HoverControlBoxContainer.cs" />
@@ -155,7 +161,10 @@
     <Compile Include="src\Utils\Extensions.cs" />
     <Compile Include="src\Utils\MakePlatformSpecificChildrenVisible.cs" />
     <Compile Include="src\Utils\Misc\CancelHorizMomentum.cs" />
+    <Compile Include="src\Utils\Misc\GameInfoPauser.cs" />
     <Compile Include="src\Utils\Misc\RemoveWallWhenHealthIs100.cs" />
+    <Compile Include="src\Utils\Misc\TutorialDecreaseHealthExample.cs" />
+    <Compile Include="src\Utils\Misc\TutorialIncreaseHealthExample.cs" />
     <Compile Include="src\Utils\Misc\TutorialRotationThrowaway.cs" />
     <Compile Include="src\Utils\PlatformSpecificChildren.cs" />
     <Compile Include="src\Utils\Priorities.cs" />

@@ -47,6 +47,7 @@ public class EndLevel : FSMKinematicBody2D<EndLevelState>, IConsumeable, IVisibi
         this.player = player;
         this.currentLevel = this.player.ActiveLevel;
         player.Health = Player.MAX_HEALTH;
+        player.Strength = Math.Max(player.Strength, Player.MAX_STRENGTH * 0.5f);
         player.MoveCameraTo(this, new Vector2(0, -NUM_UNITS_CAMERA_ABOVE), 2f);
         this.CollisionShape2D.Disabled = true;
         this.ResetActiveState(EndLevelState.SPINNING);

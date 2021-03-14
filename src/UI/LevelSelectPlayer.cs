@@ -248,20 +248,24 @@ public class LevelSelectPlayer : FSMKinematicBody2D<LevelSelectPlayerState>
         if(this.LevelPortalCurrentlyCollidingWith == null){
             return;}
         var levelPortals = this.LevelSelect.LevelPortalChain.LevelPortals;
-        if(Input.IsActionJustReleased(targetLevelPortal.forwardInputString1) ||
-           Input.IsActionJustReleased(targetLevelPortal.forwardInputString2)){
+        if(this.isJustReleasedIfValid(targetLevelPortal.forwardInputString1) ||
+           this.isJustReleasedIfValid(targetLevelPortal.forwardInputString2)){
             SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
                 new string[]{"res://media/samples/ui/click_1.wav"});
             var indexOfLevelPortal = levelPortals.IndexOf(targetLevelPortal);
             var levelPortalToMoveTo = levelPortals[indexOfLevelPortal+1];
             this.MoveTo(levelPortalToMoveTo);}
-        if(Input.IsActionJustReleased(targetLevelPortal.backwardInputString1) ||
-           Input.IsActionJustReleased(targetLevelPortal.backwardInputString2)){
+        if(this.isJustReleasedIfValid(targetLevelPortal.backwardInputString1) ||
+           this.isJustReleasedIfValid(targetLevelPortal.backwardInputString2)){
             SoundHandler.PlaySample<MyAudioStreamPlayer>(this,
                 new string[]{"res://media/samples/ui/click_1.wav"});
             var indexOfLevelPortal = levelPortals.IndexOf(targetLevelPortal);
             var levelPortalToMoveTo = levelPortals[indexOfLevelPortal-1];
             this.MoveTo(levelPortalToMoveTo);}
+    }
+
+    private Boolean isJustReleasedIfValid(String inputString){
+        return (!(inputString.Equals("")) && Input.IsActionJustReleased(inputString));
     }
 
     public void MoveTo(LevelPortal levelSelectPortal){

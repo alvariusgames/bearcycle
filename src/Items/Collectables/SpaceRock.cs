@@ -10,9 +10,8 @@ public class SpaceRock : KinematicBody2D, IConsumeable, IFood
     // Called when the node enters the scene tree for the first time.
 
     private CollisionShape2D CollisionShape2D;
-    private Sprite ShadowSprite;
     private AnimatedSprite AnimatedSprite;
-    public const int NUM_SPACE_ROCKS_IN_WHOLE_GAME = 18;
+    public const int NUM_SPACE_ROCKS_IN_WHOLE_GAME = 12;
     [Export]
     public int RockNum = 0; 
 
@@ -20,8 +19,6 @@ public class SpaceRock : KinematicBody2D, IConsumeable, IFood
         foreach(Node2D child in this.GetChildren()){
             if(child is CollisionShape2D){
                 this.CollisionShape2D = (CollisionShape2D)child;}
-            if(child is Sprite){
-                this.ShadowSprite = (Sprite)child;}
             if(child is AnimatedSprite){
                 this.AnimatedSprite = (AnimatedSprite)child;}}
         this.setToTransparentIfAlreadyCollected();}
@@ -32,8 +29,7 @@ public class SpaceRock : KinematicBody2D, IConsumeable, IFood
         if((this.RockNum == 1 && rootLevel.SpaceRock1Collected) ||
            (this.RockNum == 2 && rootLevel.SpaceRock2Collected) ||
            (this.RockNum == 3 && rootLevel.SpaceRock3Collected)){
-               this.ShadowSprite.SelfModulate = new Color(1f,1f,1f,0.33f);
-               this.AnimatedSprite.SelfModulate = this.ShadowSprite.SelfModulate;}}
+               this.AnimatedSprite.SelfModulate = new Color(1f,1f,1f, 0.33f);}}
 
     private LevelNode2D GetRootLevelNode2DParent(Node node = null){
         if(node == null){
@@ -73,8 +69,15 @@ public class SpaceRock : KinematicBody2D, IConsumeable, IFood
         this.CollisionShape2D.Disabled = true;
         this.Visible = false;}
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
+  // Called every frame. 'delta' is the elapsed time since the previous frame.
+    public override void _Process(float delta){
+        var mod = this.Modulate;
+        mod.s = 0.5f;
+        mod.h += delta;
+        if(mod.h > 1){
+            mod.h = 0;}
+        this.Modulate = mod;
+    }
 //  {
 //      
 //  }

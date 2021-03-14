@@ -53,7 +53,6 @@ public class CutOut : Node2D{
 
     public void ApplyCutoutPlayerTextureToAllChildrenSprite(){
         this.overrideTexturePathsRecurs(this);
-
     }
 
     private void overrideTexturePathsRecurs(Node n){

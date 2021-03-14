@@ -10,8 +10,23 @@ public class LevelFrame : Node{
         return this.Player.ActiveLevel;}}
     public Label TitleLabel;
     public Label ZoneLabel;
-    public PlayerStatsDisplayHandler PlayerStatsDisplayHandler;
+    public PlayerStatsDisplayHandlerContainer PlayerStatsDisplayHandlerContainer;
+    public PlayerStatsDisplayHandler PlayerStatsDisplayHandler { get {
+        return this.PlayerStatsDisplayHandlerContainer.PlayerStatsDisplayHandler;}}
+
     public DialogueHandler DialogueHandler;
+
+    public BossFightLevelFrameHandler BossFightLevelFrameHandler;
+    public TrackingArrowHandler TrackingArrowHandler;
+
+    [Export]
+    public NodePath UnderHudTranspPath {get; set;}
+    private Sprite underHudTransp;
+    public Sprite UnderHudTransp { get {
+        if(this.underHudTransp is null){
+            this.underHudTransp = this.GetNode<Sprite>(this.UnderHudTranspPath);}
+        return this.underHudTransp;
+    }}
 
     public override void _Ready(){
         foreach(Node child in this.GetChildren()){
@@ -20,10 +35,14 @@ public class LevelFrame : Node{
             if(child is ViewportContainer){
                 this.Viewport = (Viewport)(child.GetChild(0));
                 this.Player = this._recursGetPlayer(this.Viewport);}
-            if(child is PlayerStatsDisplayHandler){
-                this.PlayerStatsDisplayHandler = (PlayerStatsDisplayHandler)child;}
+            if(child is PlayerStatsDisplayHandlerContainer){
+                this.PlayerStatsDisplayHandlerContainer = (PlayerStatsDisplayHandlerContainer)child;}
             if(child is DialogueHandler){
                 this.DialogueHandler = (DialogueHandler)child;}
+            if(child is BossFightLevelFrameHandler){
+                this.BossFightLevelFrameHandler = (BossFightLevelFrameHandler)child;}
+            if(child is TrackingArrowHandler){
+                this.TrackingArrowHandler = (TrackingArrowHandler)child;}
             if(child.Name.ToLower().Contains("levelenter")){
                 foreach(Node subchild in child.GetChildren()){
                     if(subchild.Name.ToLower().Contains("background")){

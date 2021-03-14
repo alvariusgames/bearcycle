@@ -107,8 +107,8 @@ public class WholeBodyKinBody : FSMKinematicBody2D<WholeBodyState>{
             //---------
             else if(collider is INPC){
                 var npc = (INPC)collider;
-                npc.GetHitBy(this);
                 if(this.Player.ATV.Bear.ActiveState != BearState.HIT_SEQ_INVINC){
+                    npc.GetHitBy(this);
                     this.Player.GetHitBy(npc);}}
 
             //NPC Attack Area
@@ -116,8 +116,8 @@ public class WholeBodyKinBody : FSMKinematicBody2D<WholeBodyState>{
             else if(collider is NPCAttackWindow){
                 if(this.Player.ATV.Bear.ActiveState != BearState.HIT_SEQ_INVINC){
                     var npcAttackWindow = (NPCAttackWindow)collider;
-                    npcAttackWindow.GetHitBy(this);
                     if(this.Player.ATV.Bear.ActiveState != BearState.HIT_SEQ_INVINC){
+                        npcAttackWindow.GetHitBy(this);
                         this.Player.GetHitBy(npcAttackWindow);}}}
 
             //IConsumable Area
@@ -129,7 +129,7 @@ public class WholeBodyKinBody : FSMKinematicBody2D<WholeBodyState>{
         if(highestPriorityInteractable != null &&
            Input.IsActionJustPressed("ui_forage") &&
            this.timeElapsedSinceLastActionPress > MIN_ACTION_PRESS_WAITING_PERIOD_SEC){
-            highestPriorityInteractable.InteractWith(this.Player);}
+            highestPriorityInteractable.InteractWith(this.Player, delta);}
 
         //ZONE COLLIDER LOGIC
         if(highestPriorityZoneCollider != null &&

@@ -192,7 +192,7 @@ position = Vector2( -71.3986, -77.4273 )
 scale = Vector2( 0.5, 0.5 )
 z_index = 2
 frames = SubResource( 2 )
-frame = 7
+frame = 9
 playing = true
 centered = false
 
@@ -365,7 +365,7 @@ position = Vector2( -53.2092, -55.6736 )
 scale = Vector2( 0.4, 0.4 )
 z_index = 2
 frames = SubResource( 2 )
-frame = 7
+frame = 9
 playing = true
 centered = false
 
@@ -391,7 +391,7 @@ self_modulate = Color( 0.866667, 0.866667, 0.866667, 1 )
 position = Vector2( 335.924, 146.474 )
 scale = Vector2( 0.5, 0.5 )
 frames = ExtResource( 25 )
-frame = 1
+frame = 3
 playing = true
 
 [node name="TextureProgress" type="TextureProgress" parent="PlayerStatsDisplayHandler/PlatformSpecificChildren/DESKTOP"]
@@ -638,6 +638,7 @@ position = Vector2( 980.911, 545.369 )
 scale = Vector2( 5.2574, 3.10128 )
 z_index = -1
 texture = ExtResource( 27 )
+
 [connection signal="value_changed" from="PauseMenu/PlatformSpecificChildren/DESKTOP/Banner/SampleSlider" to="PauseMenu/PlatformSpecificChildren/DESKTOP/Banner/SampleSlider" method="ValueChanged"]
 [connection signal="value_changed" from="PauseMenu/PlatformSpecificChildren/DESKTOP/Banner/StreamSlider" to="PauseMenu/PlatformSpecificChildren/DESKTOP/Banner/StreamSlider" method="ValueChanged"]
 [connection signal="value_changed" from="PauseMenu/PlatformSpecificChildren/MOBILE/Banner/SamplesSlider" to="PauseMenu/PlatformSpecificChildren/MOBILE/Banner/SamplesSlider" method="ValueChanged"]

@@ -17,6 +17,15 @@ public static class NPCExtensions{
         SoundHandler.PlaySample<MyAudioStreamPlayer2D>((Node)npcObj,
         new string[]{"res://media/samples/npc/meaty_enemy/geteaten1.wav",
                      "res://media/samples/npc/meaty_enemy/geteaten2.wav"});}
+    public static void PlayGetSmushedSound1(this INPC npcObj){
+        SoundHandler.PlaySample<MyAudioStreamPlayer2D>((Node)npcObj,
+        new string[]{"res://media/samples/npc/meaty_enemy/getsmushed1.wav"});}
+
+    public static void PlayGetSmushedSound2(this INPC npcObj){
+        SoundHandler.PlaySample<MyAudioStreamPlayer2D>((Node)npcObj,
+        new string[]{"res://media/samples/npc/meaty_enemy/getsmushed2.wav"});}
+
+
 
     public static String getDisplayableName(this INPC npcObj){
         return ((Node)npcObj).RemoveNumbersAndTranslateNodeName();}
@@ -24,7 +33,11 @@ public static class NPCExtensions{
 
 public abstract class NPC<T> : FSMKinematicBody2D<T>, INPC, IFood{
     [Export]
+    public Boolean ThrowBearOffATV {get; set;} = false;
+    [Export]
     public bool ResetPlayerAttackWindowAfterGettingHit {get; set;} = true;
+    [Export]
+    public float PlayerHitUnits {get; set;} = Player.DEFAULT_HIT_UNIT;
     public abstract void GetHitBy(Node node);
     public abstract Sprite FoodDisplaySprite {get; set;}
     public abstract int Calories {get; set;}

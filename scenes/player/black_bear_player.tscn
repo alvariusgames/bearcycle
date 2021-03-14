@@ -3400,7 +3400,7 @@ texture = ExtResource( 6 )
 offset = Vector2( 168.327, 81.874 )
 
 [node name="TopJaw" type="Sprite" parent="rootSprite/BottomBody/TopBody"]
-position = Vector2( 833.785, -215.538 )
+position = Vector2( 826.56, -211.702 )
 z_index = 1
 texture = ExtResource( 7 )
 offset = Vector2( 121.884, -371.216 )

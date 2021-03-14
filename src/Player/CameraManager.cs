@@ -49,6 +49,30 @@ public class CameraManager : FSMNode2D<CameraManagerState>{
             this.SetPlatformSpecificVars();
             this.runOnlyOnStartup = false;}
         this.SetGlobalRotation(0);
+        this.secondsForwardBackwardBookkeeping(delta);
+
+    }
+
+    private void secondsForwardBackwardBookkeeping(float delta){
+        if(this.Bear.ATV.IsInAirNormalized()){
+            //don't track ground seconds when in air
+            return;}
+
+        var isOnATV = this.Bear.ActiveState.Equals(BearState.ON_ATV);
+        if(Input.IsActionPressed("ui_right") && isOnATV){
+            this.aliveGroundSecForward += delta; }
+        else {
+            this.aliveGroundSecForward -= delta;
+            this.aliveGroundSecForward = Math.Max(this.aliveGroundSecForward, 0f);
+            this.aliveGroundSecForward = Math.Min(this.aliveGroundSecForward, MAX_NUM_SECONDS_TO_TRACK);}
+
+        if(Input.IsActionPressed("ui_left") && isOnATV){
+            this.aliveGroundSecBackward += delta;}
+        else{
+            this.aliveGroundSecBackward -= delta;
+            this.aliveGroundSecBackward = Math.Max(this.aliveGroundSecBackward, 0f);
+            this.aliveGroundSecBackward = Math.Min(this.aliveGroundSecBackward, MAX_NUM_SECONDS_TO_TRACK);}
+
     }
 
     private Node2D MoveCameraToNode;
@@ -104,18 +128,30 @@ public class CameraManager : FSMNode2D<CameraManagerState>{
     private float prevXPosToApply = 0f;
     private float prevYPosToApply = 0f;
 
+    private float aliveGroundSecForward = 0f;
+    private float aliveGroundSecBackward = 0f;
+    private const float MAX_NUM_SECONDS_TO_TRACK = 3f;
+    private const float UIACTION_VELOCITY_MULT = 400f;
+    private Vector2 getUiActionVelocity(){
+        var aliveGroundSecVelocity = new Vector2(this.aliveGroundSecForward - this.aliveGroundSecBackward, 0f) * 
+                                                 UIACTION_VELOCITY_MULT;
+        var playerVelocity = this.Bear.ATV.GetRecentAverageVelocityOfTwoWheels();
+        var playerVelocityComponent = new Vector2(0.5f * playerVelocity.x,
+                                                  0.25f * playerVelocity.y);
+        return 0.5f * aliveGroundSecVelocity + 0.5f * playerVelocityComponent;
+    }
+
     public override void ReactToState(float delta){
         switch(this.ActiveState){
             case CameraManagerState.MOVING_NODE_CAMERA_FOLLOWS:
-
-                var vel = this.Bear.ATV.GetRecentAverageVelocityOfTwoWheels();
-                var xPosToApply = vel.x * HORIZONTAL_VELOCITY_MULTIPLIER + HORIZONTAL_OFFSET;
+                var uiActionVelocity = this.getUiActionVelocity();
+                var xPosToApply = uiActionVelocity.x * HORIZONTAL_VELOCITY_MULTIPLIER + HORIZONTAL_OFFSET;
                 xPosToApply = ((1 - HORIZONTAL_DRAG_EFFECT) * xPosToApply) + (HORIZONTAL_DRAG_EFFECT * this.prevXPosToApply);
                 if(Math.Abs(xPosToApply) > MaxPosition.x){
                     xPosToApply = (Math.Abs(xPosToApply) / xPosToApply) * MaxPosition.x;}
                 this.prevXPosToApply = xPosToApply;
 
-                var yPosToApply = vel.y * VERTICAL_VELOCITY_MULTIPLIER + VerticalOffset;
+                var yPosToApply = uiActionVelocity.y * VERTICAL_VELOCITY_MULTIPLIER + VerticalOffset;
                 yPosToApply = ((1 - HORIZONTAL_DRAG_EFFECT) * yPosToApply) + (HORIZONTAL_DRAG_EFFECT * this.prevYPosToApply);
                 if(Math.Abs(yPosToApply) > MaxPosition.y){
                     yPosToApply = (Math.Abs(yPosToApply) / yPosToApply) * MaxPosition.y;}

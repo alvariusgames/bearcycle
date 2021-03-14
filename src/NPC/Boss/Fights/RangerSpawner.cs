@@ -18,6 +18,11 @@ public class RangerSpawner : Spawner<RangerSpawnerState>{
     }
     protected override void _PostSpawn(Node2D entity){
         entity.Rotation = 0;
+        var ranger = (Ranger)entity;
+        if(!ranger.IsMale){
+            //Females are smaller and 'float' a bit on path2D, so adjust this
+            ranger.Position = new Vector2(0,10);
+        }
     }
 
 

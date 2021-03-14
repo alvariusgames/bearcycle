@@ -33,9 +33,6 @@ public abstract class NPCCollisionZone : KinematicBody2D{
             INPC npc = null;
             if(collision.Collider is INPC){
                 npc = (INPC)collision.Collider;}
-            if(collision.Collider is NPCNonPhysicsCollider){
-                var npcNonPhysCol = (NPCNonPhysicsCollider)collision.Collider;
-                npc = npcNonPhysCol.INPCParent;}
             if(!(npc is null)){
                 if(!this.colliderTimers.ContainsKey(npc)){
                    this.OnCollisionWith(npc);

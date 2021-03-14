@@ -16,6 +16,11 @@ public class LevelFrameBannerBase : Sprite {
         this.Modulate = this.InitialModulate;
         this.SelfModulate = this.InitialSelfModulate;}
 
+    public void ModulateToRedNow(){
+        this.Modulate = new Color(0.9f,0f,0f);
+        this.SelfModulate = new Color(0.9f, 0.9f, 0.9f);
+    }
+
     public override void _Process(float delta){
         if(BlinkRed){
             i+=(int)(10f*delta*main.DELTA_NORMALIZER);

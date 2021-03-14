@@ -61,7 +61,7 @@ public abstract class MonitorHoldable : FSMKinematicBody2D<MonitorHoldableState>
         }
     }
 
-    public void InteractWith(Player player){
+    public void InteractWith(Player player, float delta){
         player.PickupHoldable(this);}
 
      private void makeCollideable(bool collidability){
@@ -103,14 +103,23 @@ public abstract class MonitorHoldable : FSMKinematicBody2D<MonitorHoldableState>
         }
     }
 
+    private float flashTimer = 0f;
+    private void flashModulateMonitor(float delta){
+        var mod = 0.85f + 0.15f * (float)Math.Cos(this.flashTimer * 8f);
+        this.MonitorAnimSprite.Modulate = new Color(mod,mod,mod);
+        this.flashTimer += delta;
+    }
+
     public override void ReactToState(float delta){
         switch(this.ActiveState){
             case(MonitorHoldableState.HELD):
+                this.MonitorAnimSprite.Modulate = new Color(1f,1f,1f,1f);
                 this.makeCollideable(false);
                 this.MonitorAnimSprite.Visible = false;
                 this.CloudAnimSprite.Visible = true;
             break;
             case(MonitorHoldableState.NOT_HELD):
+                this.flashModulateMonitor(delta);
                 this.MonitorAnimSprite.Visible = true;
                 this.CloudAnimSprite.Visible = false; 
                 this.makeCollideable(true);

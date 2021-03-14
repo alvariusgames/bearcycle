@@ -168,11 +168,10 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
         if(this.IsBearSmushedUnderATV()){
             //ATV attempted to be flipped, but failed
             GD.Print("Failed to flip!");
-            this.Player.GoToMostRecentSafetyCheckPoint();
-        }
-            this.SetActiveState(ATVState.WITH_BEAR, 100);
-            this.FrontWheel.ResetActiveState(WheelState.IDLING);
-            this.BackWheel.ResetActiveState(WheelState.IDLING);}
+            this.Player.GoToMostRecentSafetyCheckPoint();}
+        this.SetActiveState(ATVState.WITH_BEAR, 100);
+        this.FrontWheel.ResetActiveState(WheelState.IDLING);
+        this.BackWheel.ResetActiveState(WheelState.IDLING);}
 
     public bool IsBearSmushedUnderATV(){
         var collision = this.Bear.MoveAndCollide(new Vector2(0,0));
@@ -280,9 +279,10 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
 
         var fBodyEndCoord = fcenter - ((fcenter - bcenter).Normalized()) * (this.BodyLength + actualBodyLength) / 2f;
         var bBodyEndCoor = bcenter - ((bcenter - fcenter).Normalized()) * (this.BodyLength + actualBodyLength) / 2f;
+
         this.FrontWheel.GlobalPosition = bBodyEndCoor;
         this.BackWheel.GlobalPosition = fBodyEndCoord;
-    }
+}
 
 
     private void moveBearToCenter(float delta){
@@ -291,15 +291,11 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
         var center = (bcenter + fcenter) / 2f;
         var angleUpCenter = (fcenter - bcenter).Rotated(3f * (float)Math.PI / 2f).Normalized();
         this.CurrentNormal = angleUpCenter;
-        //var bearCenter = center + angleUpCenter * distAbove;
-        
-        //this.Bear.SetGlobalPosition(bearCenter / 90);
         this.Bear.GlobalPosition = this.GetGlobalCenterOfATV();
         this.Bear.SetGlobalRotation((fcenter - bcenter).Angle());
-        //this.Bear.CollisionShape2D.SetGlobalRotation(this.Bear.CutOut.GetGlobalRotation());
-        //this.Sprite.SetGlobalRotation((fcenter - bcenter).Angle());
-        //this.Bear.SetGlobalPosition(this.GetGlobalCenterOfTwoWheels() + this.initialOffsetFromWheelsToBear);}
     }
+
+    private Vector2 prevATVPosition;
 
     public void drawATV(float delta){
         var fwcenter = this.FrontWheel.GetGlobalPosition();
@@ -311,7 +307,13 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
             3f * (float)Math.PI / 2f).Normalized();
         var distAbove = 40f;
         var atvPos = center + distAbove * angleUpCenter;
-        this.Sprite.SetGlobalPosition(atvPos);
+
+        //linear interpolate BS here
+        var fraction = Engine.GetPhysicsInterpolationFraction();
+        this.Sprite.GlobalPosition = this.prevATVPosition.LinearInterpolate(atvPos, fraction);
+        this.prevATVPosition = atvPos;
+        //end linear interpolate 
+
         this.Sprite.SetGlobalRotation((fwcenter - bwcenter).Angle());
 
         var spriteScale = this.Sprite.GetScale();
@@ -320,12 +322,13 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
                                              spriteScale[1]));
         } else if(this.Direction == ATVDirection.BACKWARD){
             this.Sprite.SetScale(new Vector2(-Math.Abs(spriteScale[0]),
-                                             spriteScale[1]));
+                                             spriteScale[1])) ;
         }
         this.drawRocketExhaust(atvPos);
     }
 
-    private void drawRocketExhaust(Vector2 atvPos){/*
+    private void drawRocketExhaust(Vector2 atvPos){
+        return;
         RocketBooster rocketBooster = null;
         if(this.Player.ActiveHoldable is RocketBooster){
             rocketBooster = ((RocketBooster)this.Player.ActiveHoldable);}
@@ -352,8 +355,6 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
         ((ParticlesMaterial)this.RocketExhaustGlobal.ProcessMaterial).Direction = globalDir;
         ((ParticlesMaterial)this.RocketExhaustLocal.ProcessMaterial).InitialVelocity = 0.1f * this.GetVelocityOfTwoWheels().Length();
         ((ParticlesMaterial)this.RocketExhaustGlobal.ProcessMaterial).InitialVelocity = 1f * this.GetVelocityOfTwoWheels().Length();
-*/
-
     }
 
     public void tempStopAllMovement(Boolean exceptGravity = false){
@@ -374,16 +375,14 @@ public class ATV : ManualEvocableFSMNode2D<ATVState> {
         this.handleTimers(delta);
         this.ReactToState(delta);}
 
-    public void ApplyPhonyRunOverEffect(Wheel wheel){
+    public void ApplyPhonyRunOverEffect(){
         ////Simulates an ATV squishing something below it
-        if(wheel.Equals(this.FrontWheel)){
-            this.FrontWheel.PhonyBounceUp(1f);
-            this.BackWheel.PhonyBounceUp(0.5f);
-        } else if(wheel.Equals(this.BackWheel)){
+        if(this.Direction.Equals(ATVDirection.FORWARD)){
             this.FrontWheel.PhonyBounceUp(0.5f);
-            this.BackWheel.PhonyBounceUp(1f);
+            this.BackWheel.PhonyBounceUp(0.25f);
         } else {
-            throw new Exception("Run over effect only for Front Wheel or Back Wheel!");
-        }}}
-
-
+            this.FrontWheel.PhonyBounceUp(0.25f);
+            this.BackWheel.PhonyBounceUp(0.5f);
+        }        
+    }
+}

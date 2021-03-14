@@ -34,4 +34,11 @@ public static class Extensions{
         var index = Extensions.rnd.Next(source.Count());
         return source.ElementAt(index);}
 
+    public static Color mixTwoColors(this Node2D node, Color c1, Color c2, float mix){
+        return new Color((c1.r * mix) + (c2.r * (1-mix)),
+                         (c1.g * mix) + (c2.g * (1-mix)),
+                         (c1.b * mix) + (c2.b * (1-mix)));
+    }
+
+
 }

@@ -77,12 +77,18 @@ public class FlyingEnemy : NPC<FlyingEnemyState>, INPC, IFood
 
     public override void GetHitBy(Node node){
         if(node is PlayerAttackWindow){
-            GD.Print("Hit an attack window");
             this.CollisionShape2D.Disabled = true;
             this.CutOut.Visible = false;
             this.ResetActiveState(FlyingEnemyState.HOVERING_STILL);
             this.DisplayExplosion();
-            this.PlayGetEatenSound();}}
+            this.PlayGetEatenSound();}
+        else if(node is WholeBodyKinBody){
+            this.CollisionShape2D.Disabled = true;
+            this.CutOut.Visible = false;
+            this.PlayGetSmushedSound2();
+            this.DisplayExplosion();}
+ 
+}
     public override void ReactStateless(float delta){}
 
     public override void UpdateState(float delta){}

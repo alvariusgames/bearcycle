@@ -2,6 +2,8 @@ using Godot;
 using System;
 
 public interface INPC{
+    Boolean ThrowBearOffATV {get; set;}
+    float PlayerHitUnits {get; set;}
     void GetHitBy(Node node);
     bool ResetPlayerAttackWindowAfterGettingHit {get; set;}
     Node GetParent();

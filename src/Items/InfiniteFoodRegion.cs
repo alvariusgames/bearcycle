@@ -50,7 +50,7 @@ public class InfiniteFoodRegion : KinematicBody2D, IInteractable
                     randSprite.SetGlobalPosition(sprite.GetGlobalPosition());
                     sprite.SetGlobalPosition(randSpritePos);}}}}
 
-    public void InteractWith(Player Player){
+    public void InteractWith(Player Player, float delta){
         var caloriesInThisBite = this.lootableCalories / NUM_BITES;
         var food = new NonNodeFood((Sprite)this.FoodIconSprite.Duplicate(),
                                     caloriesInThisBite, this.FoodDisplayName);

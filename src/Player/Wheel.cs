@@ -133,6 +133,9 @@ public class Wheel : FSMKinematicBody2DBasicPhysics<WheelState>{
             if(this.ATV.IsInAirNormalized()){
                 this.playThudSound();}}}
 
+    private int counter1 = 0;
+    private Vector2 prevGlobalPosition = new Vector2(0,0);
+
     public override void ReactStateless(float delta){
         this.applyGravity(delta);
         this.checkAndUpdateOneWayPlatformCollisions(delta);
@@ -206,14 +209,6 @@ public class Wheel : FSMKinematicBody2DBasicPhysics<WheelState>{
             this.velocity = new Vector2(this.currentNormal.x * magnitude * BOUNCE_UP_EFFECT_VELOCITY,
                                         this.currentNormal.y * magnitude * BOUNCE_UP_EFFECT_VELOCITY); 
         }
-
-
-    public void AdjustVelocityAndAccell(float velocityMultiplier, float accellVelocityMultiplier){
-        ///args: 1 means no change, 0.7f means 30% less, 2f means twice as fast, etc.
-        this.velocity = this.velocity * velocityMultiplier;
-        this.forwardAccell = this.forwardAccell * accellVelocityMultiplier;
-    }
-
 
     private void updateSprite(float delta){
         float randJiggleEffect = 0f;
