@@ -6,7 +6,7 @@ public enum PlatformType { MOBILE, TABLET, DESKTOP, NONE }
 public enum Platform { ANDROID, IOS, LINUX, WINDOWS, OSX, NONE}
 
 public class main : Node2D{
-	public const String VERSION = "v0.1.3-alpha";
+	public const String VERSION = "v0.1.4-alpha";
 	public const float DELTA_NORMALIZER = 60f;
 	public static Platform Platform = Platform.NONE;
 	public static PlatformType PlatformType = PlatformType.NONE;
@@ -20,7 +20,7 @@ public class main : Node2D{
 	public static Boolean IsDebug = false;
 	private void setupDebug(){
 		foreach(var arg in OS.GetCmdlineArgs()){
-			if(false && arg.Contains("debug=true")){
+			if(arg.Contains("debug=true")){
 				GD.Print("Debug mode activated");
 				main.IsDebug = true;}}}
 
@@ -74,7 +74,7 @@ public class main : Node2D{
 	}
 
 	public override void _Process(float delta){
-		if(main.IsDebug){
+		if(false && main.IsDebug){
 			this.GetTree().ChangeScene("res://scenes/misc/PlayArbitraryLevel.tscn");}
 		else{
 			this.GetTree().ChangeScene("res://scenes/title_screen/company_logo.tscn");
