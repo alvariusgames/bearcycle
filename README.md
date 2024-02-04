@@ -1,14 +1,17 @@
-# Bears on ATVs
+# bearcycle
 
-2D sidescroller about a rogue bear that learns to drive an ATV. Play now at https://alvariusgames.com/bears-on-atvs/
+bearcycle® combines fast-paced motorcycle racing with wacky platforming madness. This was a personal project that was released on Steam, you can check it out there. https://bearcyclegame.com
 
-![Gameplay](./misc/gameplay2.gif)
+The code in this repo is just the basic motorbike physics with some placeholder graphics. I eventually split it off into a private repo for continued development, music, artwork etc.
+
+![Gameplay](./misc/gameplay3.gif)
+
 
 ## About
 
-I am a professional software developer who has always wanted to create and release a complete video game. In this personal project, I hope to program all gameplay, compose all music, and create all artwork.
+I am a professional software developer who has always wanted to create and release a complete video game. And I did it! It's on steam :)
 
-For my game engine, I am using [Godot](https://godotengine.org/) 3.X Mono (Lets me write `C#` instead of `GDScript`). For music, I am using [Reaper](https://www.reaper.fm/) with mostly free virtual instruments. Digital artwork has not been started yet. I am using Linux in all steps of the process :). This repository just contains the code and basic Godot project files, however -- all other artwork/assets/music are private and not a part of this.
+For my game engine, I am using [Godot](https://godotengine.org/) 3.X Mono (Lets me write `C#` instead of `GDScript`). For music, I am using [Reaper](https://www.reaper.fm/) with mostly free virtual instruments. This repository just contains the code and basic Godot project files for simple motorbike physics. All other artwork/assets/music are not included.
 
 ## Backstory
 
@@ -16,10 +19,4 @@ The idea for this game came when I was hiking with friends in Alaska on a multi-
 
 ## License
 
-Everything on this https://github.com/ludditegames/bears_on_atvs.git repository is under the MIT open source license. The following restrictions apply:
-
-1) You may not use the trademarks "Bears on ATVs" or "Alvarius".
-2) You may not use any asset included in the released, distributable software that is not publicly accessible in this https://github.com/alvariusgames/bears_on_atvs.git repository.
-
-In layman's terms: don't impersonate me, and don't use music/artwork/anything you can't find publicly on https://github.com/alvariusgames/bears_on_atvs.git.
- 
+Everything on this https://github.com/ludditegames/bearcycle.git repository is under the MIT open source license. It's just the source code for basic motorbike physics, please don't use anything from the released game that you can't find in this repo. Thanks! 
